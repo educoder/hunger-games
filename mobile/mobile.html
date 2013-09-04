@@ -51,8 +51,9 @@
                 <div class="nav-collapse collapse navbar-responsive-collapse">
                     <ul class="nav nav-pills">
                         <li class="active home"><a href="#">Home</a></li>
-                        <li class="active dashboard"><a href="#">My Stuff</a></li>
-                        <li class="active harvest-planning"><a href="#">Harvest Planning</a></li>
+                        <li class="active refresh-button"><a href="#">Refresh</a></li>
+                        <li class="active harvest-planning-button"><a href="#">Harvest Planning</a></li>
+
                         
                     </ul>
                     <form class="navbar-form pull-right">
@@ -119,10 +120,10 @@
 
     </div>
 
-    <div id="dashboard-screen" class="row-fluid">
+<!--     <div id="dashboard-screen" class="row-fluid">
         <div id="list-screen" class="span12 view-container bs-docs-sidebar">
             <ul class="nav nav-list bs-docs-sidenav affix-top scrollable">
-                <!-- filled by some ListView -->
+                filled by some ListView
             </ul>
             <div class="bottom-btn-container">
                 <a id="new-note-btn" class="btn btn-primary">
@@ -130,15 +131,15 @@
                 </a>
             </div>
         </div>
-    </div>
+    </div> -->
 
     <div id="harvest-planning-screen" class="row-fluid">
-        <div id="list-screen" class="span12 view-container bs-docs-sidebar">
-            <div class="bottom-btn-container">
-                <a id="basic-evl-pull" class="btn btn-primary">
-                    Grab from EVL
-                </a>
-            </div>
+        <div class="span12 view-container bs-docs-sidebar">
+            <div>Richness: <span class="harvest-richness-field"></span></div>
+            <div>Foragers: <input class="harvest-foragers-field" type="text" /></div>
+            <div>Yield: <span class="harvest-yield-field"></span></div>
+            <div>Harvest per forager: <span class="harvest-harvest-field"></span></div>
+            <div>Squirrel minutes: <span class="harvest-squirrel-field"></span></div>
         </div>
     </div>    
 

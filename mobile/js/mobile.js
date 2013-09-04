@@ -132,19 +132,18 @@
       }
     });
 
-    // Show dashboard
-    jQuery('.dashboard').click(function() {
-      if (app.username) {
-        app.hideAllRows();
-        jQuery('#dashboard-screen').removeClass('hidden');
-      }
+    // Refresh and repull data - this may go eventually
+    jQuery('.refresh-button').click(function() {
+      jQuery().toastmessage('showNoticeToast', "Refreshing...");
+      pullAll();
     });
 
     // Show harvest planning tool
-    jQuery('.harvest-planning').click(function() {
+    jQuery('.harvest-planning-button').click(function() {
       if (app.username) {
         app.hideAllRows();
         jQuery('#harvest-planning-screen').removeClass('hidden');
+        populateHarvestPlanningScreen();
       }
     });
 
@@ -200,25 +199,61 @@
     return Model.awake.notes.add(noteModel);
   };
 
-
+  app.populateHarvestPlanningScreen = function() {
+    // ok, are we using Views?
+  }
 
   //*************** HELPER FUNCTIONS ***************//
+
+  var pullAll = function() {
+    // CAREFUL: this may need promises!
+    tryPullStateData();
+    tryPullConfigurationData();
+    tryPullStatisticsData();
+    tryPullRecentBoutData();
+  };
+
+  var tryPullStateData = function() {
+    if (app.run) {
+      jQuery.get(app.UICdrowsy+'/'+DATABASE+'/state?selector=%7B%22run_id%22%3A%22'+app.run+'%22%7D', function(data) {
+        app.stateData = data;
+      })
+      .done(function() { console.log("State data pulled!"); })
+      .fail(function() { error.log("Error pulling configuration data..."); });
+    }
+  };
 
   var tryPullConfigurationData = function() {
     if (app.run) {
       jQuery.get(app.UICdrowsy+'/'+DATABASE+'/configuration?selector=%7B%22run_id%22%3A%22'+app.run+'%22%7D', function(data) {
         app.configurationData = data;
       })
-      .done(function() { console.log("Configuration data pulled!")})
-      .fail(function() { error.log("Error pulling configuration data...") });
+      .done(function() { console.log("Configuration data pulled!"); })
+      .fail(function() { error.log("Error pulling configuration data..."); });
     }
   };
 
-  var tryPullRecentBoutData = function() {
-    // jQuery.get(app.UICdrowsy+'/logsomething/', function(data) {
+  var tryPullStatisticsData = function() {
+    // needed: run_id, habitat_configuration, bout_id
+    // if (app.run) {
+    //   jQuery.get(app.UICdrowsy+'/'+DATABASE+'/statistics', function(data) {
+    //     app.configurationData = data;
+    //   })
+    //   .done(function() { console.log("Statistics data pulled!"); })
+    //   .fail(function() { error.log("Error pulling configuration data..."); });
+    // }
+  };
 
-    // )};
-    return false;
+  var tryPullRecentBoutData = function() {
+    // to determine the selector, we need the run_id, habitat_configuration, the bout_id
+    // in the log collection (chose which based on run) get all events between the bouts' 'game_start' and 'game_stop' timestamps
+    if (app.run) {
+      jQuery.get(app.UICdrowsy+'/'+DATABASE+'/log-test', function(data) {
+        app.RecentBoutData = data;
+      })
+      .done(function() { console.log("Recent bout data pulled!"); })
+      .fail(function() { error.log("Error pulling configuration data..."); });
+    }
   };
 
 
