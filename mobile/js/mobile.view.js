@@ -3,9 +3,9 @@
 
 (function() {
   "use strict";
-  var Washago = this.Washago || {};
-  this.Washago.Mobile = this.Washago.Mobile || {};
-  var app = this.Washago.Mobile;
+  var HG = this.HG || {};
+  this.HG.Mobile = this.HG.Mobile || {};
+  var app = this.HG.Mobile;
   app.View = {};
 
   /**
@@ -46,7 +46,7 @@
 
       console.log('Initializing InputView...', this.el);
 
-      Washago.Model.awake.notes.on('add', function(n) {
+      HG.Model.awake.notes.on('add', function(n) {
         console.log('Note added...');
         // wall.registerBalloon(n, Smartboard.View.NoteBalloon, wall.balloons);
       });
@@ -54,7 +54,7 @@
       // find the list where items are rendered into
       var list = this.$el.find('ul');
 
-      Washago.Model.awake.notes.each(function(n) {
+      HG.Model.awake.notes.each(function(n) {
         console.log('Show each note...');
         // wall.registerBalloon(n, Smartboard.View.NoteBalloon, wall.balloons);
         // var listItem = jQuery('<li>');
@@ -112,7 +112,7 @@
       // if (jQuery.trim(newTag).length < 2) {
       //   return; // don't allow tags shorter than 2 characters
       // }
-      Washago.Mobile.createNewNote(newNote);
+      HG.Mobile.createNewNote(newNote);
       
       this.$el.find('#note-headline-entry').val('');
       this.$el.find('#note-body-entry').val('');
@@ -126,5 +126,5 @@
   });
 
 
-  this.Washago = Washago;
+  this.HG = HG;
 }).call(this);

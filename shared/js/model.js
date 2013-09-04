@@ -1,7 +1,7 @@
 (function() {
   "use strict";
 
-  var Backbone, Washago, Drowsy, jQuery, _,
+  var Backbone, HG, Drowsy, jQuery, _,
     __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; },
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty;
@@ -12,17 +12,17 @@
     Backbone = require("backbone");
     Backbone.$ = jQuery;
     Drowsy = require("backbone.drowsy").Drowsy;
-    Washago = {};
-    exports.Washago = Washago;
+    HG = {};
+    exports.HG = HG;
   } else {
-    window.Washago = window.Washago || {};
-    Washago = window.Washago;
+    window.HG = window.HG || {};
+    HG = window.HG;
     jQuery = window.$;
     _ = window._;
     Drowsy = window.Drowsy;
   }
 
-  Washago.Model = (function() {
+  HG.Model = (function() {
     function Model() {}
 
     Model.requiredCollections = ['notes', 'tags', 'states'];
@@ -80,7 +80,7 @@
         existingCollections = _.pluck(colls, 'name');
         _.each(requiredCollections, function (coll) {
           if (existingCollections.indexOf(coll) < 0) {
-            console.log("Creating collection '" + coll + "' under " + Washago.Model.dbURL);
+            console.log("Creating collection '" + coll + "' under " + HG.Model.dbURL);
             dfs.push(_this.db.createCollection(coll));
           }
         });
@@ -135,8 +135,8 @@
         addTag: function(tag, tagger) {
           var existingTagRelationships, tagRel,
             _this = this;
-          if (!(tag instanceof Washago.Model.Tag)) {
-            console.error("Cannot addTag ", tag, " because it is not a Washago.Model.Tag instance!");
+          if (!(tag instanceof HG.Model.Tag)) {
+            console.error("Cannot addTag ", tag, " because it is not a HG.Model.Tag instance!");
             throw "Invalid tag (doesn't exist)";
           }
           if (!tag.id) {
@@ -221,7 +221,7 @@
       .extend(BuildOnableTrait);
 
       this.Notes = this.db.Collection('notes').extend({
-        model: Washago.Model.Note
+        model: HG.Model.Note
       });
 
       /** Tag **/
@@ -232,7 +232,7 @@
       .extend(MultiposTrait);
 
       this.Tags = this.db.Collection('tags').extend({
-        model: Washago.Model.Tag
+        model: HG.Model.Tag
       });
 
       /** State **/
@@ -242,7 +242,7 @@
       });
       
       this.States = this.db.Collection('states').extend({
-        model: Washago.Model.State
+        model: HG.Model.State
       });
     };
 
@@ -267,9 +267,9 @@
       };
       this.awake = {};
       _.each(this.requiredCollections, function (collName) {
-        coll = new Washago.Model[camelCase(collName)]();
+        coll = new HG.Model[camelCase(collName)]();
         coll.wake(wakefulUrl);
-        Washago.Model.awake[collName] = coll;
+        HG.Model.awake[collName] = coll;
         deferreds.push(coll.fetch());
       });
       return jQuery.when.apply(jQuery, deferreds);

@@ -3,10 +3,10 @@
 
 (function() {
   "use strict";
-  var Washago = this.Washago || {};
-  this.Washago.Mobile = this.Washago.Mobile || {};
-  var Model = this.Washago.Model;
-  var app = this.Washago.Mobile;
+  var HG = this.HG || {};                     // TODO: refactor this to Hunger? HungerGames?
+  this.HG.Mobile = this.HG.Mobile || {};
+  var Model = this.HG.Model;
+  var app = this.HG.Mobile;
 
   app.config = null;
   app.requiredConfig = {
@@ -21,32 +21,54 @@
   };
 
   app.rollcall = null;
-
-  app.keyCount = 0;
-  app.autoSaveTimer = window.setTimeout(function() { console.log("timer activated"); } ,10);
+  app.run = null;
   app.user = 'TODO';
   app.username = null;
-
   app.runState = null;
   app.userState = null;
+
+  var DATABASE = null;
+  app.configuationData = null;
+  // app.recentBoutData = {
+  //   something: something,
+  //   somehtingelse: somethingelse
+  // }
 
   // app.indexModel = null;
   app.indexView = null;     // TODO - think about how necessary making these global is going to be
   app.inputView = null;
   app.listView = null;
 
+  app.keyCount = 0;
+  app.autoSaveTimer = window.setTimeout(function() { console.log("timer activated"); } ,10);
+
   app.init = function() {
     /* CONFIG */
-    // Washago.loadConfig();
-    // Washago.verifyConfig(app.config, this.requiredConfig);
+    // HG.loadConfig();
+    // HG.verifyConfig(app.config, this.requiredConfig);
 
     app.config = {
       drowsy: {url: "http://drowsy.badger.encorelab.org"},
       wakeful: {url: "http://wakeful.badger.encorelab.org:7777/faye"}
     };
 
+    app.UICdrowsy = "http://ltg.evl.uic.edu:9292";
+
     // TODO: should ask at startup
-    var DATABASE = "washago-dev";
+    DATABASE = "hunger-games-fall-13";
+
+    // what run are we on?
+    app.run = "period-1";         // TODO: where is this coming from? Also abstract to it's own function.
+
+    // grab the configuration data
+    tryPullConfigurationData();
+
+    // grab all the most recent bout data
+    // if (app.tryPullRecentBoutData()) {
+    //   console.log("Bout data pulled...");
+    // } else {
+    //   console.error("Error pulling bout data!");
+    // }
 
     // // TODO: should ask at startup
     // var DATABASE = app.config.drowsy.db;
@@ -59,10 +81,10 @@
     }
 
     /* initialize the model and wake it up */
-    Washago.Model.init(app.config.drowsy.url, DATABASE)
+    HG.Model.init(app.config.drowsy.url, DATABASE)
     .then(function () {
       console.log('model initialized - now waking up');
-      return Washago.Model.wake(app.config.wakeful.url);
+      return HG.Model.wake(app.config.wakeful.url);
     }).done(function () {
       console.log('model awake - now calling setup');
       app.setup();
@@ -71,7 +93,7 @@
 
   app.setup = function() {
     // retrieve user name from cookie if possible otherwise ask user to choose name
-    app.username = jQuery.cookie('washago_mobile_username');
+    app.username = jQuery.cookie('hunger-games_mobile_username');
 
     if (app.username) {
       // We have a user in cookies so we show stuff
@@ -118,6 +140,19 @@
       }
     });
 
+    // Show harvest planning tool
+    jQuery('.harvest-planning').click(function() {
+      if (app.username) {
+        app.hideAllRows();
+        jQuery('#harvest-planning-screen').removeClass('hidden');
+      }
+    });
+
+    jQuery('#basic-evl-pull').click(function() {
+      console.log('Hey, I dont do shit right now');
+    });
+
+
 
     /* MISC */
     jQuery().toastmessage({
@@ -151,6 +186,44 @@
     }
   };
 
+
+
+  //*************** MAIN FUNCTIONS (RENAME ME) ***************//
+
+  app.createNewNote = function (noteData) {
+    noteData.created_at = new Date();
+    var noteModel = new Model.Note(noteData);
+    
+    noteModel.wake(app.config.wakeful.url);
+    noteModel.save();
+
+    return Model.awake.notes.add(noteModel);
+  };
+
+
+
+  //*************** HELPER FUNCTIONS ***************//
+
+  var tryPullConfigurationData = function() {
+    if (app.run) {
+      jQuery.get(app.UICdrowsy+'/'+DATABASE+'/configuration?selector=%7B%22run_id%22%3A%22'+app.run+'%22%7D', function(data) {
+        app.configurationData = data;
+      })
+      .done(function() { console.log("Configuration data pulled!")})
+      .fail(function() { error.log("Error pulling configuration data...") });
+    }
+  };
+
+  var tryPullRecentBoutData = function() {
+    // jQuery.get(app.UICdrowsy+'/logsomething/', function(data) {
+
+    // )};
+    return false;
+  };
+
+
+  //*************** LOGIN FUNCTIONS ***************//
+
   app.loginUser = function (username) {
     // retriev user with given username
     app.rollcall.user(username)
@@ -160,7 +233,7 @@
 
         app.username = user.get('username');
 
-        jQuery.cookie('washago_mobile_username', app.username, { expires: 1, path: '/' });
+        jQuery.cookie('hunger-games_mobile_username', app.username, { expires: 1, path: '/' });
         jQuery('.username-display a').text(app.username);
 
         // show index-screen aka home
@@ -183,7 +256,7 @@
     });
 
     // if (username && username !== '') {
-    //   jQuery.cookie('washago_mobile_username', username, { expires: 1, path: '/' });
+    //   jQuery.cookie('hunger-games_mobile_username', username, { expires: 1, path: '/' });
     //   jQuery('.username-display a').text(username);
 
     //   // show index-screen aka home
@@ -199,7 +272,7 @@
   };
 
   var logoutUser = function () {
-    jQuery.removeCookie('washago_mobile_username',  { path: '/' });
+    jQuery.removeCookie('hunger-games_mobile_username',  { path: '/' });
     window.location.reload();
   };
 
@@ -220,16 +293,6 @@
     jQuery('.row-fluid').each(function (){
       jQuery(this).addClass('hidden');
     });
-  };
-
-  app.createNewNote = function (noteData) {
-    noteData.created_at = new Date();
-    var noteModel = new Model.Note(noteData);
-    
-    noteModel.wake(app.config.wakeful.url);
-    noteModel.save();
-
-    return Model.awake.notes.add(noteModel);
   };
 
   app.autoSave = function(model, inputKey, inputValue, instantSave) {
@@ -273,6 +336,7 @@
     }
   };
 
-  this.Washago = Washago;
+
+  this.HG = HG;
 
 }).call(this);

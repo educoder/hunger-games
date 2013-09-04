@@ -1,7 +1,7 @@
 <!DOCTYPE html> 
 <html> 
 <head>
-    <title>Washago Mobile</title> 
+    <title>Hunger Games Mobile</title> 
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1, minimum-scale=1, maximum-scale=1">
     
@@ -18,7 +18,7 @@
     <script src="js/jquery.toastmessage.js"></script>
     
     <script src="../shared/js/libs/jquery.cookie.js"></script>
-    <script src="../shared/js/washago.js"></script>
+    <script src="../shared/js/hunger-games.js"></script>
     <script src="../shared/js/model.js"></script>
     <script src="../shared/js/rollcall.js"></script>
 
@@ -29,7 +29,7 @@
     <script id="list-view-template" type="text/template">
         <li id="note" class="list-item investigation-item">
             <a class="note">
-                <span class="headline"><%= headline %></span>
+                <span class="headline"></span>
                 <i class="icon-chevron-right"></i>
                 <span class="author"></span>
             </a>
@@ -52,6 +52,7 @@
                     <ul class="nav nav-pills">
                         <li class="active home"><a href="#">Home</a></li>
                         <li class="active dashboard"><a href="#">My Stuff</a></li>
+                        <li class="active harvest-planning"><a href="#">Harvest Planning</a></li>
                         
                     </ul>
                     <form class="navbar-form pull-right">
@@ -62,7 +63,7 @@
                             see also:
                             http://stackoverflow.com/questions/905222/enter-key-press-event-in-javascript
                         -->
-                        <input id="username" type="text" name="username" autocomplete="on" placeholder="Please enter name" title="error" pattern="^[a-zA-Z0-9]+$" maxlength="25" onkeypress="return Washago.Mobile.interceptKeypress(event)" />
+                        <input id="username" type="text" name="username" autocomplete="on" placeholder="Please enter name" title="error" pattern="^[a-zA-Z0-9]+$" maxlength="25" onkeypress="return HG.Mobile.interceptKeypress(event)" />
                         <div class="alert alert-error input-alert">
                             <strong>Error!</strong> Name can only be alphanumerical without whitespace!
                         </div>
@@ -119,7 +120,6 @@
     </div>
 
     <div id="dashboard-screen" class="row-fluid">
-
         <div id="list-screen" class="span12 view-container bs-docs-sidebar">
             <ul class="nav nav-list bs-docs-sidenav affix-top scrollable">
                 <!-- filled by some ListView -->
@@ -130,12 +130,21 @@
                 </a>
             </div>
         </div>
-
     </div>
+
+    <div id="harvest-planning-screen" class="row-fluid">
+        <div id="list-screen" class="span12 view-container bs-docs-sidebar">
+            <div class="bottom-btn-container">
+                <a id="basic-evl-pull" class="btn btn-primary">
+                    Grab from EVL
+                </a>
+            </div>
+        </div>
+    </div>    
 
     <script type="text/javascript">
         jQuery(document).ready(function() {
-          Washago.Mobile.init();
+          HG.Mobile.init();
         }); 
     </script>
 </body>

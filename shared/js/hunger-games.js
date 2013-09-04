@@ -1,11 +1,11 @@
 (function () {
   "use strict";
   
-  var Washago = {};
+  var HG = {};
 
-  Washago.getState = function(forEntity) {
+  HG.getState = function(forEntity) {
     var state;
-    state = Washago.Model.awake.states.findWhere({
+    state = HG.Model.awake.states.findWhere({
       entity: forEntity
     });
     if (!state) {
@@ -14,13 +14,13 @@
     return state;
   };
 
-  Washago.setState = function(forEntity, values) {
+  HG.setState = function(forEntity, values) {
     var state;
-    state = Washago.getState(forEntity);
+    state = HG.getState(forEntity);
     if (!state) {
-      state = new Washago.Model.State();
+      state = new HG.Model.State();
       state.set('entity', forEntity);
-      Washago.Model.awake.states.add(state);
+      HG.Model.awake.states.add(state);
     }
     state.set(values);
     state.set('modified_at', new Date());
@@ -28,14 +28,14 @@
     return state;
   };
 
-  // basc class for Washago-based apps; inherit from this!
-  Washago.App = function () { };
+  // basc class for HG-based apps; inherit from this!
+  HG.App = function () { };
 
   /**
   Retrieves a JSON config file from "/config.json" and configures
   the given Sail app accordingly.
   */
-  Washago.App.prototype.loadConfig = function(configUrl) {
+  HG.App.prototype.loadConfig = function(configUrl) {
     var _this = this;
     configUrl = configUrl || '../../config.json';
     jQuery.ajax(
@@ -55,7 +55,7 @@
     );
   };
 
-  Washago.App.prototype.verifyConfig = function(config, required, path) {
+  HG.App.prototype.verifyConfig = function(config, required, path) {
     var _this = this;
     var curPath = path || null;
 
@@ -80,6 +80,6 @@
     });
   };
 
-  this.Washago = Washago;
+  this.HG = HG;
 
 }).call(this);
