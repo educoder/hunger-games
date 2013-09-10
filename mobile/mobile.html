@@ -52,7 +52,7 @@
                     <ul class="nav nav-pills">
                         <li class="active home"><a href="#">Home</a></li>
                         <li class="active refresh-button"><a href="#">Refresh</a></li>
-                        <li class="active harvest-planning-button"><a href="#">Harvest Planning</a></li>
+                        <li class="active equalization-button"><a href="#">Equalization</a></li>
 
                         
                     </ul>
@@ -133,13 +133,34 @@
         </div>
     </div> -->
 
-    <div id="harvest-planning-screen" class="row-fluid">
+    <div id="equalization-screen" class="row-fluid">
         <div class="span12 view-container bs-docs-sidebar">
-            <div>Richness: <span class="harvest-richness-field"></span></div>
-            <div>Foragers: <input class="harvest-foragers-field" type="text" /></div>
-            <div>Yield: <span class="harvest-yield-field"></span></div>
-            <div>Harvest per forager: <span class="harvest-harvest-field"></span></div>
-            <div>Squirrel minutes: <span class="harvest-squirrel-field"></span></div>
+            <div id="equalization-patch-1" class="patch">
+                <div>Quality: <span class="equalization-quality-field"></span></div>
+                <div>Minutes: <span class="equalization-minutes-field"></span></div>
+                <div>Foragers: <input class="equalization-foragers-field" type="number" /></div>
+                <div>Yield (Quality / Foragers): <span class="equalization-yield-field"></span></div>
+                <div>Harvest (Yield * Minutes): <span class="equalization-harvest-field"></span></div>
+                <div>Squirrel minutes (Foragers * Minutes): <span class="equalization-squirrel-minutes-field"></span></div>
+            </div>
+            <br />
+            <div id="equalization-patch-2" class="patch">
+                <div>Quality: <span class="equalization-quality-field"></span></div>
+                <div>Minutes: <span class="equalization-minutes-field"></span></div>
+                <div>Foragers: <input class="equalization-foragers-field" type="number" /></div>
+                <div>Yield (Quality / Foragers): <span class="equalization-yield-field"></span></div>
+                <div>Harvest (Yield * Minutes): <span class="equalization-harvest-field"></span></div>
+                <div>Squirrel minutes (Foragers * Minutes): <span class="equalization-squirrel-minutes-field"></span></div>
+            </div>
+            <br />
+            <div id="equalization-patch-3" class="patch">
+                <div>Quality: <span class="equalization-quality-field"></span></div>
+                <div>Minutes: <span class="equalization-minutes-field"></span></div>
+                <div>Foragers: <input class="equalization-foragers-field" type="number" /></div>
+                <div>Yield (Quality / Foragers): <span class="equalization-yield-field"></span></div>
+                <div>Harvest (Yield * Minutes): <span class="equalization-harvest-field"></span></div>
+                <div>Squirrel minutes (Foragers * Minutes): <span class="equalization-squirrel-minutes-field"></span></div>
+            </div>            
         </div>
     </div>    
 

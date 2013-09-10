@@ -61,7 +61,7 @@
     app.run = "period-1";         // TODO: where is this coming from? Also abstract to it's own function.
 
     // grab the configuration data
-    tryPullConfigurationData();
+    tryPullConfigurationData();           // TODO: does this need a callback or a promise?
 
     // grab all the most recent bout data
     // if (app.tryPullRecentBoutData()) {
@@ -139,11 +139,11 @@
     });
 
     // Show harvest planning tool
-    jQuery('.harvest-planning-button').click(function() {
+    jQuery('.equalization-button').click(function() {
       if (app.username) {
         app.hideAllRows();
-        jQuery('#harvest-planning-screen').removeClass('hidden');
-        populateHarvestPlanningScreen();
+        jQuery('#equalization-screen').removeClass('hidden');
+        populateStaticHarvestEqualization();
       }
     });
 
@@ -199,8 +199,20 @@
     return Model.awake.notes.add(noteModel);
   };
 
-  app.populateHarvestPlanningScreen = function() {
-    // ok, are we using Views?
+  var populateStaticHarvestEqualization = function() {
+    // ok, are we using Backbone Views?
+    // <div>Quality: <span class="equalization-quality-field"></span></div>
+    // <div>Minutes: <span class="equalization-minutes-field"></span></div>
+    // <div>Foragers: <input class="equalization-foragers-field" type="number" /></div>
+    // <div>Yield (Quality / Foragers): <span class="equalization-yield-field"></span></div>
+    // <div>Harvest (Yield * Minutes): <span class="equalization-harvest-field"></span></div>
+    // <div>Squirrel minutes (Foragers * Minutes): <span class="equalization-squirrel-minutes-field"></span></div>
+
+    jQuery('.equalization-minutes-field').text(app.configurationData[0].harvest_calculator_bout_length_in_minutes);
+
+    _.each(app.configurationData[0].patches, function(p) {
+      jQuery('#equalization-'+p.patch_id+' .equalization-quality-field').text(p.richness_per_minute);
+    })
   }
 
   //*************** HELPER FUNCTIONS ***************//
