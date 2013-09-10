@@ -29,6 +29,7 @@
 
   var DATABASE = null;
   app.configuationData = null;
+  app.recentBoutData = null;
   // app.recentBoutData = {
   //   something: something,
   //   somehtingelse: somethingelse
@@ -57,18 +58,13 @@
     // TODO: should ask at startup
     DATABASE = "hunger-games-fall-13";
 
-    // what run are we on?
-    app.run = "period-1";         // TODO: where is this coming from? Also abstract to it's own function.
+    // TODO: where is this coming from? Also abstract to it's own function.
+    app.run = "period-1";         
 
     // grab the configuration data
-    tryPullConfigurationData();           // TODO: does this need a callback or a promise?
+    tryPullConfigurationData();           // TODO: does this need a callback or a promise? TODO: switch to tryPullAll();
+    tryPullRecentBoutData();
 
-    // grab all the most recent bout data
-    // if (app.tryPullRecentBoutData()) {
-    //   console.log("Bout data pulled...");
-    // } else {
-    //   console.error("Error pulling bout data!");
-    // }
 
     // // TODO: should ask at startup
     // var DATABASE = app.config.drowsy.db;
@@ -135,8 +131,8 @@
     // Refresh and repull data - this may go eventually
     jQuery('.refresh-button').click(function() {
       jQuery().toastmessage('showNoticeToast', "Refreshing...");
-      pullAll();
-    });
+      tryPullAll();
+    })
 
     // Show harvest planning tool
     jQuery('.equalization-button').click(function() {
@@ -260,7 +256,7 @@
 
   //*************** HELPER FUNCTIONS ***************//
 
-  var pullAll = function() {
+  var tryPullAll = function() {
     // CAREFUL: this may need promises!
     tryPullStateData();
     tryPullConfigurationData();
@@ -304,7 +300,7 @@
     // in the log collection (chose which based on run) get all events between the bouts' 'game_start' and 'game_stop' timestamps
     if (app.run) {
       jQuery.get(app.UICdrowsy+'/'+DATABASE+'/log-test', function(data) {
-        app.RecentBoutData = data;
+        app.recentBoutData = data;
       })
       .done(function() { console.log("Recent bout data pulled!"); })
       .fail(function() { console.error("Error pulling configuration data..."); });
