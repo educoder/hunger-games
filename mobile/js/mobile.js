@@ -143,12 +143,19 @@
       if (app.username) {
         app.hideAllRows();
         jQuery('#equalization-screen').removeClass('hidden');
-        populateStaticHarvestEqualization();
+        populateStaticEqualization();
       }
     });
 
     jQuery('#basic-evl-pull').click(function() {
       console.log('Hey, I dont do shit right now');
+    });
+
+
+    // INNER CLICK LISTENERS - DUMP THOSE THAT ARE GOING TO USE BACKBONE VIEWS //
+
+    jQuery('.equalization-squirrels-field').click(function() {
+      console.log('Number of squrrels changed');
     });
 
 
@@ -183,7 +190,10 @@
         el: '#list-screen'
       });
     }
+
   };
+
+
 
 
 
@@ -199,21 +209,23 @@
     return Model.awake.notes.add(noteModel);
   };
 
-  var populateStaticHarvestEqualization = function() {
+  var populateStaticEqualization = function() {
     // ok, are we using Backbone Views?
-    // <div>Quality: <span class="equalization-quality-field"></span></div>
-    // <div>Minutes: <span class="equalization-minutes-field"></span></div>
-    // <div>Foragers: <input class="equalization-foragers-field" type="number" /></div>
-    // <div>Yield (Quality / Foragers): <span class="equalization-yield-field"></span></div>
-    // <div>Harvest (Yield * Minutes): <span class="equalization-harvest-field"></span></div>
-    // <div>Squirrel minutes (Foragers * Minutes): <span class="equalization-squirrel-minutes-field"></span></div>
+                // <div>Quality: <span class="equalization-quality-field"></span></div>
+                // <div>Number of squirrels: <input class="equalization-squirrels-field" type="number" /></div>
+                // <div>Harvest per squirrel: <span class="equalization-yield-field"></span></div>
+                // <div>Patch time all squirrels: <span class="equalization-patch-time-field"></span></div>
 
-    jQuery('.equalization-minutes-field').text(app.configurationData[0].harvest_calculator_bout_length_in_minutes);
+    jQuery('#equalization-minutes-field').text(app.configurationData[0].harvest_calculator_bout_length_in_minutes);
 
     _.each(app.configurationData[0].patches, function(p) {
       jQuery('#equalization-'+p.patch_id+' .equalization-quality-field').text(p.richness_per_minute);
-    })
-  }
+    });
+  };
+
+  var updateEqualization = function() {
+
+  };
 
   //*************** HELPER FUNCTIONS ***************//
 
@@ -231,7 +243,7 @@
         app.stateData = data;
       })
       .done(function() { console.log("State data pulled!"); })
-      .fail(function() { error.log("Error pulling configuration data..."); });
+      .fail(function() { console.error("Error pulling configuration data..."); });
     }
   };
 
@@ -241,7 +253,7 @@
         app.configurationData = data;
       })
       .done(function() { console.log("Configuration data pulled!"); })
-      .fail(function() { error.log("Error pulling configuration data..."); });
+      .fail(function() { console.error("Error pulling configuration data..."); });
     }
   };
 
@@ -264,7 +276,7 @@
         app.RecentBoutData = data;
       })
       .done(function() { console.log("Recent bout data pulled!"); })
-      .fail(function() { error.log("Error pulling configuration data..."); });
+      .fail(function() { console.error("Error pulling configuration data..."); });
     }
   };
 
