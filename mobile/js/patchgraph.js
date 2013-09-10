@@ -37,11 +37,11 @@
               .domain(d3.range(dataset.length))
               .rangeRoundBands([padding, h- padding], 0.1);
 
-  var svg = d3.select("body")
+  var svg = d3.select("#graphs-screen div")
               .append("svg")
               .attr("class", "patchgraph")
               .attr("width", w)
-              .attr("height", h)
+              .attr("height", h);
 
   // var xAxisLabel = d3.scale.ordinal()
   //                 .domain(["Low", "Middle", "High"])
@@ -72,7 +72,7 @@
     .attr("width", 200)
     .attr("height", h -padding*2)
     .attr("fill", "rgba(255,0,0, 0.3")
-    .attr("class", "legendBar")
+    .attr("class", "legendBar");
 
   svg.append("text")
     .text("Starving")
@@ -81,7 +81,7 @@
     .attr("x", padding +100)
     .attr("font-family", "sans-serif")
     .attr("font-size", "14px")
-    .attr("font-weight", "bold")
+    .attr("font-weight", "bold");
 
   svg.append("rect")
     .attr("y", padding)
@@ -89,7 +89,7 @@
     .attr("width", 200)
     .attr("height", h -padding*2)
     .attr("fill", "rgba(0,255,0, 0.3")
-    .attr("class", "legendBar")
+    .attr("class", "legendBar");
 
   svg.append("text")
     .text("Surviving")
@@ -98,7 +98,7 @@
     .attr("x", padding +300)
     .attr("font-family", "sans-serif")
     .attr("font-size", "14px")
-    .attr("font-weight", "bold")
+    .attr("font-weight", "bold");
 
   svg.append("rect")
     .attr("y", padding)
@@ -106,7 +106,7 @@
     .attr("width", 200)
     .attr("height", h -padding*2)
     .attr("fill", "rgba(0,0,255, 0.3")
-    .attr("class", "legendBar")
+    .attr("class", "legendBar");
 
   svg.append("text")
     .text("Prospering")
@@ -115,7 +115,7 @@
     .attr("x", padding +500)
     .attr("font-family", "sans-serif")
     .attr("font-size", "14px")
-    .attr("font-weight", "bold")
+    .attr("font-weight", "bold");
 
   svg.selectAll("rect.bars")
     .data(dataset)
@@ -145,13 +145,8 @@
     })
     .attr("stroke-width", 1)
     .attr("stroke", "rgb(0,0,0)")
-
-  // svg.select(".bars:nth-child(6)")
-  //  .attr("fill", "orange")
-  //  .attr("padding-bottom", 100)
-
     .on("mouseover", function(d){    
-      var yPosition = parseFloat(d3.select(this).attr("y")) + yScale.rangeBand() /2
+      var yPosition = parseFloat(d3.select(this).attr("y")) + yScale.rangeBand() /2;
       var xPosition = parseFloat(d3.select(this).attr("x")) /2 + w /2;
 
       d3.select("#tooltip")
@@ -192,7 +187,7 @@
     .attr("font-family", "sans-serif")
     .attr("font-size", "12px")
     .attr("fill", "white")
-    .attr("class", "name-labels")
+    .attr("class", "name-labels");
 
  
   svg.selectAll("text.values")
@@ -212,24 +207,24 @@
     .attr("font-family", "sans-serif")
     .attr("font-size", "12px")
     .attr("fill", function(d, i){
-      if (i%2 == 0){
-        return "blue"
+      if (i%2 === 0){
+        return "blue";
       } else {
-        return "red"
-      };
+        return "red";
+      }
     })
-    .attr("class", "labels")
+    .attr("class", "labels");
 
 
   d3.select("#yield").on("click", function(){
     // resort the graph data as well
     var sortedData = dataset.sort(function(a, b){
-      return d3.ascending(a.values[0], b.values[0])
+      return d3.ascending(a.values[0], b.values[0]);
     });
 
     svg.selectAll("rect.bars")
       .sort(function(a, b){
-        return d3.ascending(a.values[0], b.values[0])
+        return d3.ascending(a.values[0], b.values[0]);
       })
       .transition()
       .delay(function(d, i){
@@ -237,12 +232,12 @@
       })
       .duration(1000)
       .attr("y", function(d, i) {
-        return yScale(i)
+        return yScale(i);
       });
 
     svg.selectAll(".labels")
       .sort(function(a, b){
-          return d3.ascending(a.values[0], b.values[0])
+          return d3.ascending(a.values[0], b.values[0]);
       })
       .transition()
       .delay(function(d, i){
@@ -263,7 +258,7 @@
   d3.select("#richPatch").on("click", function(){
     svg.selectAll("rect.bars")
       .sort(function(a, b){
-        return d3.ascending(a.values[1], b.values[1])
+        return d3.ascending(a.values[1], b.values[1]);
       })
       .transition()
       .delay(function(d, i){
@@ -271,12 +266,12 @@
       })
       .duration(1000)
       .attr("y", function(d, i) {
-        return yScale(i)
+        return yScale(i);
       });
 
     svg.selectAll(".labels")
       .sort(function(a, b){
-        return d3.ascending(a.values[1], b.values[1])
+        return d3.ascending(a.values[1], b.values[1]);
       })
       .transition()
       .delay(function(d, i){
@@ -292,7 +287,7 @@
 
     // resort the graph data
     var sortedData = dataset.sort(function(a, b){
-      return d3.ascending(a.values[1], b.values[1])
+      return d3.ascending(a.values[1], b.values[1]);
     });
 
     changeYaxis(sortedData, 1);
@@ -301,7 +296,7 @@
   d3.select("#patchMoves").on("click", function(){     
     svg.selectAll("rect.bars")
       .sort(function(a, b){
-        return d3.ascending(a.values[2], b.values[2])
+        return d3.ascending(a.values[2], b.values[2]);
       })
       .transition()
       .delay(function(d, i){
@@ -309,12 +304,12 @@
       })
       .duration(1000)
       .attr("y", function(d, i) {
-        return yScale(i)
+        return yScale(i);
       });
 
     svg.selectAll(".labels")
       .sort(function(a, b){
-          return d3.ascending(a.values[2], b.values[2])
+          return d3.ascending(a.values[2], b.values[2]);
       })
       .transition()
       .delay(function(d, i){
@@ -330,7 +325,7 @@
 
     // resort the graph data
     var sortedData = dataset.sort(function(a, b){
-      return d3.ascending(a.values[2], b.values[2])
+      return d3.ascending(a.values[2], b.values[2]);
     });
 
     changeYaxis(sortedData, 2); 
@@ -339,7 +334,7 @@
   d3.select("#patchCompetition").on("click", function(){
     svg.selectAll("rect.bars")
       .sort(function(a, b){
-        return d3.ascending(a.values[4], b.values[4])
+        return d3.ascending(a.values[4], b.values[4]);
       })
       .transition()
       .delay(function(d, i){
@@ -347,12 +342,12 @@
       })
       .duration(1000)
       .attr("y", function(d, i) {
-        return yScale(i)
+        return yScale(i);
       });
 
     svg.selectAll(".labels")
       .sort(function(a, b){
-       return d3.ascending(a.values[4], b.values[4])
+       return d3.ascending(a.values[4], b.values[4]);
       })
       .transition()
       .delay(function(d, i){
@@ -369,7 +364,7 @@
     // svg.select(".y").call(yAxis);
     // resort the graph data
     var sortedData = dataset.sort(function(a, b){
-      return d3.ascending(a.values[4], b.values[4])
+      return d3.ascending(a.values[4], b.values[4]);
     });
 
     changeYaxis(sortedData, 4);
@@ -390,7 +385,7 @@
   var sortLabelNames = function (dataIndex) {
     svg.selectAll(".name-labels")
       .sort(function(a, b){
-          return d3.ascending(a.values[dataIndex], b.values[dataIndex])
+          return d3.ascending(a.values[dataIndex], b.values[dataIndex]);
       })
       .transition()
       .delay(function(d, i){
@@ -445,6 +440,7 @@
   };
 
   Patchgraph.svg = svg;
-  return this.Patchgraph = Patchgraph;
+
+  this.Patchgraph = Patchgraph;
 
 }).call(this);

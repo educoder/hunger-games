@@ -37,7 +37,7 @@ input {
 }
 
 .view-container {
-	height: 300px;
+	min-height: 300px !important;
 	border: 1px solid;
 	padding: 5px;
 	margin-bottom: 10px;

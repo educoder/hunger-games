@@ -26,7 +26,6 @@
 
     <script type="text/javascript" src="js/mobile.js"></script>
     <script type="text/javascript" src="js/mobile.view.js"></script>
-    <script type="text/javascript" src="js/patchgraph.js"></script>
 
     <!-- Testing out some templating -->
     <script id="list-view-template" type="text/template">
@@ -164,8 +163,28 @@
     <div id="graphs-screen" class="row-fluid">
         <div class="span12 view-container bs-docs-sidebar">
             These are not the droids you are looking for!
+            <div id="tooltip" class="hidden">
+                <p><strong>Student Name: <span id="studentName">Name</span></strong></p>
+                <p><span id="strat">100</span><p/>
+                <img id="graph"></img>
+
+                <button class="boutlink" href="#">Click to see Bout Moves</button>
+
+            </div>
+
+            <div>
+                <button type="button" id="yield">Harvest</button>
+
+                <button type="button" id="richPatch">Richness</button>
+
+                <button type"button" id="patchCompetition">Competition</button>
+
+                <button type"button" id="patchMoves">Moves</button>
+            </div>
         </div>
-    </div>    
+    </div>
+
+    <script type="text/javascript" src="js/patchgraph.js"></script>
 
     <script type="text/javascript">
         jQuery(document).ready(function() {
