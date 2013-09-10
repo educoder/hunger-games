@@ -57,10 +57,10 @@ rect:hover {
     border: solid 1px black;
 }
 
-svg {
-    /*background: #b0e0f8;*/
-    /*float: left;*/
-}
+/*svg {
+    background: #b0e0f8;
+    float: left;
+}*/
 
 .legendBar {
     pointer-events: none;
