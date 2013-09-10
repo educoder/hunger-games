@@ -167,8 +167,8 @@
 
     // INNER CLICK LISTENERS - DUMP THOSE THAT ARE GOING TO USE BACKBONE VIEWS //
 
-    jQuery('.equalization-squirrels-field').click(function() {
-      console.log('Number of squrrels changed');
+    jQuery('.equalization-squirrels-field').change(function(ev) {
+      updateEqualization(ev);
     });
 
 
@@ -224,20 +224,38 @@
 
   var populateStaticEqualization = function() {
     // ok, are we using Backbone Views?
-                // <div>Quality: <span class="equalization-quality-field"></span></div>
-                // <div>Number of squirrels: <input class="equalization-squirrels-field" type="number" /></div>
-                // <div>Harvest per squirrel: <span class="equalization-yield-field"></span></div>
-                // <div>Patch time all squirrels: <span class="equalization-patch-time-field"></span></div>
+    jQuery('#equalization-minutes-field').text(app.configurationData.harvest_calculator_bout_length_in_minutes);
 
-    jQuery('#equalization-minutes-field').text(app.configurationData[0].harvest_calculator_bout_length_in_minutes);
-
-    _.each(app.configurationData[0].patches, function(p) {
-      jQuery('#equalization-'+p.patch_id+' .equalization-quality-field').text(p.richness_per_minute);
+    _.each(app.configurationData.patches, function(p) {
+      jQuery('#equalization-screen .'+p.patch_id+' .equalization-quality-field').text(p.richness_per_minute);
     });
   };
 
-  var updateEqualization = function() {
-
+  var updateEqualization = function(ev) {
+    // (ev.target.parentElement.parentElement).attr('class') gives the patch number of the modified patch
+    var selectedPatch = jQuery(ev.target.parentElement.parentElement).attr('class');
+    var numSq = parseInt(jQuery(ev.target).val());
+    // have we pulled data?
+    if (app.configurationData) {
+      // Harvest per squirrel field
+      _.each(app.configurationData.patches, function(p) {
+        if (p.patch_id === jQuery(ev.target.parentElement.parentElement).attr('class')) {
+          // make sure we don't try to divide by zero (tho JS/Chrome seems to actually handle the gracefully!)
+          if (numSq === 0) {
+            jQuery('.'+selectedPatch+' .equalization-yield-field').text('0');
+          } else {
+            var y = p.richness_per_minute / numSq;
+            jQuery('.'+selectedPatch+' .equalization-yield-field').text(y);            
+          }
+        }
+      });
+      // Patch time all squirrels field
+      var t = app.configurationData.harvest_calculator_bout_length_in_minutes * numSq;
+      jQuery('.'+selectedPatch+' .equalization-patch-time-field').text(t);
+      
+    } else {
+      console.error("Missing configuration data...");
+    }
   };
 
   //*************** HELPER FUNCTIONS ***************//
@@ -263,7 +281,7 @@
   var tryPullConfigurationData = function() {
     if (app.run) {
       jQuery.get(app.UICdrowsy+'/'+DATABASE+'/configuration?selector=%7B%22run_id%22%3A%22'+app.run+'%22%7D', function(data) {
-        app.configurationData = data;
+        app.configurationData = data[0];
       })
       .done(function() { console.log("Configuration data pulled!"); })
       .fail(function() { console.error("Error pulling configuration data..."); });
