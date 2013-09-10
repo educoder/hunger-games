@@ -8,22 +8,25 @@
     <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
     <link href="css/mobile.css" rel="stylesheet">
     <link href="css/jquery.toastmessage.css" rel="stylesheet">
+    <link href="css/patchgraph.css" rel="stylesheet">
 
-    <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
-    <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.js"></script>
-    <script src="../node_modules/underscore/underscore.js"></script>
-    <script src="../node_modules/backbone/backbone.js"></script>
-    <script src="../node_modules/backbone.drowsy/backbone.drowsy.js"></script>
-    <script src="../node_modules/backbone.drowsy/wakeful.js"></script>
-    <script src="js/jquery.toastmessage.js"></script>
+    <script type="text/javascript" src="../shared/js/libs/d3.v3.min.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.js"></script>
+    <script type="text/javascript" src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.js"></script>
+    <script type="text/javascript" src="../node_modules/underscore/underscore.js"></script>
+    <script type="text/javascript" src="../node_modules/backbone/backbone.js"></script>
+    <script type="text/javascript" src="../node_modules/backbone.drowsy/backbone.drowsy.js"></script>
+    <script type="text/javascript" src="../node_modules/backbone.drowsy/wakeful.js"></script>
+    <script type="text/javascript" src="js/jquery.toastmessage.js"></script>
     
-    <script src="../shared/js/libs/jquery.cookie.js"></script>
-    <script src="../shared/js/hunger-games.js"></script>
-    <script src="../shared/js/model.js"></script>
-    <script src="../shared/js/rollcall.js"></script>
+    <script type="text/javascript" src="../shared/js/libs/jquery.cookie.js"></script>
+    <script type="text/javascript" src="../shared/js/hunger-games.js"></script>
+    <script type="text/javascript" src="../shared/js/model.js"></script>
+    <script type="text/javascript" src="../shared/js/rollcall.js"></script>
 
-    <script src="js/mobile.js"></script>
-    <script src="js/mobile.view.js"></script>
+    <script type="text/javascript" src="js/mobile.js"></script>
+    <script type="text/javascript" src="js/mobile.view.js"></script>
+    <script type="text/javascript" src="js/patchgraph.js"></script>
 
     <!-- Testing out some templating -->
     <script id="list-view-template" type="text/template">
@@ -53,8 +56,7 @@
                         <li class="active home"><a href="#">Home</a></li>
                         <li class="active refresh-button"><a href="#">Refresh</a></li>
                         <li class="active equalization-button"><a href="#">Equalization</a></li>
-
-                        
+                        <li class="active graphs-button"><a href="#">Graphs</a></li>
                     </ul>
                     <form class="navbar-form pull-right">
                         <!-- Default behaviour of a input field in a form is to submit the form and reload
@@ -156,6 +158,12 @@
                 <div>Harvest per squirrel: <span class="equalization-yield-field"></span></div>
                 <div>Patch time all squirrels: <span class="equalization-patch-time-field"></span></div>
             </div>            
+        </div>
+    </div> 
+
+    <div id="graphs-screen" class="row-fluid">
+        <div class="span12 view-container bs-docs-sidebar">
+            These are not the droids you are looking for!
         </div>
     </div>    
 
