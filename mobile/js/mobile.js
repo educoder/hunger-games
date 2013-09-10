@@ -132,7 +132,7 @@
     jQuery('.refresh-button').click(function() {
       jQuery().toastmessage('showNoticeToast', "Refreshing...");
       tryPullAll();
-    })
+    });
 
     // Show harvest planning tool
     jQuery('.equalization-button').click(function() {
@@ -230,7 +230,8 @@
   var updateEqualization = function(ev) {
     // (ev.target.parentElement.parentElement).attr('class') gives the patch number of the modified patch
     var selectedPatch = jQuery(ev.target.parentElement.parentElement).attr('class');
-    var numSq = parseInt(jQuery(ev.target).val());
+    // cast it to a base-10 int, cause we love Crockford
+    var numSq = parseInt(jQuery(ev.target).val(), 10);
     // have we pulled data?
     if (app.configurationData) {
       // Harvest per squirrel field
@@ -248,6 +249,16 @@
       // Patch time all squirrels field
       var t = app.configurationData.harvest_calculator_bout_length_in_minutes * numSq;
       jQuery('.'+selectedPatch+' .equalization-patch-time-field').text(t);
+
+      // Squirrels assigned field
+      var totalSq = 0;
+      jQuery('.equalization-squirrels-field').each(function(f) {
+        var sCount = parseInt(jQuery(this).val(), 10);
+        if (sCount) {
+          totalSq += parseInt(jQuery(this).val(), 10);
+        }
+      });
+      jQuery('#squirrels-assigned').text(totalSq);
       
     } else {
       console.error("Missing configuration data...");
