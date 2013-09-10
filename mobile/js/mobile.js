@@ -147,6 +147,19 @@
       }
     });
 
+    // Show harvest planning tool
+    jQuery('.graphs-button').click(function() {
+      if (app.username) {
+        app.hideAllRows();
+        jQuery('#graphs-screen').removeClass('hidden');
+        // populateStaticHarvestEqualization();
+      } else {
+        alert ("Show a nicer popup and hide everything until logged in");
+        console.log('User not logged in so show nothing and prompt for user');
+        app.hideAllRows();
+      }
+    });
+
     jQuery('#basic-evl-pull').click(function() {
       console.log('Hey, I dont do shit right now');
     });
