@@ -28,19 +28,12 @@ module.exports = function(grunt) {
           'adjoining-classes': false,
           'import': false
         },
-        src: ['mobile/css/mobile.css', 'smartboard/css/*.css']
+        src: ['mobile/css/mobile.css']
       }
     },
     jsonlint: {
       dev: {
         src: ['./*.json' ]
-      }
-    },
-    sass: {
-      compile: {
-        files: {
-          'smartboard/css/smartboard.css': 'smartboard/css/scss/wall.scss'
-        }
       }
     },
     watch: {
@@ -62,7 +55,7 @@ module.exports = function(grunt) {
 
   // Default task(s).
   // grunt.registerTask('default', ['uglify']);
-  grunt.registerTask('default', ['jshint', 'sass', 'csslint', 'jsonlint']);
+  grunt.registerTask('default', ['jshint', 'csslint', 'jsonlint']);
   grunt.registerTask('lint', ['jshint', 'csslint', 'jsonlint']);
   grunt.registerTask('compile', ['sass']);
 
