@@ -13,7 +13,7 @@
   var yAxisLabelNames;
   var xAxisLabel;
   var xAxis;
-  var yAxis
+  var yAxis;
 
   //                                    yield, avg? patch ritchness, patch moves?, strategy note, patch competition
   // var dataset = [ {name: "Bob", values: [500, 2.5, 2, "My Strategy was lorum ipsum dolum", 0] },
@@ -406,7 +406,7 @@
       .attr("transform", "translate(" + padding + ",0)")
       .call(yAxis);
 
-  }
+  };
 
   var sortLabelNames = function (dataIndex) {
     svg.selectAll(".name-labels")
