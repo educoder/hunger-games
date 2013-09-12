@@ -3,7 +3,7 @@
 
 (function() {
   "use strict";
-  var HG = this.HG || {};                     // TODO: refactor this to Hunger? HungerGames?
+  var HG = this.HG || {};
   this.HG.Mobile = this.HG.Mobile || {};
   var Model = this.HG.Model;
   var app = this.HG.Mobile;
@@ -40,6 +40,11 @@
   app.inputView = null;
   app.listView = null;
 
+  // for use with the RecentBoutData
+  app.userLocations = [];
+  app.userMove = 0;
+  app.patchPopulations = null;
+
   app.keyCount = 0;
   app.autoSaveTimer = window.setTimeout(function() { console.log("timer activated"); } ,10);
 
@@ -58,12 +63,11 @@
     // TODO: should ask at startup
     DATABASE = "hunger-games-fall-13";
 
-    // TODO: where is this coming from? Also abstract to it's own function.
-    app.run = "period-1";         
+    // TODO: where are these coming from?
+    app.run = "period-1";
 
     // grab the configuration data
-    tryPullConfigurationData();           // TODO: does this need a callback or a promise? TODO: switch to tryPullAll();
-    tryPullRecentBoutData();
+    tryPullAll();
 
 
     // // TODO: should ask at startup
@@ -143,7 +147,16 @@
       }
     });
 
-    // Show harvest planning tool
+    // Show move tracker screen
+    jQuery('.move-tracker-button').click(function() {
+      if (app.username) {
+        app.hideAllRows();
+        jQuery('#move-tracker-screen').removeClass('hidden');
+        populateMoveTracker("1623257");
+      }
+    });
+
+    // Show 
     jQuery('.graphs-button').click(function() {
       if (app.username) {
         app.hideAllRows();
@@ -167,6 +180,21 @@
       updateEqualization(ev);
     });
 
+    jQuery('#move-forward').click(function() {
+      updateMoveTracker("next");
+    });
+    jQuery('#move-backward').click(function() {
+      updateMoveTracker("previous");
+    });
+
+
+    // TEMP LISTENERS (FOR TESTING) //
+    jQuery('.select-tag-1623972').click(function() {
+      populateMoveTracker("1623972");
+    });
+    jQuery('.select-tag-1623257').click(function() {
+      populateMoveTracker("1623257");
+    });
 
 
     /* MISC */
@@ -239,10 +267,10 @@
         if (p.patch_id === jQuery(ev.target.parentElement.parentElement).attr('class')) {
           // make sure we don't try to divide by zero (tho JS/Chrome seems to actually handle the gracefully!)
           if (numSq === 0) {
-            jQuery('.'+selectedPatch+' .equalization-yield-field').text('0');
+            jQuery('.'+selectedPatch+' .equalization-harvest-field').text('0');
           } else {
             var y = p.richness_per_minute / numSq;
-            jQuery('.'+selectedPatch+' .equalization-yield-field').text(y);            
+            jQuery('.'+selectedPatch+' .equalization-harvest-field').text(y);            
           }
         }
       });
@@ -265,11 +293,117 @@
     }
   };
 
+  var populateMoveTracker = function(rfidTag) {
+    _.each(app.configurationData.patches, function(p) {
+      jQuery('#move-tracker-screen .'+p.patch_id+' .move-tracker-quality-field').text(p.richness_per_minute);
+    });
+
+    _.each(app.recentBoutData, function(e) {
+      if (e.event === "rfid_update" && e.payload.arrivals[0] === rfidTag) {
+        console.log(rfidTag + " has arrived " + e.destination + " at " + idToTimestamp(e._id.$oid));
+        app.userLocations.push({"timestamp":idToTimestamp(e._id.$oid), "location":e.destination});
+      }
+      // if (e.event === "rfid_update" && e.payload.departures[0] === rfidTag) {
+      //   console.log(rfidTag + " has departed " + e.destination + " at " + idToTimestamp(e._id.$oid));
+      // }
+    });
+
+    updateMoveTracker("first");
+
+    // app.userLocations = [
+    //     {
+    //         "timestamp": "5262672",
+    //         "location": "patch_1"
+    //     },
+    //     {
+    //         "timestamp": "5268672",
+    //         "location":"patch_2"
+    //     },
+    //     {
+    //         "timestamp": "5273672",
+    //         "location":"patch_5"
+    //     }
+    // ];
+
+  };
+
+  var updateMoveTracker = function(move) {
+    if (move === "first") {
+      app.userMove = 1;
+    } else if (move === "next") {
+      if (app.userMove < app.userLocations.length) {
+        app.userMove++;  
+      }
+    } else if (move === "previous") {
+      if (app.userMove > 1) {
+        app.userMove--;
+      }
+    } else {
+      console.error("Unknown move type");
+    }
+
+    jQuery("#move-number").text(app.userMove);
+    
+    // clear all locations
+    
+
+    if (app.userLocations[app.userMove]) {
+      jQuery('#move-tracker-screen .move-tracker-location-field').text('');
+      if (app.userMove > 1) {
+        jQuery('#move-tracker-screen .'+app.userLocations[app.userMove-2].location.substring(3)+' .move-tracker-location-field').text("Previous");  
+      }
+      if (app.userMove > 0) {
+        jQuery('#move-tracker-screen .'+app.userLocations[app.userMove-1].location.substring(3)+' .move-tracker-location-field').text("Current");
+      }
+      jQuery('#move-tracker-screen .'+app.userLocations[app.userMove].location.substring(3)+' .move-tracker-location-field').text("Next");  
+    }
+
+
+  }
+
+  var sortRecentBoutData = function() {
+    // manipulate the recentBoutData so that it is actually useful to us
+    //
+    // 7.x array (how many users on any patch) - better as an object!:
+    // time_stamp | patch_1 | patch_2 | patch_3 | patch_4 | patch_5 | patch_6
+    // 5262672    |    3    |    1    |    2    |    1    |    6    |    3
+    // 5263672    |    2    |    1    |    3    |    1    |    6    |    3
+    //
+    // 2.x array (where for user_1):
+    // time_stamp | location
+    // 5262672    |  1
+    // 5264672    |  3
+
+    app.patchPopulations = {
+        "5262672": {
+            "patch_1": 3,
+            "patch_2": 1,
+            "patch_3": 5,
+            "patch_4": 0,
+            "patch_5": 1,
+            "patch_6": 2
+        },
+        "5263672": {
+            "patch_1": 4,
+            "patch_2": 1,
+            "patch_3": 4,
+            "patch_4": 0,
+            "patch_5": 1,
+            "patch_6": 2
+        }
+    };
+
+
+    
+
+    // idToTimestamp();
+  };
+
   //*************** HELPER FUNCTIONS ***************//
 
   var tryPullAll = function() {
-    // CAREFUL: this may need promises!
-    tryPullStateData();
+    // CAREFUL: this may need promises once state is introduced!
+    //tryPullStateData();
     tryPullConfigurationData();
     tryPullStatisticsData();
     tryPullRecentBoutData();
@@ -312,12 +446,23 @@
     if (app.run) {
       jQuery.get(app.UICdrowsy+'/'+DATABASE+'/log-test', function(data) {
         app.recentBoutData = data;
+        sortRecentBoutData();
       })
       .done(function() { console.log("Recent bout data pulled!"); })
       .fail(function() { console.error("Error pulling configuration data..."); });
     }
   };
 
+
+
+
+  var idToTimestamp = function(id) {
+    var timestamp = id.substring(0,8);
+    var seconds = parseInt(timestamp, 16);
+    return seconds;
+    // date = new Date( parseInt(timestamp, 16) * 1000 );
+    // return date;
+  };
 
   //*************** LOGIN FUNCTIONS ***************//
 

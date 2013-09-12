@@ -55,6 +55,7 @@
                         <li class="active home"><a href="#">Home</a></li>
                         <li class="active refresh-button"><a href="#">Refresh</a></li>
                         <li class="active equalization-button"><a href="#">Equalization</a></li>
+                        <li class="active move-tracker-button"><a href="#">Move tracker</a></li>
                         <li class="active graphs-button"><a href="#">Graphs</a></li>
                     </ul>
                     <form class="navbar-form pull-right">
@@ -145,94 +146,107 @@
             <div class="patch-1">
                 <div>Quality: <span class="equalization-quality-field"></span></div>
                 <div>Number of squirrels: <input class="equalization-squirrels-field" value=0 min=0 type="number" /></div>
-                <div>Harvest per squirrel: <span class="equalization-yield-field"></span></div>
+                <div>Harvest per squirrel: <span class="equalization-harvest-field"></span></div>
                 <div>Patch time all squirrels: <span class="equalization-patch-time-field"></span></div>
             </div>
             <br />
             <div class="patch-2">
                 <div>Quality: <span class="equalization-quality-field"></span></div>
                 <div>Number of squirrels: <input class="equalization-squirrels-field" value=0 min=0 type="number" /></div>
-                <div>Harvest per squirrel: <span class="equalization-yield-field"></span></div>
+                <div>Harvest per squirrel: <span class="equalization-harvest-field"></span></div>
                 <div>Patch time all squirrels: <span class="equalization-patch-time-field"></span></div>
             </div>
             <br />
             <div class="patch-3">
                 <div>Quality: <span class="equalization-quality-field"></span></div>
                 <div>Number of squirrels: <input class="equalization-squirrels-field" value=0 min=0 type="number" /></div>
-                <div>Harvest per squirrel: <span class="equalization-yield-field"></span></div>
+                <div>Harvest per squirrel: <span class="equalization-harvest-field"></span></div>
                 <div>Patch time all squirrels: <span class="equalization-patch-time-field"></span></div>
             </div>
             <br />
             <div class="patch-4">
                 <div>Quality: <span class="equalization-quality-field"></span></div>
                 <div>Number of squirrels: <input class="equalization-squirrels-field" value=0 min=0 type="number" /></div>
-                <div>Harvest per squirrel: <span class="equalization-yield-field"></span></div>
+                <div>Harvest per squirrel: <span class="equalization-harvest-field"></span></div>
                 <div>Patch time all squirrels: <span class="equalization-patch-time-field"></span></div>
             </div>
             <br />
             <div class="patch-5">
                 <div>Quality: <span class="equalization-quality-field"></span></div>
                 <div>Number of squirrels: <input class="equalization-squirrels-field" value=0 min=0 type="number" /></div>
-                <div>Harvest per squirrel: <span class="equalization-yield-field"></span></div>
+                <div>Harvest per squirrel: <span class="equalization-harvest-field"></span></div>
                 <div>Patch time all squirrels: <span class="equalization-patch-time-field"></span></div>
             </div>
             <br />
             <div class="patch-6">
                 <div>Quality: <span class="equalization-quality-field"></span></div>
                 <div>Number of squirrels: <input class="equalization-squirrels-field" value=0 min=0 type="number" /></div>
-                <div>Harvest per squirrel: <span class="equalization-yield-field"></span></div>
+                <div>Harvest per squirrel: <span class="equalization-harvest-field"></span></div>
                 <div>Patch time all squirrels: <span class="equalization-patch-time-field"></span></div>
             </div>
         </div>
     </div>
 
-    <div id="bout-tracker-screen" class="row-fluid">
+    <div id="move-tracker-screen" class="row-fluid">
         <div class="span12 view-container bs-docs-sidebar">
-            <div id="bout-tracker-title">Bout Move Tracker</div>
+            <div id="move-tracker-title">Move Tracker</div>
             <br />
-            <div>Bout <span id="move-number"></span> moves</div>
+            <div>Bout <span class="bout-number"></span> moves</div>
+            <div>Move <span id="move-number"></span></div>
             <br />
             <div class="patch-1">
-                <div>Quality: <span class="equalization-quality-field"></span></div>
-                <div>Number of squirrels: <input class="equalization-squirrels-field" value=0 min=0 type="number" /></div>
-                <div>Harvest per squirrel: <span class="equalization-yield-field"></span></div>
-                <div>Patch time all squirrels: <span class="equalization-patch-time-field"></span></div>
+                <div>Quality: <span class="move-tracker-quality-field"></span></div>
+                <div>Number of squirrels: <span class="move-tracker-squirrels-field"></span></div>
+                <div>Harvest per squirrel: <span class="move-tracker-yield-field"></span></div>
+                <div>New harvest per squirrel: <span class="move-tracker-new-yield-field"></span></div>
+                <div>Location: <span class="move-tracker-location-field"></span></div>
             </div>
             <br />
             <div class="patch-2">
-                <div>Quality: <span class="equalization-quality-field"></span></div>
-                <div>Number of squirrels: <input class="equalization-squirrels-field" value=0 min=0 type="number" /></div>
-                <div>Harvest per squirrel: <span class="equalization-yield-field"></span></div>
-                <div>Patch time all squirrels: <span class="equalization-patch-time-field"></span></div>
+                <div>Quality: <span class="move-tracker-quality-field"></span></div>
+                <div>Number of squirrels: <span class="move-tracker-squirrels-field"></span></div>
+                <div>Harvest per squirrel: <span class="move-tracker-yield-field"></span></div>
+                <div>New harvest per squirrel: <span class="move-tracker-new-yield-field"></span></div>
+                <div>Location: <span class="move-tracker-location-field"></span></div>
             </div>
             <br />
             <div class="patch-3">
-                <div>Quality: <span class="equalization-quality-field"></span></div>
-                <div>Number of squirrels: <input class="equalization-squirrels-field" value=0 min=0 type="number" /></div>
-                <div>Harvest per squirrel: <span class="equalization-yield-field"></span></div>
-                <div>Patch time all squirrels: <span class="equalization-patch-time-field"></span></div>
+                <div>Quality: <span class="move-tracker-quality-field"></span></div>
+                <div>Number of squirrels: <span class="move-tracker-squirrels-field"></span></div>
+                <div>Harvest per squirrel: <span class="move-tracker-yield-field"></span></div>
+                <div>New harvest per squirrel: <span class="move-tracker-new-yield-field"></span></div>
+                <div>Location: <span class="move-tracker-location-field"></span></div>
             </div>
             <br />
             <div class="patch-4">
-                <div>Quality: <span class="equalization-quality-field"></span></div>
-                <div>Number of squirrels: <input class="equalization-squirrels-field" value=0 min=0 type="number" /></div>
-                <div>Harvest per squirrel: <span class="equalization-yield-field"></span></div>
-                <div>Patch time all squirrels: <span class="equalization-patch-time-field"></span></div>
+                <div>Quality: <span class="move-tracker-quality-field"></span></div>
+                <div>Number of squirrels: <span class="move-tracker-squirrels-field"></span></div>
+                <div>Harvest per squirrel: <span class="move-tracker-yield-field"></span></div>
+                <div>New harvest per squirrel: <span class="move-tracker-new-yield-field"></span></div>
+                <div>Location: <span class="move-tracker-location-field"></span></div>
             </div>
             <br />
             <div class="patch-5">
-                <div>Quality: <span class="equalization-quality-field"></span></div>
-                <div>Number of squirrels: <input class="equalization-squirrels-field" value=0 min=0 type="number" /></div>
-                <div>Harvest per squirrel: <span class="equalization-yield-field"></span></div>
-                <div>Patch time all squirrels: <span class="equalization-patch-time-field"></span></div>
+                <div>Quality: <span class="move-tracker-quality-field"></span></div>
+                <div>Number of squirrels: <span class="move-tracker-squirrels-field"></span></div>
+                <div>Harvest per squirrel: <span class="move-tracker-yield-field"></span></div>
+                <div>New harvest per squirrel: <span class="move-tracker-new-yield-field"></span></div>
+                <div>Location: <span class="move-tracker-location-field"></span></div>
             </div>
             <br />
             <div class="patch-6">
-                <div>Quality: <span class="equalization-quality-field"></span></div>
-                <div>Number of squirrels: <input class="equalization-squirrels-field" value=0 min=0 type="number" /></div>
-                <div>Harvest per squirrel: <span class="equalization-yield-field"></span></div>
-                <div>Patch time all squirrels: <span class="equalization-patch-time-field"></span></div>
+                <div>Quality: <span class="move-tracker-quality-field"></span></div>
+                <div>Number of squirrels: <span class="move-tracker-squirrels-field"></span></div>
+                <div>Harvest per squirrel: <span class="move-tracker-yield-field"></span></div>
+                <div>New harvest per squirrel: <span class="move-tracker-new-yield-field"></span></div>
+                <div>Location: <span class="move-tracker-location-field"></span></div>
             </div>
+            <br />
+            
+            <button id="move-backward">Move backward</button>
+            <button id="move-forward">Move forward</button>
+            <button class="select-tag-1623972">Select user 1623972</button>
+            <button class="select-tag-1623257">Select user 1623257</button>
         </div>
     </div>
 
