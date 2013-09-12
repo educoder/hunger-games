@@ -2,6 +2,7 @@
 (function() {
   "use strict";
   var Patchgraph = this.Patchgraph || {};
+  var HG = this.HG || {};                     // TODO: refactor this to Hunger? HungerGames?
 
   var w = 650;
   var h = 600;
@@ -38,6 +39,12 @@
 
 
   Patchgraph.init = function () {
+    fetchDataSet();
+    return true;
+  };
+
+  Patchgraph.refresh = function () {
+    d3.select(".patchgraph").remove();
     fetchDataSet();
     return true;
   };
@@ -475,6 +482,6 @@
 
   Patchgraph.svg = svg;
 
-  this.Patchgraph = Patchgraph;
+  HG.Patchgraph = Patchgraph;
 
 }).call(this);

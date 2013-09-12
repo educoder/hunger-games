@@ -24,9 +24,9 @@
     <script type="text/javascript" src="js/model.js"></script>
     <script type="text/javascript" src="js/rollcall.js"></script>
 
+    <script type="text/javascript" src="js/patchgraph.js"></script>
     <script type="text/javascript" src="js/mobile.js"></script>
     <script type="text/javascript" src="js/mobile.view.js"></script>
-    <script type="text/javascript" src="js/patchgraph.js"></script>
 
     <!-- Testing out some templating -->
     <script id="list-view-template" type="text/template">
@@ -195,7 +195,10 @@
 
     <div id="graphs-screen" class="row-fluid">
         <div class="span12 view-container bs-docs-sidebar">
-            These are not the droids you are looking for!
+            <button type="button" class="btn btn-success" id="refresh-graph">Refresh</button>
+            <p>
+                These are not the droids you are looking for!
+            </p>
             <div id="tooltip" class="hidden">
                 <p><strong>Student Name: <span id="studentName">Name</span></strong></p>
                 <p><span id="strat">100</span><p/>
@@ -222,7 +225,7 @@
     <script type="text/javascript">
         jQuery(document).ready(function() {
           HG.Mobile.init();
-          Patchgraph.init();
+          HG.Patchgraph.init();
         }); 
     </script>
 </body>
