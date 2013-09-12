@@ -169,6 +169,12 @@
       }
     });
 
+    // Click listener for graph refresh button
+    jQuery('#refresh-graph').click(function () {
+      console.log('Refresh the harvest planning graph on user request');
+      HG.Patchgraph.refresh();
+    });
+
     jQuery('#basic-evl-pull').click(function() {
       console.log('Hey, I dont do shit right now');
     });
