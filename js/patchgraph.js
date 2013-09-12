@@ -36,25 +36,33 @@
   //                 {name: "Paulo", values: [175, 2.5, 7, "My Strategy was lorum ipsum dolum", 17], "color": {"r": 255, "g": 255, "b": 0}},
   //             ];
 
+
+  Patchgraph.init = function () {
+    fetchDataSet();
+    return true;
+  };
+
   /*
   * Replaced static data by loading this data via Ajax from local file system.
   * Once Chicago is ready we pull data from their URL, transform the data so it
-  * looks like dataset and then call init.
+  * looks like dataset and then call draw.
   */
-  var jqXHR = jQuery.ajax("../test-data.json")
-    .done(function(data){
-       console.log('successfully fetched patchgraph data');
-       dataset = data;
-       Patchgraph.init();
-    })
-    .fail(function(error) {
-      console.error('Ajax request failed with status code: '+jqXHR.status);
-    });
+  var fetchDataSet = function () { 
+    var jqXHR = jQuery.ajax('http://ltg.evl.uic.edu:9292/hunger-games-fall-13/statistics?selector=%7B%22run_id%22%3A%22period-1%22,%22bout_id%22%3A%222%22%7D')
+      .done(function(data){
+         console.log('successfully fetched patchgraph data');
+         dataset = _.first(data).user_stats;
+         draw();
+      })
+      .fail(function(error) {
+        console.error('Ajax request failed with status code: '+jqXHR.status);
+      });
+  };
 
-  Patchgraph.init = function () {
+  var draw = function () {
     xScale = d3.scale.linear()
                 .domain([0, d3.max(dataset, function(d){
-                        return d.values[0]; })])
+                        return d.total_calories; })])
                 .range([padding, w - (padding*2)]);
 
     yScale = d3.scale.ordinal()
@@ -78,7 +86,7 @@
 
     xAxisLabel = d3.scale.linear()
                     .domain([0, d3.max(dataset, function(d){
-                        return d.values[0]; })])
+                        return d.total_calories; })])
                     .range([padding, w -padding]);
 
     xAxis = d3.svg.axis()
@@ -151,7 +159,7 @@
           return yScale(i);
       })
       .attr("width", function(d) {
-          return xScale(d.values[0]);
+          return xScale(d.total_calories);
       })
       .attr("height", yScale.rangeBand())
       .attr("fill", function(d) {
@@ -177,7 +185,7 @@
             .style("left", "660px")
             .style("top", "140px")
             .select("#strat")
-            .text(d.values[3]);
+            .text(d.avg_richness);
             
         d3.select("#tooltip")
             .select("#graph")
@@ -219,14 +227,14 @@
       .enter()
       .append("text")
       .text(function(d) {
-          return d.values[0];
+          return d.total_calories;
       })
       .attr("text-anchor", "middle")
       .attr("y", function(d, i) {
         return yScale(i) + yScale.rangeBand() /2 +4;
       })
       .attr("x", function(d) {
-        return xScale(d.values[0]) +65;
+        return xScale(d.total_calories) +65;
       })
       .attr("font-family", "sans-serif")
       .attr("font-size", "12px")
@@ -243,12 +251,12 @@
     d3.select("#yield").on("click", function(){
       // resort the graph data as well
       var sortedData = dataset.sort(function(a, b){
-        return d3.ascending(a.values[0], b.values[0]);
+        return d3.ascending(a.total_calories, b.total_calories);
       });
 
       svg.selectAll("rect.bars")
         .sort(function(a, b){
-          return d3.ascending(a.values[0], b.values[0]);
+          return d3.ascending(a.total_calories, b.total_calories);
         })
         .transition()
         .delay(function(d, i){
@@ -261,7 +269,7 @@
 
       svg.selectAll(".labels")
         .sort(function(a, b){
-            return d3.ascending(a.values[0], b.values[0]);
+            return d3.ascending(a.total_calories, b.total_calories);
         })
         .transition()
         .delay(function(d, i){
@@ -273,16 +281,16 @@
           return yScale(i) +yScale.rangeBand() /2 +4;
         });
 
-      sortLabelNames(0);
+      sortLabelNames('total_calories');
 
       // changeGraph(sortedData);
-      changeYaxis(sortedData, 0);
+      changeYaxis(sortedData, 'total_calories');
     });
 
     d3.select("#richPatch").on("click", function(){
       svg.selectAll("rect.bars")
         .sort(function(a, b){
-          return d3.ascending(a.values[1], b.values[1]);
+          return d3.ascending(a.avg_richness, b.avg_richness);
         })
         .transition()
         .delay(function(d, i){
@@ -295,7 +303,7 @@
 
       svg.selectAll(".labels")
         .sort(function(a, b){
-          return d3.ascending(a.values[1], b.values[1]);
+          return d3.ascending(a.avg_richness, b.avg_richness);
         })
         .transition()
         .delay(function(d, i){
@@ -307,20 +315,20 @@
           return yScale(i) +yScale.rangeBand() /2 +4;
       });
 
-      sortLabelNames(1);
+      sortLabelNames('avg_richness');
 
       // resort the graph data
       var sortedData = dataset.sort(function(a, b){
-        return d3.ascending(a.values[1], b.values[1]);
+        return d3.ascending(a.avg_richness, b.avg_richness);
       });
 
-      changeYaxis(sortedData, 1);
+      changeYaxis(sortedData, 'avg_richness');
     });
 
     d3.select("#patchMoves").on("click", function(){     
       svg.selectAll("rect.bars")
         .sort(function(a, b){
-          return d3.ascending(a.values[2], b.values[2]);
+          return d3.ascending(a.total_moves, b.total_moves);
         })
         .transition()
         .delay(function(d, i){
@@ -333,7 +341,7 @@
 
       svg.selectAll(".labels")
         .sort(function(a, b){
-            return d3.ascending(a.values[2], b.values[2]);
+            return d3.ascending(a.total_moves, b.total_moves);
         })
         .transition()
         .delay(function(d, i){
@@ -345,20 +353,20 @@
           return yScale(i) +yScale.rangeBand() /2 +4;
       });
 
-      sortLabelNames(2);
+      sortLabelNames('total_moves');
 
       // resort the graph data
       var sortedData = dataset.sort(function(a, b){
-        return d3.ascending(a.values[2], b.values[2]);
+        return d3.ascending(a.total_moves, b.total_moves);
       });
 
-      changeYaxis(sortedData, 2); 
+      changeYaxis(sortedData, 'total_moves'); 
     });
 
     d3.select("#patchCompetition").on("click", function(){
       svg.selectAll("rect.bars")
         .sort(function(a, b){
-          return d3.ascending(a.values[4], b.values[4]);
+          return d3.ascending(a.avg_competition, b.avg_competition);
         })
         .transition()
         .delay(function(d, i){
@@ -371,7 +379,7 @@
 
       svg.selectAll(".labels")
         .sort(function(a, b){
-         return d3.ascending(a.values[4], b.values[4]);
+         return d3.ascending(a.avg_competition, b.avg_competition);
         })
         .transition()
         .delay(function(d, i){
@@ -383,15 +391,15 @@
          return yScale(i) +yScale.rangeBand() /2 +4;
       });
 
-      sortLabelNames(4);
+      sortLabelNames('avg_competition');
 
       // svg.select(".y").call(yAxis);
       // resort the graph data
       var sortedData = dataset.sort(function(a, b){
-        return d3.ascending(a.values[4], b.values[4]);
+        return d3.ascending(a.avg_competition, b.avg_competition);
       });
 
-      changeYaxis(sortedData, 4);
+      changeYaxis(sortedData, 'avg_competition');
     });
 
     //Create Y axis
@@ -408,10 +416,10 @@
 
   };
 
-  var sortLabelNames = function (dataIndex) {
+  var sortLabelNames = function (dataField) {
     svg.selectAll(".name-labels")
       .sort(function(a, b){
-          return d3.ascending(a.values[dataIndex], b.values[dataIndex]);
+          return d3.ascending(a[dataField], b[dataField]);
       })
       .transition()
       .delay(function(d, i){
@@ -447,10 +455,10 @@
      it will show the names of each student. However I am showing the data range we
      sorted with. This doesn't work quit yet and I might need some help to figure
      this out */
-  var changeYaxis = function (sortedData, dataIndex) {
+  var changeYaxis = function (sortedData, dataField) {
     var yAxisLabel = d3.scale.ordinal()
       .domain(sortedData.map(function(d){
-          return d.values[dataIndex];
+          return d[dataField];
       }))
       .rangeRoundBands([padding, h - padding], 0.05);
 
