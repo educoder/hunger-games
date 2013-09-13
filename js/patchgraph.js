@@ -10,7 +10,7 @@
   var xScale;
   var yScale;
   var svg;
-  var dataset = [];
+  var statistics_data = [];
   var yAxisLabelNames;
   var xAxisLabel;
   var xAxis;
@@ -39,14 +39,33 @@
 
 
   Patchgraph.init = function () {
-    fetchDataSet();
-    return true;
+    fetchDataSet().done(function(data){
+      console.log('successfully fetched patchgraph data');
+      updateBoutPicker(data);
+
+      draw(_.first(data).user_stats);
+      statistics_data = data;
+    });
   };
 
   Patchgraph.refresh = function () {
     d3.select(".patchgraph").remove();
-    fetchDataSet();
-    return true;
+    fetchDataSet().done(function(data){
+      console.log('successfully fetched patchgraph data');
+      updateBoutPicker(data);
+
+      draw(_.first(data).user_stats);
+      statistics_data = data;
+    });
+  };
+
+  Patchgraph.showGraphForBout = function(bout) {
+    d3.select(".patchgraph").remove();
+    var bout_data = _.find(statistics_data, function (d) {
+      return parseInt(d.bout_id, 10) === parseInt(bout, 10);
+    });
+
+    draw(bout_data.user_stats);
   };
 
   /*
@@ -55,18 +74,29 @@
   * looks like dataset and then call draw.
   */
   var fetchDataSet = function () { 
-    var jqXHR = jQuery.ajax('http://ltg.evl.uic.edu:9292/hunger-games-fall-13/statistics?selector=%7B%22run_id%22%3A%22period-1%22,%22bout_id%22%3A%222%22%7D')
-      .done(function(data){
-         console.log('successfully fetched patchgraph data');
-         dataset = _.first(data).user_stats;
-         draw();
-      })
-      .fail(function(error) {
-        console.error('Ajax request failed with status code: '+jqXHR.status);
-      });
+    var promise = jQuery.ajax('http://ltg.evl.uic.edu:9292/hunger-games-fall-13/statistics?selector=%7B%22run_id%22%3A%22period-1%22%7D');
+    return promise;
+    // var jqXHR = jQuery.ajax('http://ltg.evl.uic.edu:9292/hunger-games-fall-13/statistics?selector=%7B%22run_id%22%3A%22period-1%22,%22bout_id%22%3A%222%22%7D')
+    // var jqXHR = jQuery.ajax('http://ltg.evl.uic.edu:9292/hunger-games-fall-13/statistics?selector=%7B%22run_id%22%3A%22period-1%22%7D')
+    //   .done(function(data){
+    //     var bouts = [];
+    //     console.log('successfully fetched patchgraph data');
+
+    //     _.each(data, function (d, iterator) {
+    //       bouts.push(d.bout_id);
+    //     });
+
+    //     updateBoutPicker(bouts);
+
+    //     dataset = _.first(data).user_stats;
+    //     draw();
+    //   })
+    //   .fail(function(error) {
+    //     console.error('Ajax request failed with status code: '+jqXHR.status);
+    //   });
   };
 
-  var draw = function () {
+  var draw = function (dataset) {
     xScale = d3.scale.linear()
                 .domain([0, d3.max(dataset, function(d){
                         return d.total_calories; })])
@@ -183,31 +213,31 @@
         }
       })
       .attr("stroke-width", 1)
-      .attr("stroke", "rgb(0,0,0)")
-      .on("mouseover", function(d){    
-        var yPosition = parseFloat(d3.select(this).attr("y")) + yScale.rangeBand() /2;
-        var xPosition = parseFloat(d3.select(this).attr("x")) /2 + w /2;
+      .attr("stroke", "rgb(0,0,0)");
+      // .on("mouseover", function(d){    
+      //   var yPosition = parseFloat(d3.select(this).attr("y")) + yScale.rangeBand() /2;
+      //   var xPosition = parseFloat(d3.select(this).attr("x")) /2 + w /2;
 
-        d3.select("#tooltip")
-            .style("left", "660px")
-            .style("top", "140px")
-            .select("#strat")
-            .text(d.avg_richness);
+      //   d3.select("#tooltip")
+      //       .style("left", "660px")
+      //       .style("top", "140px")
+      //       .select("#strat")
+      //       .text(d.avg_richness);
             
-        d3.select("#tooltip")
-            .select("#graph")
-            .attr("src", "img/cpg.jpg");
+      //   // d3.select("#tooltip")
+      //   //     .select("#graph")
+      //   //     .attr("src", "img/cpg.jpg");
             
-        d3.select("#tooltip")
-            .select("#studentName")
-            .text(d.name);
+      //   d3.select("#tooltip")
+      //       .select("#studentName")
+      //       .text(d.name);
 
-        d3.select("#tooltip").classed("hidden", false);
-      })
+      //   d3.select("#tooltip").classed("hidden", false);
+      // })
 
-      .on("mouseout", function() {
-          d3.select("#tooltip").classed("hidden", true);
-      });
+      // .on("mouseout", function() {
+      //     d3.select("#tooltip").classed("hidden", true);
+      // });
 
     svg.selectAll("text.name")
       .data(dataset)
@@ -478,6 +508,16 @@
       .transition()
       .duration(1600)
       .call(yAxisNew);
+  };
+
+  var updateBoutPicker = function(data) {
+    jQuery('#bout-picker').html('');
+    _.each(data, function (d, iterator) {
+      //<li><a tabindex="-1" href="#" data-bout="3">Something else here</a></li>
+      var listItem = jQuery('<li>');
+      listItem.append('<a tabindex="-1" href="#" data-bout='+d.bout_id+'>'+d.bout_id+'</a>');
+      jQuery('#bout-picker').append(listItem);
+    });
   };
 
   Patchgraph.svg = svg;
