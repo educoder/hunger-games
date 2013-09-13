@@ -47,6 +47,11 @@ input {
 	background-color: #ddd
 }
 
+.map-screen {
+	background-image: url('../img/background_map.jpeg');
+	
+}
+
 /*.container-header {
 	height: 40px;
 	padding: 10px 5px 5px 5px;
