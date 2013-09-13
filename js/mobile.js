@@ -43,7 +43,7 @@
   // for use with the RecentBoutData
   app.userLocations = [];
   app.userMove = 0;
-  app.patchPopulations = null;
+  app.patchPopulations = {};
 
   app.keyCount = 0;
   app.autoSaveTimer = window.setTimeout(function() { console.log("timer activated"); } ,10);
@@ -311,33 +311,16 @@
       jQuery('#move-tracker-screen .'+p.patch_id+' .move-tracker-quality-field').text(p.richness_per_minute);
     });
 
+    // go over the array and pull out all 'rfid_update' events that are related to user with tag rfidTag
     _.each(app.recentBoutData, function(e) {
+      // this only checks the first arrival (so far it seems like there's never more than 1, but could be an issue)
       if (e.event === "rfid_update" && e.payload.arrivals[0] === rfidTag) {
         console.log(rfidTag + " has arrived " + e.destination + " at " + idToTimestamp(e._id.$oid));
         app.userLocations.push({"timestamp":idToTimestamp(e._id.$oid), "location":e.destination});
       }
-      // if (e.event === "rfid_update" && e.payload.departures[0] === rfidTag) {
-      //   console.log(rfidTag + " has departed " + e.destination + " at " + idToTimestamp(e._id.$oid));
-      // }
     });
 
     updateMoveTracker("first");
-
-    // app.userLocations = [
-    //     {
-    //         "timestamp": "5262672",
-    //         "location": "patch_1"
-    //     },
-    //     {
-    //         "timestamp": "5268672",
-    //         "location":"patch_2"
-    //     },
-    //     {
-    //         "timestamp": "5273672",
-    //         "location":"patch_5"
-    //     }
-    // ];
-
   };
 
   var updateMoveTracker = function(move) {
@@ -346,39 +329,63 @@
     } else if (move === "next") {
       if (app.userMove < app.userLocations.length) {
         app.userMove++;  
+      } else {
+        console.log("Last move reached - should this be a toast?");
       }
     } else if (move === "previous") {
       if (app.userMove > 1) {
         app.userMove--;
+      } else {
+        console.log("First move reached - should this be a toast?");
       }
     } else {
       console.error("Unknown move type");
     }
 
-    jQuery("#move-number").text(app.userMove);
-    
-    // clear all locations
-    
+    // the timestamp for Current location (post update)
+    var ts = app.userLocations[app.userMove-1].timestamp;
 
-    if (app.userLocations[app.userMove]) {
-      jQuery('#move-tracker-screen .move-tracker-location-field').text('');
-      if (app.userMove > 1) {
-        jQuery('#move-tracker-screen .'+app.userLocations[app.userMove-2].location.substring(3)+' .move-tracker-location-field').text("Previous");  
+    // update UI: move number
+    jQuery("#move-number").text(app.userMove);
+
+    // update UI: squirrel counts, yield and new yield
+    if (app.patchPopulations[ts]) {
+      for (var i = 1; i < 7; i++) {
+        var p = "patch-"+i;
+        var qual = jQuery('#move-tracker-screen .'+p+' .move-tracker-quality-field').text();
+        jQuery('#move-tracker-screen .'+p+' .move-tracker-squirrels-field').text(app.patchPopulations[ts][p]);
+        if (app.patchPopulations[ts][p] > 0) {
+          jQuery('#move-tracker-screen .'+p+' .move-tracker-yield-field').text(qual / app.patchPopulations[ts][p]);
+        } else {
+          jQuery('#move-tracker-screen .'+p+' .move-tracker-yield-field').text("0");
+        }
+        
+        jQuery('#move-tracker-screen .'+p+' .move-tracker-new-yield-field').text(qual / (app.patchPopulations[ts][p] + 1));
       }
-      if (app.userMove > 0) {
-        jQuery('#move-tracker-screen .'+app.userLocations[app.userMove-1].location.substring(3)+' .move-tracker-location-field').text("Current");
-      }
-      jQuery('#move-tracker-screen .'+app.userLocations[app.userMove].location.substring(3)+' .move-tracker-location-field').text("Next");  
+    } else {
+      console.error("No timestamp for this move in the patchPopulations");
     }
 
+    // update UI: location fields 
+    if (app.userLocations[app.userMove]) {
+      // clear all locations
+      jQuery('#move-tracker-screen .move-tracker-location-field').text('');
+      if (app.userMove > 1) {
+        // app.userLocations[x].location = ie "fg-patch-1"
+        jQuery('#move-tracker-screen .'+app.userLocations[app.userMove-2].location.substring(3)+' .move-tracker-location-field').text("Previous");
+      }
+      jQuery('#move-tracker-screen .'+app.userLocations[app.userMove-1].location.substring(3)+' .move-tracker-location-field').text("Current");
+      jQuery('#move-tracker-screen .'+app.userLocations[app.userMove-1].location.substring(3)+' .move-tracker-new-yield-field').text("N/A");
+      jQuery('#move-tracker-screen .'+app.userLocations[app.userMove].location.substring(3)+' .move-tracker-location-field').text("Next");
+    }
 
   };
 
   var sortRecentBoutData = function() {
-    // manipulate the recentBoutData so that it is actually useful to us
+    // this function manipulates the recentBoutData so that it is actually useful to us
     //
     // 7.x array (how many users on any patch) - better as an object!:
-    // time_stamp | patch_1 | patch_2 | patch_3 | patch_4 | patch_5 | patch_6
+    // time_stamp | patch-1 | patch-2 | patch-3 | patch-4 | patch-5 | patch-6
     // 5262672    |    3    |    1    |    2    |    1    |    6    |    3
     // 5263672    |    2    |    1    |    3    |    1    |    6    |    3
     //
@@ -387,29 +394,60 @@
     // 5262672    |  1
     // 5264672    |  3
 
-    app.patchPopulations = {
-        "5262672": {
-            "patch_1": 3,
-            "patch_2": 1,
-            "patch_3": 5,
-            "patch_4": 0,
-            "patch_5": 1,
-            "patch_6": 2
-        },
-        "5263672": {
-            "patch_1": 4,
-            "patch_2": 1,
-            "patch_3": 4,
-            "patch_4": 0,
-            "patch_5": 1,
-            "patch_6": 2
+    // this object contains the running counts of the populations
+    var populations = {"patch-1":0,"patch-2":0,"patch-3":0,"patch-4":0,"patch-5":0,"patch-6":0};
+
+    _.each(app.recentBoutData, function(e) {
+      // this only checks the first arrival (so far it seems like there's never more than 1, but could be an issue)
+      if (e.event === "rfid_update" && e.destination !== "fg-den") {
+        // if this event's timestamp does not already exist in the patchPopulations object, create it
+        var ts = idToTimestamp(e._id.$oid);
+        var loc = e.destination.substring(3);
+
+        if (!app.patchPopulations[ts]) {
+          app.patchPopulations[ts] = {"patch-1":0,"patch-2":0,"patch-3":0,"patch-4":0,"patch-5":0,"patch-6":0};
         }
-    };
+        
+        // update the patches for this timestamp with the arrivals and departures
+        if (e.payload.arrivals[0]) {
+          populations[loc]++;
+          app.patchPopulations[ts][loc] = populations[loc];
+        }
+        if (e.payload.departures[0]) {
+          populations[loc]--;
+          app.patchPopulations[ts][loc] = populations[loc];
+        }
+      }
+    });
 
+    // TESTING ONLY
+    // var postData = {};
+    // postData.boutData = app.patchPopulations;
 
-    
+    // jQuery.ajax({
+    //   type: "POST",
+    //   url: "https://drowsy.badger.encorelab.org/hg-test/recent_bout/",
+    //   data: postData
+    // });
 
-    // idToTimestamp();
+    // app.patchPopulations = {
+    //     "5262672": {
+    //         "patch-1": 3,
+    //         "patch-2": 1,
+    //         "patch-3": 5,
+    //         "patch-4": 0,
+    //         "patch-5": 1,
+    //         "patch-6": 2
+    //     },
+    //     "5263673": {
+    //         "patch-1": 4,
+    //         "patch-2": 1,
+    //         "patch-3": 4,
+    //         "patch-4": 0,
+    //         "patch-5": 1,
+    //         "patch-6": 2
+    //     }
+    // };
   };
 
   //*************** HELPER FUNCTIONS ***************//
@@ -476,6 +514,7 @@
     // date = new Date( parseInt(timestamp, 16) * 1000 );
     // return date;
   };
+
 
   //*************** LOGIN FUNCTIONS ***************//
 
