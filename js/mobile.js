@@ -102,6 +102,7 @@
 
       // show index-screen aka home
       jQuery('#index-screen').removeClass('hidden');
+      // jQuery('#graphs-screen').removeClass('hidden');
 
       hideLogin();
       showUsername();
@@ -167,6 +168,12 @@
         console.log('User not logged in so show nothing and prompt for user');
         app.hideAllRows();
       }
+    });
+
+    jQuery(document).on('click', '#bout-picker li a', function () {
+      console.log("Selected Option:"+ jQuery(this).text());
+      console.log("Selected Option:"+ jQuery(this).data("bout"));
+      HG.Patchgraph.showGraphForBout(jQuery(this).data("bout"));
     });
 
     // Click listener for graph refresh button

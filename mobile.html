@@ -253,19 +253,28 @@
 
     <div id="graphs-screen" class="row-fluid">
         <div class="span12 view-container bs-docs-sidebar">
+            <div class="btn-group">
+                <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">Choose bout <span class="caret"></span></button>
+                <ul id="bout-picker" class="dropdown-menu" role="menu" aria-labelledby="choose bout">
+                    <li><a tabindex="-1" href="#" data-bout="1">Action</a></li>
+                    <li><a tabindex="-1" href="#" data-bout="2">Another action</a></li>
+                    <li><a tabindex="-1" href="#" data-bout="3">Something else here</a></li>
+                </ul>
+                </a>
+            </div>
+            
+            <!-- <select class="selectpicker">
+                <option value="volvo">Volvo</option>
+                <option value="saab">Saab</option>
+                <option value="opel">Opel</option>
+                <option value="audi">Audi</option>
+            </select> -->
+                
             <button type="button" class="btn btn-success" id="refresh-graph">Refresh</button>
             <p>
                 These are not the droids you are looking for!
             </p>
-            <div id="tooltip" class="hidden">
-                <p><strong>Student Name: <span id="studentName">Name</span></strong></p>
-                <p><span id="strat">100</span><p/>
-                <img id="graph"></img>
-
-                <button class="boutlink" href="#">Click to see Bout Moves</button>
-
-            </div>
-
+            
             <div>
                 <button type="button" class="btn btn-success" id="yield">Harvest</button>
 
