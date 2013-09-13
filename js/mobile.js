@@ -335,19 +335,42 @@
       console.error("Unknown move type");
     }
 
+    // the timestamp for Current location (post update)
+    var ts = app.userLocations[app.userMove-1].timestamp;
+
+    // update UI: move number
     jQuery("#move-number").text(app.userMove);
 
+    // update UI: squirrel counts, yield and new yield
+    if (app.patchPopulations[ts]) {
+      for (var i = 1; i < 7; i++) {
+        var p = "patch-"+i;
+        var qual = jQuery('#move-tracker-screen .'+p+' .move-tracker-quality-field').text();
+        jQuery('#move-tracker-screen .'+p+' .move-tracker-squirrels-field').text(app.patchPopulations[ts][p]);
+        if (app.patchPopulations[ts][p] > 0) {
+          jQuery('#move-tracker-screen .'+p+' .move-tracker-yield-field').text(qual / app.patchPopulations[ts][p]);
+        } else {
+          jQuery('#move-tracker-screen .'+p+' .move-tracker-yield-field').text("0");
+        }
+        
+        jQuery('#move-tracker-screen .'+p+' .move-tracker-new-yield-field').text(qual / (app.patchPopulations[ts][p] + 1));
+      }
+    } else {
+      console.error("No timestamp for this move in the patchPopulations");
+    }
+
+    // update UI: location fields 
     if (app.userLocations[app.userMove]) {
       // clear all locations
       jQuery('#move-tracker-screen .move-tracker-location-field').text('');
       if (app.userMove > 1) {
         // app.userLocations[x].location = ie "fg-patch-1"
-        jQuery('#move-tracker-screen .'+app.userLocations[app.userMove-2].location.substring(3)+' .move-tracker-location-field').text("Previous");  
+        jQuery('#move-tracker-screen .'+app.userLocations[app.userMove-2].location.substring(3)+' .move-tracker-location-field').text("Previous");
       }
       jQuery('#move-tracker-screen .'+app.userLocations[app.userMove-1].location.substring(3)+' .move-tracker-location-field').text("Current");
-      jQuery('#move-tracker-screen .'+app.userLocations[app.userMove].location.substring(3)+' .move-tracker-location-field').text("Next");  
+      jQuery('#move-tracker-screen .'+app.userLocations[app.userMove-1].location.substring(3)+' .move-tracker-new-yield-field').text("N/A");
+      jQuery('#move-tracker-screen .'+app.userLocations[app.userMove].location.substring(3)+' .move-tracker-location-field').text("Next");
     }
-
 
   };
 
@@ -409,7 +432,7 @@
     //         "patch-5": 1,
     //         "patch-6": 2
     //     },
-    //     "5263672": {
+    //     "5263673": {
     //         "patch-1": 4,
     //         "patch-2": 1,
     //         "patch-3": 4,
