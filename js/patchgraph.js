@@ -140,8 +140,8 @@
       .attr("x", padding)
       .attr("width", 200)
       .attr("height", h -padding*2)
-      .attr("fill", "rgba(255,0,0, 0.3")
-      .attr("class", "legendBar");
+      // .attr("fill", "rgba(255,0,0, 0.3")
+      .attr("class", "legendBar legendBar1");
 
     svg.append("text")
       .text("Starving")
@@ -157,8 +157,8 @@
       .attr("x", padding +200)
       .attr("width", 200)
       .attr("height", h -padding*2)
-      .attr("fill", "rgba(0,255,0, 0.3")
-      .attr("class", "legendBar");
+      // .attr("fill", "rgba(0,255,0, 0.3")
+      .attr("class", "legendBar legendBar2");
 
     svg.append("text")
       .text("Surviving")
@@ -174,8 +174,8 @@
       .attr("x", padding +400)
       .attr("width", 200)
       .attr("height", h -padding*2)
-      .attr("fill", "rgba(0,0,255, 0.3")
-      .attr("class", "legendBar");
+      // .attr("fill", "rgba(0,0,255, 0.3")
+      .attr("class", "legendBar legendBar3");
 
     svg.append("text")
       .text("Prospering")

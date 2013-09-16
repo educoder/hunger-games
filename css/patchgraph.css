@@ -67,6 +67,21 @@ rect:hover {
     z-index: -2;
 }
 
+.legendBar1 {
+    fill: rgb(200, 0, 0); /* Fallback */
+    fill: rgba(255,0,0, 0.3);
+}
+
+.legendBar2 {
+    fill: rgb(0, 200, 0); /* Fallback */
+    fill: rgba(0,255,0, 0.3);
+}
+
+.legendBar3 {
+    fill: rgb(0, 0, 200); /* Fallback */
+    fill: rgba(0,0,255, 0.3);
+}
+
 .labels {
     pointer-events:none;
     /*text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;*/
