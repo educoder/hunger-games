@@ -69,6 +69,9 @@
     // grab the configuration data
     tryPullAll();
 
+    // Init the Patchgraph
+    HG.Patchgraph.init(app.UICdrowsy, DATABASE, app.run);
+
 
     // // TODO: should ask at startup
     // var DATABASE = app.config.drowsy.db;
@@ -157,7 +160,11 @@
       }
     });
 
-    // Show 
+    /*
+     * =========================================================
+     * Section with functions for the harvest/patch graph
+     * =========================================================
+    */
     jQuery('.graphs-button').click(function() {
       if (app.username) {
         app.hideAllRows();
@@ -170,17 +177,23 @@
       }
     });
 
+    // click listener for bout-picker dropdown to re-draw graph for selected bout (no data reload)
     jQuery(document).on('click', '#bout-picker li a', function () {
       console.log("Selected Option:"+ jQuery(this).text());
       console.log("Selected Option:"+ jQuery(this).data("bout"));
       HG.Patchgraph.showGraphForBout(jQuery(this).data("bout"));
     });
 
-    // Click listener for graph refresh button
+    // Click listener for graph refresh button - this will reload data and re-draw bout
     jQuery('#refresh-graph').click(function () {
       console.log('Refresh the harvest planning graph on user request');
       HG.Patchgraph.refresh();
     });
+    /*
+     * =========================================================
+     * End of - Section with functions for the harvest/patch graph
+     * =========================================================
+    */
 
     jQuery('#basic-evl-pull').click(function() {
       console.log('Hey, I dont do shit right now');
