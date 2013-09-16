@@ -153,7 +153,7 @@
       if (app.username) {
         app.hideAllRows();
         jQuery('#move-tracker-screen').removeClass('hidden');
-        populateMoveTracker("1623257");
+        populateMoveTracker("1623972");
       }
     });
 
@@ -205,8 +205,8 @@
     jQuery('.select-tag-1623972').click(function() {
       populateMoveTracker("1623972");
     });
-    jQuery('.select-tag-1623257').click(function() {
-      populateMoveTracker("1623257");
+    jQuery('.select-tag-1623373').click(function() {
+      populateMoveTracker("1623373");
     });
 
 
@@ -270,14 +270,15 @@
 
   var updateEqualization = function(ev) {
     // (ev.target.parentElement.parentElement).attr('class') gives the patch number of the modified patch
-    var selectedPatch = jQuery(ev.target.parentElement.parentElement).attr('class');
+    var selectedPatch;
     // cast it to a base-10 int, cause we love Crockford
     var numSq = parseInt(jQuery(ev.target).val(), 10);
     // have we pulled data?
     if (app.configurationData) {
       // Harvest per squirrel field
       _.each(app.configurationData.patches, function(p) {
-        if (p.patch_id === jQuery(ev.target.parentElement.parentElement).attr('class')) {
+        if (jQuery(ev.target.parentElement.parentElement).hasClass(p.patch_id)) {
+          selectedPatch = p.patch_id;
           // make sure we don't try to divide by zero (tho JS/Chrome seems to actually handle the gracefully!)
           if (numSq === 0) {
             jQuery('.'+selectedPatch+' .equalization-harvest-field').text('0');
@@ -314,12 +315,13 @@
     // go over the array and pull out all 'rfid_update' events that are related to user with tag rfidTag
     _.each(app.recentBoutData, function(e) {
       // this only checks the first arrival (so far it seems like there's never more than 1, but could be an issue)
-      if (e.event === "rfid_update" && e.payload.arrivals[0] === rfidTag) {
-        console.log(rfidTag + " has arrived " + e.destination + " at " + idToTimestamp(e._id.$oid));
-        app.userLocations.push({"timestamp":idToTimestamp(e._id.$oid), "location":e.destination});
+      if (e.event === "rfid_update" && e.payload.id === rfidTag) {
+        console.log(rfidTag + " has arrived to " + e.payload.arrival + " at " + idToTimestamp(e._id.$oid));
+        app.userLocations.push({"timestamp":idToTimestamp(e._id.$oid), "location":e.payload.arrival});
       }
     });
 
+    // set up the move tracker for the first move for this user in this bout
     updateMoveTracker("first");
   };
 
@@ -372,11 +374,11 @@
       jQuery('#move-tracker-screen .move-tracker-location-field').text('');
       if (app.userMove > 1) {
         // app.userLocations[x].location = ie "fg-patch-1"
-        jQuery('#move-tracker-screen .'+app.userLocations[app.userMove-2].location.substring(3)+' .move-tracker-location-field').text("Previous");
+        jQuery('#move-tracker-screen .'+app.userLocations[app.userMove-2].location+' .move-tracker-location-field').text("Previous");
       }
-      jQuery('#move-tracker-screen .'+app.userLocations[app.userMove-1].location.substring(3)+' .move-tracker-location-field').text("Current");
-      jQuery('#move-tracker-screen .'+app.userLocations[app.userMove-1].location.substring(3)+' .move-tracker-new-yield-field').text("N/A");
-      jQuery('#move-tracker-screen .'+app.userLocations[app.userMove].location.substring(3)+' .move-tracker-location-field').text("Next");
+      jQuery('#move-tracker-screen .'+app.userLocations[app.userMove-1].location+' .move-tracker-location-field').text("Current");
+      jQuery('#move-tracker-screen .'+app.userLocations[app.userMove-1].location+' .move-tracker-new-yield-field').text("N/A");
+      jQuery('#move-tracker-screen .'+app.userLocations[app.userMove].location+' .move-tracker-location-field').text("Next");
     }
 
   };
@@ -399,36 +401,37 @@
 
     _.each(app.recentBoutData, function(e) {
       // this only checks the first arrival (so far it seems like there's never more than 1, but could be an issue)
-      if (e.event === "rfid_update" && e.destination !== "fg-den") {
+      if (e.event === "rfid_update" && e.payload.arrival !== "fg-den") {
         // if this event's timestamp does not already exist in the patchPopulations object, create it
         var ts = idToTimestamp(e._id.$oid);
-        var loc = e.destination.substring(3);
+        var arr = e.payload.arrival;
+        var dep = e.payload.departure;
 
-        if (!app.patchPopulations[ts]) {
-          app.patchPopulations[ts] = {"patch-1":0,"patch-2":0,"patch-3":0,"patch-4":0,"patch-5":0,"patch-6":0};
-        }
+        // if (!app.patchPopulations[ts]) {
+        //   app.patchPopulations[ts] = {"patch-1":0,"patch-2":0,"patch-3":0,"patch-4":0,"patch-5":0,"patch-6":0};
+        // }
         
         // update the patches for this timestamp with the arrivals and departures
-        if (e.payload.arrivals[0]) {
-          populations[loc]++;
-          app.patchPopulations[ts][loc] = populations[loc];
+        if (arr) {
+          populations[arr]++;
         }
-        if (e.payload.departures[0]) {
-          populations[loc]--;
-          app.patchPopulations[ts][loc] = populations[loc];
+        if (dep) {
+          populations[dep]--;
         }
+        var clonedPopulationsObj = _.clone(populations);
+        app.patchPopulations[ts] = clonedPopulationsObj;
       }
     });
 
     // TESTING ONLY
-    // var postData = {};
-    // postData.boutData = app.patchPopulations;
+    var postData = {};
+    postData.boutData = app.patchPopulations;
 
-    // jQuery.ajax({
-    //   type: "POST",
-    //   url: "https://drowsy.badger.encorelab.org/hg-test/recent_bout/",
-    //   data: postData
-    // });
+    jQuery.ajax({
+      type: "POST",
+      url: "https://drowsy.badger.encorelab.org/hg-test/recent_bout/",
+      data: postData
+    });
 
     // app.patchPopulations = {
     //     "5262672": {
