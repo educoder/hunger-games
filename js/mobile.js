@@ -195,10 +195,6 @@
      * =========================================================
     */
 
-    jQuery('#basic-evl-pull').click(function() {
-      console.log('Hey, I dont do shit right now');
-    });
-
 
     // INNER CLICK LISTENERS - DUMP THOSE THAT ARE GOING TO USE BACKBONE VIEWS //
 
@@ -211,15 +207,6 @@
     });
     jQuery('#move-backward').click(function() {
       updateMoveTracker("previous");
-    });
-
-
-    // TEMP LISTENERS (FOR TESTING) //
-    jQuery('.select-tag-1623972').click(function() {
-      populateMoveTracker("1623972");
-    });
-    jQuery('.select-tag-1623373').click(function() {
-      populateMoveTracker("1623373");
     });
 
 
@@ -255,9 +242,6 @@
     }
 
   };
-
-
-
 
 
   //*************** MAIN FUNCTIONS (RENAME ME) ***************//
@@ -469,7 +453,7 @@
   //*************** HELPER FUNCTIONS ***************//
 
   var tryPullAll = function() {
-    // CAREFUL: this may need promises once state is introduced!
+    // CAREFUL: this may need promises once state is introduced!          // START HERE SO THAT BOUT MOVE NUMBER THING CAN BE POPULATED
     //tryPullStateData();
     tryPullConfigurationData();
     tryPullStatisticsData();
