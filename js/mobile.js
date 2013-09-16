@@ -69,6 +69,9 @@
     // grab the configuration data
     tryPullAll();
 
+    // Init the Patchgraph
+    HG.Patchgraph.init(app.UICdrowsy, DATABASE, app.run);
+
 
     // // TODO: should ask at startup
     // var DATABASE = app.config.drowsy.db;
