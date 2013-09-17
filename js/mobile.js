@@ -21,7 +21,7 @@
   };
 
   app.rollcall = null;
-  app.run_id = null;
+  app.runId= null;
   app.user = 'TODO';
   app.username = null;
   app.runState = null;
@@ -62,7 +62,7 @@
     DATABASE = "hunger-games-fall-13";
 
     // TODO=
-    app.run_id = "5bj";
+    app.runId= "5bj";
     app.username = "som"
 
     // grab the state data, the configuration data, the statistics data and the recent bout data
@@ -152,7 +152,7 @@
       if (app.username) {
         app.hideAllRows();
         jQuery('#move-tracker-screen').removeClass('hidden');
-        app.populateMoveTracker("1623972");
+        app.populateMoveTracker("som");
       }
     });
 
@@ -193,6 +193,17 @@
 
 
     // INNER CLICK LISTENERS - DUMP THOSE THAT ARE GOING TO USE BACKBONE VIEWS //
+
+
+    // TODO: readd me if the incrementers are gone
+    // jQuery('.equalization-squirrels-field').click(function() {
+    //   jQuery(this).val('');
+    // });
+    // jQuery('.equalization-squirrels-field').focusout(function() {
+    //   if (jQuery(this).val() == '') {
+    //     jQuery(this).val('0');
+    //   }
+    // });
 
     jQuery('.equalization-squirrels-field').change(function(ev) {
       updateEqualization(ev);
@@ -238,7 +249,7 @@
     }
 
     // Init the Patchgraph
-    HG.Patchgraph.init(app.UICdrowsy, DATABASE, app.run_id);
+    HG.Patchgraph.init(app.UICdrowsy, DATABASE, app.runId);
 
   };
 
@@ -260,7 +271,7 @@
     jQuery('#equalization-minutes-field').text(app.configurationData.harvest_calculator_bout_length_in_minutes);
 
     _.each(app.configurationData.patches, function(p) {
-      jQuery('#equalization-screen .'+p.patch_id+' .equalization-quality-field').text(p.richness_per_minute);
+      jQuery('#equalization-screen .'+p.patch_id+' .equalization-quality-field').text(p.quality_per_minute);
     });
   };
 
@@ -275,11 +286,11 @@
       _.each(app.configurationData.patches, function(p) {
         if (jQuery(ev.target.parentElement.parentElement).hasClass(p.patch_id)) {
           selectedPatch = p.patch_id;
-          // make sure we don't try to divide by zero (tho JS/Chrome seems to actually handle the gracefully!)
+          // make sure we don't try to divide by zero (tho JS/Chrome seems to actually handle this gracefully!)
           if (numSq === 0) {
             jQuery('.'+selectedPatch+' .equalization-harvest-field').text('0');
           } else {
-            var y = p.richness_per_minute / numSq;
+            var y = p.quality_per_minute / numSq;
             jQuery('.'+selectedPatch+' .equalization-harvest-field').text(y);            
           }
         }
@@ -303,19 +314,19 @@
     }
   };
 
-  app.populateMoveTracker = function(rfidTag) {
+  app.populateMoveTracker = function(username) {
     jQuery('.bout-number').text(app.currentBout);
     jQuery('.username').text(app.username);
 
-    _.each(app.configurationData.patches, function(p) {
-      jQuery('#move-tracker-screen .'+p.patch_id+' .move-tracker-quality-field').text(p.richness_per_minute);
-    });
+    // _.each(app.configurationData.patches, function(p) {
+    //   jQuery('#move-tracker-screen .'+p.patch_id+' .move-tracker-quality-field').text(p.richness_per_minute);
+    // });
 
     // go over the array and pull out all 'rfid_update' events that are related to user with tag rfidTag
     _.each(app.recentBoutData, function(e) {
       // this only checks the first arrival (so far it seems like there's never more than 1, but could be an issue)
-      if (e.event === "rfid_update" && e.payload.id === rfidTag) {
-        console.log(rfidTag + " has arrived to " + e.payload.arrival + " at " + idToTimestamp(e._id.$oid));
+      if (e.event === "rfid_update" && e.payload.id === username) {
+        console.log(username + " has arrived to " + e.payload.arrival + " at " + idToTimestamp(e._id.$oid));
         app.userLocations.push({"timestamp":idToTimestamp(e._id.$oid), "location":e.payload.arrival});
       }
     });
@@ -349,20 +360,24 @@
     // update UI: move number
     jQuery("#move-number").text(app.userMove);
 
+    // set up an object with patch_id:quality... likely cleaner with _.map
+    var qualObj = {};
+    _.each(app.configurationData.patches, function(p) {
+      qualObj[p.patch_id] = p.quality_per_minute;
+    });
+
     // update UI: squirrel counts, yield and new yield
     if (app.patchPopulations[ts]) {
-      for (var i = 1; i < 7; i++) {
-        var p = "patch-"+i;
-        var qual = jQuery('#move-tracker-screen .'+p+' .move-tracker-quality-field').text();
-        jQuery('#move-tracker-screen .'+p+' .move-tracker-squirrels-field').text(app.patchPopulations[ts][p]);
-        if (app.patchPopulations[ts][p] > 0) {
-          jQuery('#move-tracker-screen .'+p+' .move-tracker-yield-field').text(qual / app.patchPopulations[ts][p]);
+      _.each(app.patchPopulations[ts], function(numSq, p) {
+        jQuery('#move-tracker-screen .'+p+' .move-tracker-squirrels-field').text(numSq);
+        if (numSq > 0) {
+          jQuery('#move-tracker-screen .'+p+' .move-tracker-yield-field').text(qualObj[p] / numSq);
         } else {
           jQuery('#move-tracker-screen .'+p+' .move-tracker-yield-field').text("0");
         }
         
-        jQuery('#move-tracker-screen .'+p+' .move-tracker-new-yield-field').text(qual / (app.patchPopulations[ts][p] + 1));
-      }
+        jQuery('#move-tracker-screen .'+p+' .move-tracker-new-yield-field').text(qualObj[p] / (numSq + 1));
+      });
     } else {
       console.error("No timestamp for this move in the patchPopulations");
     }
@@ -458,8 +473,8 @@
   };
 
   var tryPullStateData = function() {
-    if (app.run_id) {
-      jQuery.get(app.UICdrowsy+'/'+DATABASE+'/state?selector=%7B%22run_id%22%3A%22'+app.run_id+'%22%7D', function(data) {
+    if (app.runId) {
+      jQuery.get(app.UICdrowsy+'/'+DATABASE+'/state?selector=%7B%22run_id%22%3A%22'+app.runId+'%22%7D', function(data) {
         app.stateData = data[0];
         app.currentBout = app.stateData.state.current_bout_id;
       })
@@ -474,8 +489,8 @@
   };
 
   var tryPullConfigurationData = function() {
-    if (app.run_id) {
-      jQuery.get(app.UICdrowsy+'/'+DATABASE+'/configuration?selector=%7B%22run_id%22%3A%22'+app.run_id+'%22%7D', function(data) {
+    if (app.runId) {
+      jQuery.get(app.UICdrowsy+'/'+DATABASE+'/configuration?selector=%7B%22run_id%22%3A%22'+app.runId+'%22%7D', function(data) {
         app.configurationData = data[0];
       })
       .done(function() { console.log("Configuration data pulled!"); })
@@ -485,7 +500,7 @@
 
   var tryPullStatisticsData = function() {
     // needed: run_id, habitat_configuration, bout_id
-    // if (app.run_id) {
+    // if (app.runId) {
     //   jQuery.get(app.UICdrowsy+'/'+DATABASE+'/statistics', function(data) {
     //     app.configurationData = data;
     //   })
@@ -497,8 +512,9 @@
   var tryPullRecentBoutData = function() {
     // to determine the selector, we need the run_id, habitat_configuration, the bout_id
     // in the log collection (chose which based on run) get all events between the bouts' 'game_start' and 'game_stop' timestamps
-    if (app.run_id) {
-      jQuery.get(app.UICdrowsy+'/'+DATABASE+'/log-test?%3Fsort%3D["_id"%2C"ASC"]', function(data) {
+    if (app.runId) {
+      // +'%3F%253Fsort%253D%5B%22_id%22%252C%22ASC%22%5D'
+      jQuery.get(app.UICdrowsy+'/'+DATABASE+'/log-'+app.runId, function(data) {
         app.recentBoutData = data;
         sortRecentBoutData();
       })
