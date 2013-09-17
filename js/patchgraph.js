@@ -23,10 +23,10 @@
   var yAxis;
 
 
-  Patchgraph.init = function (drowsyUrl, database, run) {
+  Patchgraph.init = function (drowsyUrl, database, run_id) {
     baseUrl = drowsyUrl;
     DATABASE = database;
-    runId = run;
+    runId = run_id;
 
     fetchDataSetAndRedraw();
   };

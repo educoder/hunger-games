@@ -238,7 +238,7 @@
     }
 
     // Init the Patchgraph
-    HG.Patchgraph.init(app.UICdrowsy, DATABASE, app.run);
+    HG.Patchgraph.init(app.UICdrowsy, DATABASE, app.run_id);
 
   };
 
