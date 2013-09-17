@@ -70,7 +70,7 @@
     tryPullAll();
 
     // Init the Patchgraph
-    HG.Patchgraph.init(app.UICdrowsy, DATABASE, app.run);
+    // HG.Patchgraph.init(app.UICdrowsy, DATABASE, app.run);
 
 
     // // TODO: should ask at startup
@@ -240,6 +240,9 @@
         el: '#list-screen'
       });
     }
+
+    // Init the Patchgraph
+    HG.Patchgraph.init(app.UICdrowsy, DATABASE, app.run);
 
   };
 
