@@ -68,9 +68,6 @@
     // grab the state data, the configuration data, the statistics data and the recent bout data
     tryPullAll();
 
-    // Init the Patchgraph
-    //HG.Patchgraph.init(app.UICdrowsy, DATABASE, app.run); REDO ME
-
 
     // // TODO: should ask at startup
     // var DATABASE = app.config.drowsy.db;
@@ -239,6 +236,9 @@
         el: '#list-screen'
       });
     }
+
+    // Init the Patchgraph
+    HG.Patchgraph.init(app.UICdrowsy, DATABASE, app.run);
 
   };
 
