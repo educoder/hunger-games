@@ -64,13 +64,13 @@
     DATABASE = "hunger-games-fall-13";
 
     // TODO: where are these coming from?
-    app.run = "period-1";
+    app.run = "5BJ";
 
     // grab the configuration data
     tryPullAll();
 
     // Init the Patchgraph
-    HG.Patchgraph.init(app.UICdrowsy, DATABASE, app.run);
+    //HG.Patchgraph.init(app.UICdrowsy, DATABASE, app.run); REDO ME
 
 
     // // TODO: should ask at startup
@@ -370,7 +370,7 @@
       // clear all locations
       jQuery('#move-tracker-screen .move-tracker-location-field').text('');
       if (app.userMove > 1) {
-        // app.userLocations[x].location = ie "fg-patch-1"
+        // app.userLocations[x].location = ie "fg-patch-a"
         jQuery('#move-tracker-screen .'+app.userLocations[app.userMove-2].location+' .move-tracker-location-field').text("Previous");
       }
       jQuery('#move-tracker-screen .'+app.userLocations[app.userMove-1].location+' .move-tracker-location-field').text("Current");
@@ -384,7 +384,7 @@
     // this function manipulates the recentBoutData so that it is actually useful to us
     //
     // 7.x array (how many users on any patch) - better as an object!:
-    // time_stamp | patch-1 | patch-2 | patch-3 | patch-4 | patch-5 | patch-6
+    // time_stamp | patch-a | patch-b | patch-c | patch-d | patch-e | patch-f
     // 5262672    |    3    |    1    |    2    |    1    |    6    |    3
     // 5263672    |    2    |    1    |    3    |    1    |    6    |    3
     //
@@ -394,7 +394,7 @@
     // 5264672    |  3
 
     // this object contains the running counts of the populations
-    var populations = {"patch-1":0,"patch-2":0,"patch-3":0,"patch-4":0,"patch-5":0,"patch-6":0};
+    var populations = {"patch-a":0,"patch-b":0,"patch-c":0,"patch-d":0,"patch-e":0,"patch-f":0};
 
     _.each(app.recentBoutData, function(e) {
       // this only checks the first arrival (so far it seems like there's never more than 1, but could be an issue)
@@ -405,7 +405,7 @@
         var dep = e.payload.departure;
 
         // if (!app.patchPopulations[ts]) {
-        //   app.patchPopulations[ts] = {"patch-1":0,"patch-2":0,"patch-3":0,"patch-4":0,"patch-5":0,"patch-6":0};
+        //   app.patchPopulations[ts] = {"patch-a":0,"patch-b":0,"patch-c":0,"patch-d":0,"patch-e":0,"patch-f":0};
         // }
         
         // update the patches for this timestamp with the arrivals and departures
@@ -421,31 +421,389 @@
     });
 
     // TESTING ONLY
-    var postData = {};
-    postData.boutData = app.patchPopulations;
 
-    jQuery.ajax({
-      type: "POST",
-      url: "https://drowsy.badger.encorelab.org/hg-test/recent_bout/",
-      data: postData
-    });
+//     var postData = {};
+//     postData.boutData = 
+//     [
+
+//     {
+//         "_id": {
+//             "$oid": "52337c5c3004b3c501fe4779"
+//         },
+//         "event": "rfid_update",
+//         "payload": {
+//             "id": "1623115",
+//             "departure": null,
+//             "arrival": "patch-d"
+//         }
+//     },
+//     {
+//         "_id": {
+//             "$oid": "52337c673004b3c501fe477a"
+//         },
+//         "event": "rfid_update",
+//         "payload": {
+//             "id": "1623972",
+//             "departure": null,
+//             "arrival": "patch-a"
+//         }
+//     },
+//     {
+//         "_id": {
+//             "$oid": "52337c683004b3c501fe477b"
+//         },
+//         "event": "rfid_update",
+//         "payload": {
+//             "id": "1623373",
+//             "departure": null,
+//             "arrival": "patch-a"
+//         }
+//     },
+//     {
+//         "_id": {
+//             "$oid": "52337c683004b3c501fe477c"
+//         },
+//         "event": "rfid_update",
+//         "payload": {
+//             "id": "1623641",
+//             "departure": null,
+//             "arrival": "patch-e"
+//         }
+//     },
+//     {
+//         "_id": {
+//             "$oid": "52337c683004b3c501fe477d"
+//         },
+//         "event": "rfid_update",
+//         "payload": {
+//             "id": "1623624",
+//             "departure": null,
+//             "arrival": "patch-e"
+//         }
+//     },
+//     {
+//         "_id": {
+//             "$oid": "52337c753004b3c501fe477e"
+//         },
+//         "event": "rfid_update",
+//         "payload": {
+//             "id": "1623115",
+//             "departure": "patch-d",
+//             "arrival": "patch-c"
+//         }
+//     },
+//     {
+//         "_id": {
+//             "$oid": "52337c843004b3c501fe477f"
+//         },
+//         "event": "rfid_update",
+//         "payload": {
+//             "id": "1623373",
+//             "departure": "patch-a",
+//             "arrival": "patch-e"
+//         }
+//     },
+//     {
+//         "_id": {
+//             "$oid": "52337c863004b3c501fe4780"
+//         },
+//         "event": "rfid_update",
+//         "payload": {
+//             "id": "1623972",
+//             "departure": "patch-a",
+//             "arrival": "patch-e"
+//         }
+//     },
+//     {
+//         "_id": {
+//             "$oid": "52337c9a3004b3c501fe4781"
+//         },
+//         "event": "rfid_update",
+//         "payload": {
+//             "id": "1623972",
+//             "departure": "patch-e",
+//             "arrival": "patch-a"
+//         }
+//     },
+//     {
+//         "_id": {
+//             "$oid": "52337ca23004b3c501fe4782"
+//         },
+//         "event": "rfid_update",
+//         "payload": {
+//             "id": "1623641",
+//             "departure": "patch-e",
+//             "arrival": "patch-d"
+//         }
+//     },
+//     {
+//         "_id": {
+//             "$oid": "52337ca23004b3c501fe4783"
+//         },
+//         "event": "rfid_update",
+//         "payload": {
+//             "id": "1623115",
+//             "departure": "patch-c",
+//             "arrival": "patch-d"
+//         }
+//     },
+//     {
+//         "_id": {
+//             "$oid": "52337ca83004b3c501fe4784"
+//         },
+//         "event": "rfid_update",
+//         "payload": {
+//             "id": "1623972",
+//             "departure": "patch-a",
+//             "arrival": "patch-e"
+//         }
+//     },
+//     {
+//         "_id": {
+//             "$oid": "52337cac3004b3c501fe4785"
+//         },
+//         "event": "rfid_update",
+//         "payload": {
+//             "id": "1623972",
+//             "departure": "patch-e",
+//             "arrival": "patch-b"
+//         }
+//     },
+//     {
+//         "_id": {
+//             "$oid": "52337cb63004b3c501fe4786"
+//         },
+//         "event": "rfid_update",
+//         "payload": {
+//             "id": "1623373",
+//             "departure": "patch-e",
+//             "arrival": "patch-b"
+//         }
+//     },
+//     {
+//         "_id": {
+//             "$oid": "52337cb63004b3c501fe4787"
+//         },
+//         "event": "rfid_update",
+//         "payload": {
+//             "id": "1623624",
+//             "departure": "patch-e",
+//             "arrival": "patch-b"
+//         }
+//     },
+//     {
+//         "_id": {
+//             "$oid": "52337cc53004b3c501fe4788"
+//         },
+//         "event": "rfid_update",
+//         "payload": {
+//             "id": "1623115",
+//             "departure": "patch-d",
+//             "arrival": "patch-a"
+//         }
+//     },
+//     {
+//         "_id": {
+//             "$oid": "52337ccf3004b3c501fe4789"
+//         },
+//         "event": "rfid_update",
+//         "payload": {
+//             "id": "1623373",
+//             "departure": "patch-b",
+//             "arrival": "patch-e"
+//         }
+//     },
+//     {
+//         "_id": {
+//             "$oid": "52337ccf3004b3c501fe478a"
+//         },
+//         "event": "rfid_update",
+//         "payload": {
+//             "id": "1623972",
+//             "departure": "patch-b",
+//             "arrival": "patch-e"
+//         }
+//     },
+//     {
+//         "_id": {
+//             "$oid": "52337cd03004b3c501fe478b"
+//         },
+//         "event": "rfid_update",
+//         "payload": {
+//             "id": "1623624",
+//             "departure": "patch-b",
+//             "arrival": "patch-e"
+//         }
+//     },
+//     {
+//         "_id": {
+//             "$oid": "52337cd73004b3c501fe478c"
+//         },
+//         "event": "rfid_update",
+//         "payload": {
+//             "id": "1623373",
+//             "departure": "patch-e",
+//             "arrival": "patch-b"
+//         }
+//     },
+//     {
+//         "_id": {
+//             "$oid": "52337cd83004b3c501fe478d"
+//         },
+//         "event": "rfid_update",
+//         "payload": {
+//             "id": "1623624",
+//             "departure": "patch-e",
+//             "arrival": "patch-b"
+//         }
+//     },
+//     {
+//         "_id": {
+//             "$oid": "52337ce23004b3c501fe478e"
+//         },
+//         "event": "rfid_update",
+//         "payload": {
+//             "id": "1623972",
+//             "departure": "patch-e",
+//             "arrival": "patch-f"
+//         }
+//     },
+//     {
+//         "_id": {
+//             "$oid": "52337cff3004b3c501fe478f"
+//         },
+//         "event": "rfid_update",
+//         "payload": {
+//             "id": "1623641",
+//             "departure": "patch-d",
+//             "arrival": "patch-a"
+//         }
+//     },
+//     {
+//         "_id": {
+//             "$oid": "52337d093004b3c501fe4790"
+//         },
+//         "event": "rfid_update",
+//         "payload": {
+//             "id": "1623373",
+//             "departure": "patch-b",
+//             "arrival": "patch-e"
+//         }
+//     },
+//     {
+//         "_id": {
+//             "$oid": "52337d0a3004b3c501fe4791"
+//         },
+//         "event": "rfid_update",
+//         "payload": {
+//             "id": "1623624",
+//             "departure": "patch-b",
+//             "arrival": "patch-e"
+//         }
+//     },
+//     {
+//         "_id": {
+//             "$oid": "52337d0e3004b3c501fe4792"
+//         },
+//         "event": "rfid_update",
+//         "payload": {
+//             "id": "1623624",
+//             "departure": "patch-e",
+//             "arrival": "patch-b"
+//         }
+//     },
+//     {
+//         "_id": {
+//             "$oid": "52337d183004b3c501fe4793"
+//         },
+//         "event": "rfid_update",
+//         "payload": {
+//             "id": "1623641",
+//             "departure": "patch-a",
+//             "arrival": "patch-f"
+//         }
+//     },
+//     {
+//         "_id": {
+//             "$oid": "52337d363004b3c501fe4794"
+//         },
+//         "event": "rfid_update",
+//         "payload": {
+//             "id": "1623624",
+//             "departure": "patch-b",
+//             "arrival": "patch-e"
+//         }
+//     },
+//     {
+//         "_id": {
+//             "$oid": "52337d4e3004b3c501fe4795"
+//         },
+//         "event": "rfid_update",
+//         "payload": {
+//             "id": "1623115",
+//             "departure": "patch-a",
+//             "arrival": "patch-f"
+//         }
+//     },
+//     {
+//         "_id": {
+//             "$oid": "52337d533004b3c501fe4796"
+//         },
+//         "event": "rfid_update",
+//         "payload": {
+//             "id": "1623641",
+//             "departure": "patch-f",
+//             "arrival": "patch-a"
+//         }
+//     },
+//     {
+//         "_id": {
+//             "$oid": "52337d623004b3c501fe4797"
+//         },
+//         "event": "rfid_update",
+//         "payload": {
+//             "id": "1623972",
+//             "departure": "patch-f",
+//             "arrival": "patch-d"
+//         }
+//     },
+//     {
+//         "_id": {
+//             "$oid": "52337d693004b3c501fe4798"
+//         },
+//         "event": "rfid_update",
+//         "payload": {
+//             "id": "1623972",
+//             "departure": "patch-d",
+//             "arrival": "patch-c"
+//         }
+//     }
+
+// ]
+
+
+//     jQuery.ajax({
+//       type: "POST",
+//       url: "https://drowsy.badger.encorelab.org/hg-test/log-test/",
+//       data: postData
+//     });
 
     // app.patchPopulations = {
     //     "5262672": {
-    //         "patch-1": 3,
-    //         "patch-2": 1,
-    //         "patch-3": 5,
-    //         "patch-4": 0,
-    //         "patch-5": 1,
-    //         "patch-6": 2
+    //         "patch-a": 3,
+    //         "patch-b": 1,
+    //         "patch-c": 5,
+    //         "patch-d": 0,
+    //         "patch-e": 1,
+    //         "patch-f": 2
     //     },
     //     "5263673": {
-    //         "patch-1": 4,
-    //         "patch-2": 1,
-    //         "patch-3": 4,
-    //         "patch-4": 0,
-    //         "patch-5": 1,
-    //         "patch-6": 2
+    //         "patch-a": 4,
+    //         "patch-b": 1,
+    //         "patch-c": 4,
+    //         "patch-d": 0,
+    //         "patch-e": 1,
+    //         "patch-f": 2
     //     }
     // };
   };
@@ -453,7 +811,7 @@
   //*************** HELPER FUNCTIONS ***************//
 
   var tryPullAll = function() {
-    // CAREFUL: this may need promises once state is introduced!          // START HERE SO THAT BOUT MOVE NUMBER THING CAN BE POPULATED
+    // CAREFUL: this may need promises once state is introduced!          // START HERE SO THAT BOUT MOVE NUMBER THING CAN BE POPULATED. ALSO GET IPAD SCREEN
     //tryPullStateData();
     tryPullConfigurationData();
     tryPullStatisticsData();
@@ -466,7 +824,7 @@
         app.stateData = data;
       })
       .done(function() { console.log("State data pulled!"); })
-      .fail(function() { console.error("Error pulling configuration data..."); });
+      .fail(function() { console.error("Error pulling state data..."); });
     }
   };
 
@@ -495,7 +853,7 @@
     // to determine the selector, we need the run_id, habitat_configuration, the bout_id
     // in the log collection (chose which based on run) get all events between the bouts' 'game_start' and 'game_stop' timestamps
     if (app.run) {
-      jQuery.get(app.UICdrowsy+'/'+DATABASE+'/log-test', function(data) {
+      jQuery.get(app.UICdrowsy+'/'+DATABASE+'/log-test?%3Fsort%3D["_id"%2C"ASC"]', function(data) {
         app.recentBoutData = data;
         sortRecentBoutData();
       })

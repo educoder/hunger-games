@@ -129,10 +129,10 @@ input:disabled {
 /* MAP SCREENS */
 
 .map-screen {
-	background-image: url('../img/background_map.jpg');
+	background-image: url('../img/background_final_lglegend.png');
 	background-size: 100% 100%;
 	width: 100%;
-	height: 700px;
+	height: 667px !important;
 }
 
 .map-title {
@@ -148,39 +148,39 @@ input:disabled {
 	width: 200px;
 }
 
-.patch-1 {
-	position: absolute;
-	top: 10%;
-	left: 5%;
-}
-
-.patch-2 {
-	position: absolute;
-	top: 30%;
-	left: 30%;
-}
-
-.patch-3 {
-	position: absolute;
-	top: 70%;
-	left: 10%;
-}
-
-.patch-4 {
-	position: absolute;
-	top: 80%;
-	left: 80%;
-}
-
-.patch-5 {
-	position: absolute;
-	top: 10%;
-	left: 60%;
-}
-
-.patch-6 {
+.patch-a {
 	position: absolute;
 	top: 50%;
+	left: 77%;
+}
+
+.patch-b {
+	position: absolute;
+	top: 60%;
+	left: 48%;
+}
+
+.patch-c {
+	position: absolute;
+	top: 64%;
+	left: 21%;
+}
+
+.patch-d {
+	position: absolute;
+	top: 39%;
+	left: 16%;
+}
+
+.patch-e {
+	position: absolute;
+	top: 8%;
+	left: 22%;
+}
+
+.patch-f {
+	position: absolute;
+	top: 32%;
 	left: 50%;
 }
 
