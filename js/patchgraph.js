@@ -70,7 +70,7 @@
   var draw = function (dataset) {
     xScale = d3.scale.linear()
                 .domain([0, d3.max(dataset, function(d){
-                        return d.total_calories; })])
+                        return d.harvest; })])
                 .range([padding, w - (padding*2)]);
 
     yScale = d3.scale.ordinal()
@@ -94,7 +94,7 @@
 
     xAxisLabel = d3.scale.linear()
                     .domain([0, d3.max(dataset, function(d){
-                        return d.total_calories; })])
+                        return d.harvest; })])
                     .range([padding, w -padding]);
 
     xAxis = d3.svg.axis()
@@ -167,7 +167,7 @@
           return yScale(i);
       })
       .attr("width", function(d) {
-          return xScale(d.total_calories);
+          return xScale(d.harvest);
       })
       .attr("height", yScale.rangeBand())
       .attr("fill", function(d) {
@@ -184,7 +184,10 @@
         }
       })
       .attr("stroke-width", 1)
-      .attr("stroke", "rgb(0,0,0)");
+      .attr("stroke", "rgb(0,0,0)")
+      .on("click", function(){
+        console.log('clicked on bar in graph');
+      });
       // .on("mouseover", function(d){    
       //   var yPosition = parseFloat(d3.select(this).attr("y")) + yScale.rangeBand() /2;
       //   var xPosition = parseFloat(d3.select(this).attr("x")) /2 + w /2;
@@ -193,7 +196,7 @@
       //       .style("left", "660px")
       //       .style("top", "140px")
       //       .select("#strat")
-      //       .text(d.avg_richness);
+      //       .text(d.avg_quality);
             
       //   // d3.select("#tooltip")
       //   //     .select("#graph")
@@ -235,14 +238,14 @@
       .enter()
       .append("text")
       .text(function(d) {
-          return d.total_calories;
+          return d.harvest;
       })
       .attr("text-anchor", "middle")
       .attr("y", function(d, i) {
         return yScale(i) + yScale.rangeBand() /2 +4;
       })
       .attr("x", function(d) {
-        return xScale(d.total_calories) +65;
+        return xScale(d.harvest) +65;
       })
       .attr("font-family", "sans-serif")
       .attr("font-size", "12px")
@@ -256,159 +259,85 @@
       .attr("class", "labels");
 
 
-    d3.select("#yield").on("click", function(){
-      // resort the graph data as well
-      var sortedData = dataset.sort(function(a, b){
-        return d3.ascending(a.total_calories, b.total_calories);
-      });
+    d3.selectAll(".graph-sort-btn").on("click", function(){
+      var selector = jQuery(this).data('selector');
 
-      svg.selectAll("rect.bars")
-        .sort(function(a, b){
-          return d3.ascending(a.total_calories, b.total_calories);
-        })
-        .transition()
-        .delay(function(d, i){
-          return i *50;
-        })
-        .duration(1000)
-        .attr("y", function(d, i) {
-          return yScale(i);
-        });
+      sortGraphBars(selector);
 
-      svg.selectAll(".labels")
-        .sort(function(a, b){
-            return d3.ascending(a.total_calories, b.total_calories);
-        })
-        .transition()
-        .delay(function(d, i){
-          return i * 50;
-        })
-        .duration(1000)
-        .attr("text-anchor", "middle")
-        .attr("y", function(d, i) {
-          return yScale(i) +yScale.rangeBand() /2 +4;
-        });
-
-      sortLabelNames('total_calories');
-
-      // changeGraph(sortedData);
-      changeYaxis(sortedData, 'total_calories');
-    });
-
-    d3.select("#richPatch").on("click", function(){
-      svg.selectAll("rect.bars")
-        .sort(function(a, b){
-          return d3.ascending(a.avg_richness, b.avg_richness);
-        })
-        .transition()
-        .delay(function(d, i){
-          return i *50;
-        })
-        .duration(1000)
-        .attr("y", function(d, i) {
-          return yScale(i);
-        });
-
-      svg.selectAll(".labels")
-        .sort(function(a, b){
-          return d3.ascending(a.avg_richness, b.avg_richness);
-        })
-        .transition()
-        .delay(function(d, i){
-          return i * 50;
-        })
-        .duration(1000)
-        .attr("text-anchor", "middle")
-        .attr("y", function(d, i) {
-          return yScale(i) +yScale.rangeBand() /2 +4;
-      });
-
-      sortLabelNames('avg_richness');
-
-      // resort the graph data
-      var sortedData = dataset.sort(function(a, b){
-        return d3.ascending(a.avg_richness, b.avg_richness);
-      });
-
-      changeYaxis(sortedData, 'avg_richness');
-    });
-
-    d3.select("#patchMoves").on("click", function(){     
-      svg.selectAll("rect.bars")
-        .sort(function(a, b){
-          return d3.ascending(a.total_moves, b.total_moves);
-        })
-        .transition()
-        .delay(function(d, i){
-          return i *50;
-        })
-        .duration(1000)
-        .attr("y", function(d, i) {
-          return yScale(i);
-        });
-
-      svg.selectAll(".labels")
-        .sort(function(a, b){
-            return d3.ascending(a.total_moves, b.total_moves);
-        })
-        .transition()
-        .delay(function(d, i){
-          return i * 50;
-        })
-        .duration(1000)
-        .attr("text-anchor", "middle")
-        .attr("y", function(d, i) {
-          return yScale(i) +yScale.rangeBand() /2 +4;
-      });
-
-      sortLabelNames('total_moves');
-
-      // resort the graph data
-      var sortedData = dataset.sort(function(a, b){
-        return d3.ascending(a.total_moves, b.total_moves);
-      });
-
-      changeYaxis(sortedData, 'total_moves'); 
-    });
-
-    d3.select("#patchCompetition").on("click", function(){
-      svg.selectAll("rect.bars")
-        .sort(function(a, b){
-          return d3.ascending(a.avg_competition, b.avg_competition);
-        })
-        .transition()
-        .delay(function(d, i){
-          return i *50;
-        })
-        .duration(1000)
-        .attr("y", function(d, i) {
-          return yScale(i);
-        });
-
-      svg.selectAll(".labels")
-        .sort(function(a, b){
-         return d3.ascending(a.avg_competition, b.avg_competition);
-        })
-        .transition()
-        .delay(function(d, i){
-          return i * 50;
-        })
-        .duration(1000)
-        .attr("text-anchor", "middle")
-        .attr("y", function(d, i) {
-         return yScale(i) +yScale.rangeBand() /2 +4;
-      });
-
-      sortLabelNames('avg_competition');
+      sortLabelNames(selector);
 
       // svg.select(".y").call(yAxis);
       // resort the graph data
       var sortedData = dataset.sort(function(a, b){
-        return d3.ascending(a.avg_competition, b.avg_competition);
+        return d3.ascending(a[selector], b[selector]);
       });
 
-      changeYaxis(sortedData, 'avg_competition');
+      changeYaxis(sortedData, selector);
     });
+
+    // d3.select("#richPatch").on("click", function(){
+    //   var selector = jQuery(this).data('selector');
+
+    //   sortGraphBars(selector);
+
+    //   sortLabelNames(selector);
+
+    //   // svg.select(".y").call(yAxis);
+    //   // resort the graph data
+    //   var sortedData = dataset.sort(function(a, b){
+    //     return d3.ascending(a[selector], b[selector]);
+    //   });
+
+    //   changeYaxis(sortedData, selector);
+    // });
+
+    // d3.select("#patchMoves").on("click", function(){     
+    //   var selector = jQuery(this).data('selector');
+
+    //   sortGraphBars(selector);
+
+    //   sortLabelNames(selector);
+
+    //   // svg.select(".y").call(yAxis);
+    //   // resort the graph data
+    //   var sortedData = dataset.sort(function(a, b){
+    //     return d3.ascending(a[selector], b[selector]);
+    //   });
+
+    //   changeYaxis(sortedData, selector);
+    // });
+
+    // d3.select("#patchCompetition").on("click", function(){
+    //   var selector = jQuery(this).data('selector');
+
+    //   sortGraphBars(selector);
+
+    //   sortLabelNames(selector);
+
+    //   // svg.select(".y").call(yAxis);
+    //   // resort the graph data
+    //   var sortedData = dataset.sort(function(a, b){
+    //     return d3.ascending(a[selector], b[selector]);
+    //   });
+
+    //   changeYaxis(sortedData, selector);
+    // });
+
+    // d3.select("#arbitrage").on("click", function(){
+    //   var selector = jQuery(this).data('selector');
+
+    //   sortGraphBars(selector);
+
+    //   sortLabelNames(selector);
+
+    //   // svg.select(".y").call(yAxis);
+    //   // resort the graph data
+    //   var sortedData = dataset.sort(function(a, b){
+    //     return d3.ascending(a[selector], b[selector]);
+    //   });
+
+    //   changeYaxis(sortedData, selector);
+    // });
 
     //Create Y axis
     svg.append("g")
@@ -422,6 +351,21 @@
       .attr("transform", "translate(" + padding + ",0)")
       .call(yAxis);
 
+  };
+
+  var sortGraphBars = function (selector) {
+    svg.selectAll("rect.bars")
+      .sort(function(a, b){
+        return d3.ascending(a[selector], b[selector]);
+      })
+      .transition()
+      .delay(function(d, i){
+        return i *50;
+      })
+      .duration(1000)
+      .attr("y", function(d, i) {
+        return yScale(i);
+      });
   };
 
   var sortLabelNames = function (dataField) {
