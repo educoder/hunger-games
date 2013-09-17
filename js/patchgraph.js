@@ -187,6 +187,10 @@
       .attr("stroke", "rgb(0,0,0)")
       .on("click", function(){
         console.log('clicked on bar in graph');
+        // this is the result of weird usernames. Embrace for impact! 
+        var username = runId + '#' + this.__data__.name;
+        // TODO call Colin's 
+        HG.Mobile.populateMoveTracker(username);
       });
       // .on("mouseover", function(d){    
       //   var yPosition = parseFloat(d3.select(this).attr("y")) + yScale.rangeBand() /2;
