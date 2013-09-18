@@ -55,17 +55,20 @@
       var list = this.$el.find('ul');
 
       HG.Model.awake.notes.each(function(n) {
-        console.log('Show each note...');
-        // wall.registerBalloon(n, Smartboard.View.NoteBalloon, wall.balloons);
-        // var listItem = jQuery('<li>');
-        // listItem.text(n.get('headline'));
-        var data = n.toJSON();
-        // _.extend(data, viewHelpers);
+        if (n.get('body') && n.get('headline')) {
+          console.log('Show each note...');
+          // wall.registerBalloon(n, Smartboard.View.NoteBalloon, wall.balloons);
+          // var listItem = jQuery('<li>');
+          // listItem.text(n.get('headline'));
+          var data = n.toJSON();
+          // _.extend(data, viewHelpers);
 
-        var listItem = _.template(jQuery(view.template).text(), data);
-        // list.html(listItem);
+          var listItem = _.template(jQuery(view.template).text(), data);
+          // list.html(listItem);
 
-        list.append(listItem);
+          list.append(listItem);         
+        }
+
       });
 
       return view;

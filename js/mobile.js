@@ -99,9 +99,8 @@
       console.log('We found user: '+app.username);
       jQuery('.username-display a').text(app.username);
 
-      // show index-screen aka home
-      jQuery('#index-screen').removeClass('hidden');
-      // jQuery('#graphs-screen').removeClass('hidden');
+      // show notes-screen
+      jQuery('#notes-screen').removeClass('hidden');
 
       hideLogin();
       showUsername();
@@ -124,11 +123,11 @@
       logoutUser();
     });
 
-    // Show home / input screen
-    jQuery('.home').click(function() {
+    // Show notes screen
+    jQuery('.notes-button').click(function() {
       if (app.username) {
         app.hideAllRows();
-        jQuery('#index-screen').removeClass('hidden');
+        jQuery('#notes-screen').removeClass('hidden');
       }
     });
 
@@ -232,7 +231,7 @@
     
     if (app.indexView === null) {
       app.indexView = new app.View.IndexView({
-        el: jQuery('#index-screen')
+        el: jQuery('#notes-screen')
       });
     }
 
@@ -549,8 +548,8 @@
         jQuery.cookie('hunger-games_mobile_username', app.username, { expires: 1, path: '/' });
         jQuery('.username-display a').text(app.username);
 
-        // show index-screen aka home
-        jQuery('#index-screen').removeClass('hidden');
+        // show notes-screen
+        jQuery('#notes-screen').removeClass('hidden');
 
         hideLogin();
         showUsername();
@@ -572,8 +571,8 @@
     //   jQuery.cookie('hunger-games_mobile_username', username, { expires: 1, path: '/' });
     //   jQuery('.username-display a').text(username);
 
-    //   // show index-screen aka home
-    //   jQuery('#index-screen').removeClass('hidden');
+    //   // show notes-screen
+    //   jQuery('#notes-screen').removeClass('hidden');
 
     //   hideLogin();
     //   showUsername();
