@@ -63,7 +63,7 @@
 
     // TODO=
     app.runId= "5bj";
-    app.username = "som"
+    app.username = "som";
 
     // grab the state data, the configuration data, the statistics data and the recent bout data
     tryPullAll();
