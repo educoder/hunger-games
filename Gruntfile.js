@@ -13,7 +13,7 @@ module.exports = function(grunt) {
     //   }
     // }
     jshint: {
-      all: ['Gruntfile.js', 'js/*.js']
+      all: ['Gruntfile.js', 'js/*.js', 'agents/*.js']
     },
     csslint: {
       dev: {
