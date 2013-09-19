@@ -55,8 +55,8 @@
       var list = this.$el.find('ul');
 
       HG.Model.awake.notes.each(function(n) {
-        if (n.get('body') && n.get('headline')) {
-          console.log('Show each note...');
+        if (n.get('part_1') && n.get('part_2')) {
+          console.log('Showing each note...');
           // wall.registerBalloon(n, Smartboard.View.NoteBalloon, wall.balloons);
           // var listItem = jQuery('<li>');
           // listItem.text(n.get('headline'));
@@ -107,11 +107,11 @@
     },
 
     shareNewNote: function () {
-      var newHeadline = this.$el.find('#note-part-1-entry').val();
-      var newNoteText = this.$el.find('#note-part-2-entry').val();
+      var newPart1 = this.$el.find('#note-part-1-entry').val();
+      var newPart2 = this.$el.find('#note-part-2-entry').val();
       var newNote = {};
-      newNote.headline = newHeadline;
-      newNote.body = newNoteText;
+      newNote.part_1 = newPart1;
+      newNote.part_2 = newPart2;
       // if (jQuery.trim(newTag).length < 2) {
       //   return; // don't allow tags shorter than 2 characters
       // }
@@ -119,6 +119,8 @@
       
       this.$el.find('#note-part-1-entry').val('');
       this.$el.find('#note-part-2-entry').val('');
+
+      // RE SET PROMPTS
     },
 
     render: function () {
