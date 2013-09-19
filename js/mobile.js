@@ -55,7 +55,8 @@
 
     app.config = {
       drowsy: {url: "http://drowsy.badger.encorelab.org"},
-      wakeful: {url: "http://wakeful.badger.encorelab.org:7777/faye"}
+      wakeful: {url: "http://wakeful.badger.encorelab.org:7777/faye"},
+      login_picker: true
     };
 
     app.UICdrowsy = "http://ltg.evl.uic.edu:9292";
@@ -112,11 +113,13 @@
       console.log('No user found so prompt for username');
       hideUsername();
       // fill modal dialog with user login buttons
-      addUserLoginButtons(app.runId);
-
-      // register click listeners
-
-      // show modal dialog
+      if (app.config.login_picker) {
+        hideLogin();
+        showUserLoginPicker(app.runId);
+      } else {
+        showLogin();
+        hideUserLoginPicker();
+      }
     }
 
     // click listener that sets username
@@ -268,11 +271,11 @@
       });
     }
 
-    if (app.loginButtonsView === null) {
-      app.loginButtonsView = new app.View.LoginButtonsView({
-        el: '#login-picker'
-      });
-    }
+    // if (app.loginButtonsView === null) {
+    //   app.loginButtonsView = new app.View.LoginButtonsView({
+    //     el: '#login-picker'
+    //   });
+    // }
 
     // Init the Patchgraph
     HG.Patchgraph.init(app.UICdrowsy, DATABASE, app.runId);
@@ -592,6 +595,7 @@
         jQuery('#notes-screen').removeClass('hidden');
 
         hideLogin();
+        hideUserLoginPicker();
         showUsername();
 
         app.ready();
@@ -606,21 +610,6 @@
         }
       }
     });
-
-    // if (username && username !== '') {
-    //   jQuery.cookie('hunger-games_mobile_username', username, { expires: 1, path: '/' });
-    //   jQuery('.username-display a').text(username);
-
-    //   // show notes-screen
-    //   jQuery('#notes-screen').removeClass('hidden');
-
-    //   hideLogin();
-    //   showUsername();
-
-    //   app.ready();
-    // } else {
-    //   console.error('Username invalid');
-    // }
   };
 
   var logoutUser = function () {
@@ -628,9 +617,19 @@
     window.location.reload();
   };
 
+  var showLogin = function () {
+    jQuery('#login-button').removeAttr('disabled');
+    jQuery('#username').removeAttr('disabled');
+  };
+
   var hideLogin = function () {
     jQuery('#login-button').attr('disabled','disabled');
     jQuery('#username').attr('disabled','disabled');
+  };
+
+  var hideUserLoginPicker = function () {
+    // hide modal dialog
+    jQuery('#login-picker').modal('hide');
   };
 
   var showUsername = function () {
@@ -641,18 +640,30 @@
     jQuery('.username-display').addClass('hide');
   };
 
-  var addUserLoginButtons = function(runId) {
+  var showUserLoginPicker = function(runId) {
     // retrieve all users that have runId
     app.rollcall.usersWithTags([runId])
     .done(function (availableUsers) {
+      jQuery('.login-buttons').html(''); //clear the house
       console.log(availableUsers);
       app.users = availableUsers;
 
-      _.each(app.users, function(user) {
-
+      app.users.each(function(user) {
+        var button = jQuery('<button class="btn btn-large btn-primary login-button">');
+        button.val(user.id);
+        button.text(user.get('username'));
+        jQuery('.login-buttons').append(button);
       });
-    });
-    jQuery('login-buttons').html(/*buttons*/);
+
+      // register click listeners
+      jQuery('.login-button').click(function() {
+        var clickedUserName = jQuery(this).text();
+        app.loginUser(clickedUserName);
+      });
+
+      // show modal dialog
+      jQuery('#login-picker').modal('show');
+    }); 
   };
 
   app.hideAllRows = function () {

@@ -131,36 +131,36 @@
   /**
     LoginButtonsView
   **/
-  app.View.LoginButtonsView = Backbone.View.extend({
-    initialize: function () {
-      console.log('Initializing LoginButtonsView...', this.el);
-    },
+  // app.View.LoginButtonsView = Backbone.View.extend({
+  //   initialize: function () {
+  //     console.log('Initializing LoginButtonsView...', this.el);
+  //   },
 
-    events: {
-      //'click #share-note-btn': 'shareNewNote'
-    },
+  //   events: {
+  //     //'click #share-note-btn': 'shareNewNote'
+  //   },
 
-    shareNewNote: function () {
-      // var newHeadline = this.$el.find('#note-headline-entry').val();
-      // var newNoteText = this.$el.find('#note-body-entry').val();
-      // var newNote = {};
-      // newNote.headline = newHeadline;
-      // newNote.body = newNoteText;
-      // // if (jQuery.trim(newTag).length < 2) {
-      // //   return; // don't allow tags shorter than 2 characters
-      // // }
-      // HG.Mobile.createNewNote(newNote);
+  //   shareNewNote: function () {
+  //     // var newHeadline = this.$el.find('#note-headline-entry').val();
+  //     // var newNoteText = this.$el.find('#note-body-entry').val();
+  //     // var newNote = {};
+  //     // newNote.headline = newHeadline;
+  //     // newNote.body = newNoteText;
+  //     // // if (jQuery.trim(newTag).length < 2) {
+  //     // //   return; // don't allow tags shorter than 2 characters
+  //     // // }
+  //     // HG.Mobile.createNewNote(newNote);
       
-      // this.$el.find('#note-headline-entry').val('');
-      // this.$el.find('#note-body-entry').val('');
-    },
+  //     // this.$el.find('#note-headline-entry').val('');
+  //     // this.$el.find('#note-body-entry').val('');
+  //   },
 
-    render: function () {
-      console.log('Rendering LoginButtonsView');
-    }
+  //   render: function () {
+  //     console.log('Rendering LoginButtonsView');
+  //   }
 
 
-  });
+  // });
 
 
   this.HG = HG;
