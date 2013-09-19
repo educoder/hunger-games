@@ -107,8 +107,8 @@
     },
 
     shareNewNote: function () {
-      var newHeadline = this.$el.find('#note-headline-entry').val();
-      var newNoteText = this.$el.find('#note-body-entry').val();
+      var newHeadline = this.$el.find('#note-part-1-entry').val();
+      var newNoteText = this.$el.find('#note-part-2-entry').val();
       var newNote = {};
       newNote.headline = newHeadline;
       newNote.body = newNoteText;
@@ -117,8 +117,8 @@
       // }
       HG.Mobile.createNewNote(newNote);
       
-      this.$el.find('#note-headline-entry').val('');
-      this.$el.find('#note-body-entry').val('');
+      this.$el.find('#note-part-1-entry').val('');
+      this.$el.find('#note-part-2-entry').val('');
     },
 
     render: function () {

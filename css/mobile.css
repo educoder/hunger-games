@@ -24,11 +24,11 @@ input {
 	overflow-y: auto;
 }
 
-.bottom-btn-container {
+/*.bottom-btn-container {
 	position: absolute;
 	bottom: 3px;
 	right: 3px;
-}
+}*/
 
 .top-btn-container {
 	position: absolute;
@@ -47,6 +47,14 @@ input {
 	background-color: #ddd
 }
 
+#list-screen {
+	border: 1px solid;
+	padding: 5px;
+	border-radius: 7px;
+	box-shadow: rgba(0,0,0,0.2) 1px 4px 15px;
+	background-color: #ddd
+}
+
 /*.container-header {
 	height: 40px;
 	padding: 10px 5px 5px 5px;
@@ -56,15 +64,6 @@ input {
 	overflow-y: auto;
 	font-weight: bold;
 }*/
-
-.body-text-entry {
-	width: 85%;
-	height: 120px;
-}
-
-.headline-text-entry {
-	width: 65%;
-}
 
 
 /* NAVBAR */
@@ -101,8 +100,6 @@ input:disabled {
 }
 
 
-
-
 /* BODY - ALL */
 
 .row-fluid {
@@ -117,6 +114,31 @@ input:disabled {
 }
 
 /* LIST SCREEN */
+
+#activity-dropdown {
+	float: left;
+    width: -moz-calc(100% - 115px);
+    width: -webkit-calc(100% - 115px);
+    width: calc(100% - 115px);
+	height: 100%;
+	font-size: 30px;
+	margin-bottom: 20px;
+}
+
+#share-note-btn {
+	width: 80px;
+	height: 30px;
+	float: right;
+}
+
+.note-entry-field {
+	width: 99%;
+	margin-top: -11px;
+}
+
+.headline-text-entry {
+	width: 65%;
+}
 
 .icon-chevron-right {
 	float: right;
