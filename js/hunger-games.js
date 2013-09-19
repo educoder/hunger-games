@@ -37,7 +37,7 @@
   */
   HG.App.prototype.loadConfig = function(configUrl) {
     var _this = this;
-    configUrl = configUrl || '../../config.json';
+    configUrl = configUrl || 'config.json';
     jQuery.ajax(
       {
         url: configUrl, 

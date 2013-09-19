@@ -17,17 +17,19 @@
           // has roster user a run that matches defined runs?
           if (_.contains(runs, uicUser.run)) {
             var userId = uicUser._id.substring(4,7);
-            var result = rollcallUsers.findWhere({username: userId});
-            if (result) {
-              console.log('Update user: '+result.get('username'));
-              var tags = result.get('tags');
+            var user = rollcallUsers.findWhere({username: userId});
+            if (user) {
+              console.log('Update user: '+user.get('username'));
+              // user.set('display_name', userId.toUpperCase());
+              var tags = user.get('tags');
               tags.push(uicUser.run);
-              result.set('tags', _.uniq(tags));
-              // result.save();
+              user.set('tags', _.uniq(tags));
+              // user.save();
             } else {
               console.log('user not found - create');
               var newUser = new copycat.rollcall.User({
                 username: userId,
+                display_name: userId.toUpperCase(),
                 tags: [uicUser.run],
                 rfid_tag: uicUser.rfid_tag,
                 color: uicUser.color,

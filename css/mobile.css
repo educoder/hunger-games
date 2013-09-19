@@ -95,6 +95,11 @@ input:disabled {
 	display: none;
 }
 
+.login-button {
+	margin: 1%;
+	min-width: 6em;
+}
+
 .username-display .hide {
 	display: none;
 }

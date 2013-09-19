@@ -4,7 +4,7 @@
 (function() {
   "use strict";
   var HG = this.HG || {};
-  this.HG.Mobile = this.HG.Mobile || {};
+  this.HG.Mobile = this.HG.Mobile || new HG.App();
   var Model = this.HG.Model;
   var app = this.HG.Mobile;
 
@@ -12,12 +12,14 @@
   app.requiredConfig = {
     drowsy: {
       url: 'string',
-      db: 'string'
+      db: 'string',
+      uic_url: 'string'
     },
     wakeful: {
       url: 'string'
     },
-    curnit:'string'
+    rollcall: {db: 'string'},
+    login_picker:'boolean'
   };
 
   app.rollcall = null;
@@ -50,22 +52,23 @@
 
   app.init = function() {
     /* CONFIG */
-    // HG.loadConfig();
-    // HG.verifyConfig(app.config, this.requiredConfig);
+    app.loadConfig();
+    app.verifyConfig(app.config, app.requiredConfig);
 
-    app.config = {
-      drowsy: {url: "http://drowsy.badger.encorelab.org"},
-      wakeful: {url: "http://wakeful.badger.encorelab.org:7777/faye"}
-    };
+    // app.config = {
+    //   drowsy: {url: "http://drowsy.badger.encorelab.org"},
+    //   wakeful: {url: "http://wakeful.badger.encorelab.org:7777/faye"},
+    //   login_picker: true
+    // };
 
-    app.UICdrowsy = "http://ltg.evl.uic.edu:9292";
+    // app.config.drowsy.uic_url = "http://ltg.evl.uic.edu:9292";
 
     // TODO: should ask at startup
-    DATABASE = "hunger-games-fall-13";
+    DATABASE = app.config.drowsy.db;
 
     // TODO=
     app.runId= "5bj";
-    app.username = "som";
+    // app.username = "som";
 
     // grab the state data, the configuration data, the statistics data and the recent bout data
     tryPullAll();
@@ -78,7 +81,7 @@
     app.hideAllRows();
 
     if (app.rollcall === null) {
-      app.rollcall = new Rollcall('http://drowsy.badger.encorelab.org', 'rollcall');
+      app.rollcall = new Rollcall(app.config.drowsy.url, app.config.rollcall.db);
     }
 
     /* initialize the model and wake it up */
@@ -112,11 +115,13 @@
       console.log('No user found so prompt for username');
       hideUsername();
       // fill modal dialog with user login buttons
-      addUserLoginButtons(app.runId);
-
-      // register click listeners
-
-      // show modal dialog
+      if (app.config.login_picker) {
+        hideLogin();
+        showUserLoginPicker(app.runId);
+      } else {
+        showLogin();
+        hideUserLoginPicker();
+      }
     }
 
     // click listener that sets username
@@ -256,14 +261,14 @@
       });
     }
 
-    if (app.loginButtonsView === null) {
-      app.loginButtonsView = new app.View.LoginButtonsView({
-        el: '#login-picker'
-      });
-    }
+    // if (app.loginButtonsView === null) {
+    //   app.loginButtonsView = new app.View.LoginButtonsView({
+    //     el: '#login-picker'
+    //   });
+    // }
 
     // Init the Patchgraph
-    HG.Patchgraph.init(app.UICdrowsy, DATABASE, app.runId);
+    HG.Patchgraph.init(app.config.drowsy.uic_url, DATABASE, app.runId);
 
   };
 
@@ -489,7 +494,7 @@
 
   var tryPullStateData = function() {
     if (app.runId) {
-      jQuery.get(app.UICdrowsy+'/'+DATABASE+'/state?selector=%7B%22run_id%22%3A%22'+app.runId+'%22%7D', function(data) {
+      jQuery.get(app.config.drowsy.uic_url+'/'+DATABASE+'/state?selector=%7B%22run_id%22%3A%22'+app.runId+'%22%7D', function(data) {
         app.stateData = data[0];
         app.currentBout = app.stateData.state.current_bout_id;
       })
@@ -505,7 +510,7 @@
 
   var tryPullConfigurationData = function() {
     if (app.runId) {
-      jQuery.get(app.UICdrowsy+'/'+DATABASE+'/configuration?selector=%7B%22run_id%22%3A%22'+app.runId+'%22%7D', function(data) {
+      jQuery.get(app.config.drowsy.uic_url+'/'+DATABASE+'/configuration?selector=%7B%22run_id%22%3A%22'+app.runId+'%22%7D', function(data) {
         app.configurationData = data[0];
       })
       .done(function() { console.log("Configuration data pulled!"); })
@@ -516,7 +521,7 @@
   var tryPullStatisticsData = function() {
     // needed: run_id, habitat_configuration, bout_id
     // if (app.runId) {
-    //   jQuery.get(app.UICdrowsy+'/'+DATABASE+'/statistics', function(data) {
+    //   jQuery.get(app.config.drowsy.uic_url+'/'+DATABASE+'/statistics', function(data) {
     //     app.configurationData = data;
     //   })
     //   .done(function() { console.log("Statistics data pulled!"); })
@@ -529,7 +534,7 @@
     // in the log collection (chose which based on run) get all events between the bouts' 'game_start' and 'game_stop' timestamps
     if (app.runId) {
       // +'%3F%253Fsort%253D%5B%22_id%22%252C%22ASC%22%5D'
-      jQuery.get(app.UICdrowsy+'/'+DATABASE+'/log-'+app.runId, function(data) {
+      jQuery.get(app.config.drowsy.uic_url+'/'+DATABASE+'/log-'+app.runId, function(data) {
         app.recentBoutData = data;
         sortRecentBoutData();
       })
@@ -568,6 +573,7 @@
         jQuery('#notes-screen').removeClass('hidden');
 
         hideLogin();
+        hideUserLoginPicker();
         showUsername();
 
         app.ready();
@@ -582,21 +588,6 @@
         }
       }
     });
-
-    // if (username && username !== '') {
-    //   jQuery.cookie('hunger-games_mobile_username', username, { expires: 1, path: '/' });
-    //   jQuery('.username-display a').text(username);
-
-    //   // show notes-screen
-    //   jQuery('#notes-screen').removeClass('hidden');
-
-    //   hideLogin();
-    //   showUsername();
-
-    //   app.ready();
-    // } else {
-    //   console.error('Username invalid');
-    // }
   };
 
   var logoutUser = function () {
@@ -604,9 +595,19 @@
     window.location.reload();
   };
 
+  var showLogin = function () {
+    jQuery('#login-button').removeAttr('disabled');
+    jQuery('#username').removeAttr('disabled');
+  };
+
   var hideLogin = function () {
     jQuery('#login-button').attr('disabled','disabled');
     jQuery('#username').attr('disabled','disabled');
+  };
+
+  var hideUserLoginPicker = function () {
+    // hide modal dialog
+    jQuery('#login-picker').modal('hide');
   };
 
   var showUsername = function () {
@@ -617,18 +618,36 @@
     jQuery('.username-display').addClass('hide');
   };
 
-  var addUserLoginButtons = function(runId) {
+  var showUserLoginPicker = function(runId) {
     // retrieve all users that have runId
     app.rollcall.usersWithTags([runId])
     .done(function (availableUsers) {
+      jQuery('.login-buttons').html(''); //clear the house
       console.log(availableUsers);
       app.users = availableUsers;
 
-      _.each(app.users, function(user) {
+      // sort the collection by username
+      app.users.comparator = function(model) {
+        return model.get('username');
+      };
+      app.users.sort();
 
+      app.users.each(function(user) {
+        var button = jQuery('<button class="btn btn-large btn-primary login-button">');
+        button.val(user.get('username'));
+        button.text(user.get('username'));
+        jQuery('.login-buttons').append(button);
       });
-    });
-    jQuery('login-buttons').html(/*buttons*/);
+
+      // register click listeners
+      jQuery('.login-button').click(function() {
+        var clickedUserName = jQuery(this).val();
+        app.loginUser(clickedUserName);
+      });
+
+      // show modal dialog
+      jQuery('#login-picker').modal('show');
+    }); 
   };
 
   app.hideAllRows = function () {

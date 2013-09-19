@@ -1,10 +1,12 @@
 {
-  "drowsy": {
+    "drowsy": {
         "url": "http://drowsy.badger.encorelab.org",
-        "db":"hunger-games-dev"
+        "db": "hunger-games-fall-13",
+        "uic_url": "http://ltg.evl.uic.edu:9292"
     },
     "wakeful": {
-        "url": "http://badger.encorelab.org:7777/faye"
+        "url": "http://wakeful.badger.encorelab.org:7777/faye"
     },
-    "curnit": "cktest"
+    "rollcall": {"db": "rollcall"},
+    "login_picker": true
 }
