@@ -78,12 +78,17 @@
       list.html('');                            // TODO: I'm going to cause problems later! Better to make the each smarter by using dropping an id into a data element to reside in the DOM
 
       HG.Model.awake.notes.each(function(n) {
-        if (n.get('part_1') && n.get('part_2') && (n.get('related_activity') === jQuery('#activity-dropdown').val())) {
-          console.log('Showing each note...');
-          var data = n.toJSON();
+        if (n.get('part_1') && n.get('part_2') && n.get('author')) {
+          // only display notes from the selected activity
+          if (n.get('related_activity') === jQuery('#activity-dropdown').val()) {
+            console.log('Showing each note...');
+            var data = n.toJSON();
 
-          var listItem = _.template(jQuery(view.template).text(), data);
-          list.append(listItem);         
+            var listItem = _.template(jQuery(view.template).text(), data);
+            list.append(listItem);
+          }
+        } else {
+          console.warn('Malformed note...');
         }
       });
     }
@@ -114,14 +119,16 @@
     },
 
     shareNewNote: function () {
+      var view = this;
       var p1 = this.$el.find('#note-part-1-entry').val();
       var p2 = this.$el.find('#note-part-2-entry').val();
-      if (p1.slice(-3) != "..." && p2.slice(-3) != "...") {
+      if (p1.slice(-3) !== "..." && p2.slice(-3) !== "...") {
         var newNote = {};
         newNote.author = app.username;
         newNote.part_1 = p1;
         newNote.part_2 = p2;
         newNote.related_activity = this.$el.find('#activity-dropdown').val();
+        newNote.worth_remembering = false;
 
         HG.Mobile.createNewNote(newNote);
 

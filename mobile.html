@@ -31,9 +31,11 @@
 
     <!-- Testing out some templating -->
     <script id="list-view-template" type="text/template">
-        <li id="note" class="list-item">
+        <li class="list-item">
             <a class="note">
+                <span class="author"><%= author %></span>
                 <span class="part-1"><%= part_1 %></span>
+                <br />
                 <span class="part-2"><%= part_2 %></span>
             </a>
         </li>
