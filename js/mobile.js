@@ -23,6 +23,7 @@
   app.rollcall = null;
   app.runId= null;
   app.user = 'TODO';
+  app.users = null; // users collection
   app.username = null;
   app.runState = null;
   app.userState = null;
@@ -42,6 +43,7 @@
   app.indexView = null;     // TODO - think about how necessary making these global is going to be
   app.inputView = null;
   app.listView = null;
+  app.loginButtonsView = null;
 
   app.keyCount = 0;
   app.autoSaveTimer = window.setTimeout(function() { console.log("timer activated"); } ,10);
@@ -109,6 +111,12 @@
     } else {
       console.log('No user found so prompt for username');
       hideUsername();
+      // fill modal dialog with user login buttons
+      addUserLoginButtons(app.runId);
+
+      // register click listeners
+
+      // show modal dialog
     }
 
     // click listener that sets username
@@ -257,6 +265,12 @@
     if (app.listView === null) {
       app.listView = new app.View.ListView({
         el: '#list-screen'
+      });
+    }
+
+    if (app.loginButtonsView === null) {
+      app.loginButtonsView = new app.View.LoginButtonsView({
+        el: '#login-picker'
       });
     }
 
@@ -625,6 +639,20 @@
 
   var hideUsername = function() {
     jQuery('.username-display').addClass('hide');
+  };
+
+  var addUserLoginButtons = function(runId) {
+    // retrieve all users that have runId
+    app.rollcall.usersWithTags([runId])
+    .done(function (availableUsers) {
+      console.log(availableUsers);
+      app.users = availableUsers;
+
+      _.each(app.users, function(user) {
+
+      });
+    });
+    jQuery('login-buttons').html(/*buttons*/);
   };
 
   app.hideAllRows = function () {

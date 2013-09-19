@@ -24,6 +24,10 @@ input {
 	overflow-y: auto;
 }
 
+.hidden {
+    display: none;
+}
+
 /*.bottom-btn-container {
 	position: absolute;
 	bottom: 3px;
