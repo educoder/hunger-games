@@ -224,3 +224,15 @@ input:disabled {
 .equalization-squirrels-field {
 	width: 50px;
 }
+
+.current-position {
+	border-style: solid;
+	border-width: 2px;
+	border-color: red;
+}
+
+.next-position {
+	border-style: dashed;
+	border-width: 1px;
+	border-color: green;
+}

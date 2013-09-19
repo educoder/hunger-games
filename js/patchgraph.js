@@ -188,7 +188,7 @@
       .on("click", function(){
         console.log('clicked on bar in graph');
         // this is the result of weird usernames. Embrace for impact! 
-        var username = runId + '#' + this.__data__.name;
+        var username = this.__data__.name;
         // TODO call Colin's 
         HG.Mobile.populateMoveTracker(username);
       });

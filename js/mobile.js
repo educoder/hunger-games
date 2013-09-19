@@ -68,7 +68,6 @@
 
     // TODO=
     app.runId= "5bj";
-    // app.username = "som";
 
     // grab the state data, the configuration data, the statistics data and the recent bout data
     tryPullAll();
@@ -159,12 +158,12 @@
       }
     });
 
-    // Show move tracker screen
+    // Show move tracker screen - TODO: remove me before going to prod
     jQuery('.move-tracker-button').click(function() {
       if (app.username) {
         app.hideAllRows();
         jQuery('#move-tracker-screen').removeClass('hidden');
-        app.populateMoveTracker("som");
+        app.populateMoveTracker(app.username);
       }
     });
 
@@ -336,13 +335,8 @@
 
   app.populateMoveTracker = function(username) {
     jQuery('.bout-number').text(app.currentBout);
-    jQuery('.username').text(app.username);
 
-    // _.each(app.configurationData.patches, function(p) {
-    //   jQuery('#move-tracker-screen .'+p.patch_id+' .move-tracker-quality-field').text(p.richness_per_minute);
-    // });
-
-    // go over the array and pull out all 'rfid_update' events that are related to user with tag rfidTag
+    // go over the array and pull out all 'rfid_update' events that are related to username
     _.each(app.recentBoutData, function(e) {
       // this only checks the first arrival (so far it seems like there's never more than 1, but could be an issue)
       if (e.event === "rfid_update" && e.payload.id === username) {
@@ -352,12 +346,15 @@
     });
 
     // set up the move tracker for the first move for this user in this bout
-    updateMoveTracker("first");
+    updateMoveTracker("first", username);
   };
 
-  var updateMoveTracker = function(move) {
+  var updateMoveTracker = function(move, username) {
     if (move === "first") {
       app.userMove = 1;
+      app.hideAllRows();
+      jQuery('#move-tracker-screen').removeClass('hidden');
+      jQuery('.username').text(username);
     } else if (move === "next") {
       if (app.userMove < app.userLocations.length) {
         app.userMove++;  
@@ -405,14 +402,16 @@
     // update UI: location fields 
     if (app.userLocations[app.userMove]) {
       // clear all locations
-      jQuery('#move-tracker-screen .move-tracker-location-field').text('');
-      if (app.userMove > 1) {
-        // app.userLocations[x].location = ie "patch-a"
-        jQuery('#move-tracker-screen .'+app.userLocations[app.userMove-2].location+' .move-tracker-location-field').text("Previous");
-      }
-      jQuery('#move-tracker-screen .'+app.userLocations[app.userMove-1].location+' .move-tracker-location-field').text("Current");
-      jQuery('#move-tracker-screen .'+app.userLocations[app.userMove-1].location+' .move-tracker-new-yield-field').text("N/A");
-      jQuery('#move-tracker-screen .'+app.userLocations[app.userMove].location+' .move-tracker-location-field').text("Next");
+      jQuery('#move-tracker-screen .patch').removeClass('current-position');
+      jQuery('#move-tracker-screen .patch').removeClass('next-position');
+      //jQuery('#move-tracker-screen .move-tracker-location-field').text('');
+      // if (app.userMove > 1) {
+      //   // app.userLocations[x].location = ie "patch-a"
+      //   jQuery('#move-tracker-screen .'+app.userLocations[app.userMove-2].location+' .move-tracker-location-field').text("Previous");
+      // }
+      jQuery('#move-tracker-screen .'+app.userLocations[app.userMove-1].location).addClass('current-position');
+      //jQuery('#move-tracker-screen .'+app.userLocations[app.userMove-1].location+' .move-tracker-new-yield-field').text("N/A");
+      jQuery('#move-tracker-screen .'+app.userLocations[app.userMove].location).addClass('next-position');
     }
 
   };
