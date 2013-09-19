@@ -48,28 +48,15 @@
 
       HG.Model.awake.notes.on('add', function(n) {
         console.log('Note added...');
-        // wall.registerBalloon(n, Smartboard.View.NoteBalloon, wall.balloons);
+        view.render();
       });
 
-      // find the list where items are rendered into
-      var list = this.$el.find('ul');
-
-      HG.Model.awake.notes.each(function(n) {
-        if (n.get('part_1') && n.get('part_2')) {
-          console.log('Showing each note...');
-          // wall.registerBalloon(n, Smartboard.View.NoteBalloon, wall.balloons);
-          // var listItem = jQuery('<li>');
-          // listItem.text(n.get('headline'));
-          var data = n.toJSON();
-          // _.extend(data, viewHelpers);
-
-          var listItem = _.template(jQuery(view.template).text(), data);
-          // list.html(listItem);
-
-          list.append(listItem);         
-        }
-
+      jQuery('#activity-dropdown').on('change', function() {
+        console.log('Dropdown changed...');
+        view.render();
       });
+
+      view.render();
 
       return view;
     },
@@ -83,8 +70,24 @@
     },
 
     render: function () {
+      var view = this;
       console.log('Rendering InputView');
+
+      // find the list where items are rendered into
+      var list = this.$el.find('ul');
+      list.html('');                            // TODO: I'm going to cause problems later! Better to make the each smarter by using dropping an id into a data element to reside in the DOM
+
+      HG.Model.awake.notes.each(function(n) {
+        if (n.get('part_1') && n.get('part_2') && (n.get('related_activity') === jQuery('#activity-dropdown').val())) {
+          console.log('Showing each note...');
+          var data = n.toJSON();
+
+          var listItem = _.template(jQuery(view.template).text(), data);
+          list.append(listItem);         
+        }
+      });
     }
+
   });
 
   /**
@@ -99,35 +102,60 @@
   **/
   app.View.InputView = Backbone.View.extend({
     initialize: function () {
+      var view = this;
       console.log('Initializing InputView...', this.el);
+      view.updatePrompts();
     },
 
     events: {
-      'click #share-note-btn': 'shareNewNote'
+      'click #share-note-btn': 'shareNewNote',
+      'click .note-entry-field': 'updateEllipses',
+      'change #activity-dropdown': 'updatePrompts'
     },
 
     shareNewNote: function () {
-      var newPart1 = this.$el.find('#note-part-1-entry').val();
-      var newPart2 = this.$el.find('#note-part-2-entry').val();
-      var newNote = {};
-      newNote.part_1 = newPart1;
-      newNote.part_2 = newPart2;
-      // if (jQuery.trim(newTag).length < 2) {
-      //   return; // don't allow tags shorter than 2 characters
-      // }
-      HG.Mobile.createNewNote(newNote);
-      
-      this.$el.find('#note-part-1-entry').val('');
-      this.$el.find('#note-part-2-entry').val('');
+      var p1 = this.$el.find('#note-part-1-entry').val();
+      var p2 = this.$el.find('#note-part-2-entry').val();
+      if (p1.slice(-3) != "..." && p2.slice(-3) != "...") {
+        var newNote = {};
+        newNote.author = app.username;
+        newNote.part_1 = p1;
+        newNote.part_2 = p2;
+        newNote.related_activity = this.$el.find('#activity-dropdown').val();
 
-      // RE SET PROMPTS
+        HG.Mobile.createNewNote(newNote);
+
+        view.updatePrompts();       
+      } else {
+        jQuery().toastmessage('showErrorToast', "Please fill out both parts of the note");
+      }
+
+    },
+
+    updateEllipses: function (ev) {
+      var str = jQuery(ev.target).val();
+      if (str.slice(-3) === "...") {
+        jQuery(ev.target).val(str.substring(0, str.length - 3) + " ");
+      }
+    },
+
+    updatePrompts: function () {
+      var activity = jQuery('#activity-dropdown').val();
+      if (activity === "activity-1") {
+        jQuery('#note-part-1-entry').val("The strategy I tended to use was...");
+        jQuery('#note-part-2-entry').val("In order to do better next time I will...");
+      } else if (activity === "activity-2") {
+        jQuery('#note-part-1-entry').val("Compared to an ideal distribution, our results were...");
+        jQuery('#note-part-2-entry').val("This was because...");
+      } else {
+        jQuery('#note-part-1-entry').val("");
+        jQuery('#note-part-2-entry').val("");
+      }
     },
 
     render: function () {
       console.log('Rendering InputView');
     }
-
-
   });
 
   /**

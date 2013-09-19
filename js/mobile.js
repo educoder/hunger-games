@@ -223,19 +223,6 @@
       updateMoveTracker("previous");
     });
 
-    // TODO: move these to mobile.view.js
-    jQuery('#activity-dropdown').change(function() {
-      app.updatePrompts(jQuery('#activity-dropdown').val());
-    });
-
-    jQuery('.note-entry-field').click(function() {
-      // remove the ellipse if it's there
-      var str = jQuery(this).text();
-      if (str.slice(-3) === "...") {
-        jQuery(this).text(str.substring(0, str.length - 3) + " ");
-      }
-    });
-
 
     /* MISC */
     jQuery().toastmessage({
@@ -284,6 +271,7 @@
   //*************** MAIN FUNCTIONS (RENAME ME) ***************//
 
   app.createNewNote = function (noteData) {
+    
     noteData.created_at = new Date();
     var noteModel = new Model.Note(noteData);
     
@@ -291,19 +279,6 @@
     noteModel.save();
 
     return Model.awake.notes.add(noteModel);
-  };
-
-  app.updatePrompts = function(activity) {
-    if (activity === "activity-1") {
-      jQuery('#note-part-1-entry').text("The strategy I tended to use was...");
-      jQuery('#note-part-2-entry').text("In order to do better next time I will...");
-    } else if (activity === "activity-2") {
-      jQuery('#note-part-1-entry').text("Compared to an ideal distribution, our results were...");
-      jQuery('#note-part-2-entry').text("This was because...");
-    } else {
-      jQuery('#note-part-1-entry').text("");
-      jQuery('#note-part-2-entry').text("");      
-    }
   };
 
   var populateStaticEqualization = function() {

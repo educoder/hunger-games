@@ -35,8 +35,6 @@
             <a class="note">
                 <span class="part-1"><%= part_1 %></span>
                 <span class="part-2"><%= part_2 %></span>
-                // <i class="icon-chevron-right"></i>
-                // <span class="author"></span>
             </a>
         </li>
     </script>
@@ -92,16 +90,16 @@
             <select id="activity-dropdown">
                  <option value="activity-1">In-Class Activity: My Bout Moves</option>
                  <option value="activity-2">Day 2, Activity 6: Reflecting on Bout 2</option>
-                 <option value="activity-3">Activity 3</option>
+<!--                  <option value="activity-3">Activity 3</option>
                  <option value="activity-4">Activity 4</option>
-                 <option value="activity-5">Activity 5</option>
+                 <option value="activity-5">Activity 5</option> -->
              </select>
             <a id="share-note-btn" class="btn btn-success">
                 Submit
             </a>
             <div id="input-screen">
-                <textarea class="field note-entry-field part-1-text-entry" id="note-part-1-entry" name="part-1" type="text" >The strategy I tended to use was...</textarea>
-                <textarea class="field note-entry-field part-2-text-entry" id="note-part-2-entry" name="part-2" type="text" >In order to do better next time I will...</textarea>
+                <textarea class="field note-entry-field part-1-text-entry" id="note-part-1-entry" name="part-1" type="text" ></textarea>
+                <textarea class="field note-entry-field part-2-text-entry" id="note-part-2-entry" name="part-2" type="text" ></textarea>
             </div>
 
             <div id="list-screen" class="bs-docs-sidebar">
@@ -224,13 +222,6 @@
                 </ul>
                 </a>
             </div>
-            
-            <!-- <select class="selectpicker">
-                <option value="volvo">Volvo</option>
-                <option value="saab">Saab</option>
-                <option value="opel">Opel</option>
-                <option value="audi">Audi</option>
-            </select> -->
                 
             <button type="button" class="btn btn-success" id="refresh-graph">Refresh</button>
             <p>
@@ -245,25 +236,6 @@
                 <button type="button" class="btn btn-success graph-sort-btn" id="arbitrage" data-selector="arbitrage">Arbitrage</button>
             </div>
         </div>
-    </div>
-
-    <!-- Modal -->
-    <div id="login-picker" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h3 id="myModalLabel">Modal header</h3>
-      </div>
-      <div class="modal-body login-buttons">
-        <!-- filled by java script with buttons for user login -->
-      </div>
-      <div class="modal-footer">
-        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-        <button class="btn btn-primary">Save changes</button>
-      </div>
-    </div>
-
-    <div class="hidden">
-        <a href="#login-picker" role="button" class="btn" data-toggle="modal">Launch demo modal</a>
     </div>
 
 
