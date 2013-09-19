@@ -242,6 +242,7 @@
     // user
     // mobile
     
+    // TODO: FIX THE WHOLE INDEX CONCEPT
     if (app.indexView === null) {
       app.indexView = new app.View.IndexView({
         el: jQuery('#notes-screen')
@@ -250,7 +251,7 @@
 
     if (app.inputView === null) {
       app.inputView = new app.View.InputView({
-        el: '#input-screen'
+        el: '#notes-screen'
       });
     }
 
