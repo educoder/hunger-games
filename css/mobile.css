@@ -97,6 +97,7 @@ input:disabled {
 
 .login-button {
 	margin: 1%;
+	min-width: 6em;
 }
 
 .username-display .hide {
