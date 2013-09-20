@@ -146,7 +146,10 @@
     // Refresh and repull data - this may go eventually
     jQuery('.refresh-button').click(function() {
       jQuery().toastmessage('showNoticeToast', "Refreshing...");
-      tryPullAll();
+      tryPullAll(); // why try? Just do it ;)
+
+      console.log('Refresh the harvest planning graph on user request');
+      HG.Patchgraph.refresh();
     });
 
     // Show harvest planning tool
@@ -192,10 +195,10 @@
     });
 
     // Click listener for graph refresh button - this will reload data and re-draw bout
-    jQuery('#refresh-graph').click(function () {
-      console.log('Refresh the harvest planning graph on user request');
-      HG.Patchgraph.refresh();
-    });
+    // jQuery('#refresh-graph').click(function () {
+    //   console.log('Refresh the harvest planning graph on user request');
+    //   HG.Patchgraph.refresh();
+    // });
     /*
      * =========================================================
      * End of - Section with functions for the harvest/patch graph
@@ -645,7 +648,7 @@
       });
 
       // show modal dialog
-      jQuery('#login-picker').modal('show');
+      jQuery('#login-picker').modal({backdrop: 'static'});
     }); 
   };
 
