@@ -96,7 +96,7 @@
                  <option value="activity-4">Activity 4</option>
                  <option value="activity-5">Activity 5</option> -->
              </select>
-            <a id="share-note-btn" class="btn btn-success">
+            <a id="share-note-btn" class="btn btn-large btn-success">
                 Submit
             </a>
             <div id="input-screen">
@@ -214,37 +214,33 @@
     </div>
 
     <div id="graphs-screen" class="row-fluid">
-        <div class="span12 view-container bs-docs-sidebar">
-            <div class="btn-group">
-                <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">Choose bout <span class="caret"></span></button>
-                <ul id="bout-picker" class="dropdown-menu" role="menu" aria-labelledby="choose bout">
-                    <li><a tabindex="-1" href="#" data-bout="1">Action</a></li>
-                    <li><a tabindex="-1" href="#" data-bout="2">Another action</a></li>
-                    <li><a tabindex="-1" href="#" data-bout="3">Something else here</a></li>
-                </ul>
-                </a>
-            </div>
-                
-            <button type="button" class="btn btn-success" id="refresh-graph">Refresh</button>
-            <p>
-                These are not the droids you are looking for!
-            </p>
-            
-            <div>
-                <button type="button" class="btn btn-success graph-sort-btn" id="harvest" data-selector="harvest">Harvest</button>
-                <button type="button" class="btn btn-success graph-sort-btn" id="richPatch" data-selector="avg_quality">Richness</button>
-                <button type="button" class="btn btn-success graph-sort-btn" id="patchCompetition" data-selector="avg_competition">Competition</button>
-                <button type="button" class="btn btn-success graph-sort-btn" id="patchMoves" data-selector="total_moves">Moves</button>
-                <button type="button" class="btn btn-success graph-sort-btn" id="arbitrage" data-selector="arbitrage">Arbitrage</button>
+        <div class="span12 view-container bs-docs-sidebar">        
+            <div class="btn-toolbar">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-large btn-success graph-sort-btn" id="harvest" data-selector="harvest">Harvest</button>
+                    <button type="button" class="btn btn-large btn-success graph-sort-btn" id="richPatch" data-selector="avg_quality">Richness</button>
+                    <button type="button" class="btn btn-large btn-success graph-sort-btn" id="patchCompetition" data-selector="avg_competition">Competition</button>
+                    <button type="button" class="btn btn-large btn-success graph-sort-btn" id="patchMoves" data-selector="total_moves">Moves</button>
+                    <button type="button" class="btn btn-large btn-success graph-sort-btn" id="arbitrage" data-selector="arbitrage">Arbitrage</button>
+                </div>
+                <div class="btn-group">
+                    <button class="btn btn-large btn-primary dropdown-toggle" data-toggle="dropdown">Choose bout <span class="caret"></span></button>
+                    <ul id="bout-picker" class="dropdown-menu" role="menu" aria-labelledby="choose bout">
+                        <li><a tabindex="-1" href="#" data-bout="1">Action</a></li>
+                        <li><a tabindex="-1" href="#" data-bout="2">Another action</a></li>
+                        <li><a tabindex="-1" href="#" data-bout="3">Something else here</a></li>
+                    </ul>
+                    </a>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- Modal -->
-    <div id="login-picker" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div id="login-picker" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="login-picker" aria-hidden="true">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h3 id="myModalLabel">Modal header</h3>
+        <!-- <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button> -->
+        <h3>Please log in with your squirrel ID</h3>
       </div>
       <div class="modal-body login-buttons">
         <!-- filled by java script with buttons for user login -->

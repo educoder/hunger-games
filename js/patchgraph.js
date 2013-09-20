@@ -370,6 +370,20 @@
       .attr("y", function(d, i) {
         return yScale(i);
       });
+
+      svg.selectAll(".labels")
+        .sort(function(a, b){
+            return d3.ascending(a[selector], b[selector]);
+        })
+        .transition()
+        .delay(function(d, i){
+          return i * 50;
+        })
+        .duration(1000)
+        .attr("text-anchor", "middle")
+        .attr("y", function(d, i) {
+          return yScale(i) +yScale.rangeBand() /2 +4;
+        });
   };
 
   var sortLabelNames = function (dataField) {
