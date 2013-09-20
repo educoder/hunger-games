@@ -34,9 +34,9 @@
         <li class="list-item">
             <a class="note">
                 <span class="author"><%= author %></span>
-                <span class="part-1"><%= part_1 %></span>
+                <span class="part part-1"><%= part_1 %></span>
                 <br />
-                <span class="part-2"><%= part_2 %></span>
+                <span class="part part-2"><%= part_2 %></span>
             </a>
         </li>
     </script>
@@ -60,7 +60,7 @@
                         <li class="active notes-button"><a href="#">Notes</a></li>
                         <li class="active worth-remembering-button"><a href="#">Worth remembering</a></li>
                         <li class="active equalization-button"><a href="#">Equalization</a></li>
-                        <li class="active move-tracker-button"><a href="#">Move tracker</a></li>
+                        <!-- <li class="active move-tracker-button"><a href="#">Move tracker</a></li> -->
                         <li class="active graphs-button"><a href="#">Harvest</a></li>
                     </ul>
                     <form class="navbar-form pull-right">
@@ -160,12 +160,12 @@
 
     <div id="move-tracker-screen" class="row-fluid">
         <div class="span12 view-container bs-docs-sidebar map-screen bkg-large-legend">
-<!--             <div id="move-tracker-title">Move Tracker</div>
-            <br /> -->
-            <div class="map-title">
-                <button id="move-backward"><</button>
-                Bout <span class="bout-number"></span> moves for <span class="username"></span>: Move <span id="move-number"></span>
-                <button id="move-forward">></button>
+            <div id="move-tracker-title-box">
+                <div class="map-title">
+                    <button id="move-backward" class="move-button"><</button>
+                    Bout <span class="bout-number"></span> moves for <span class="username"></span>: Move <span id="move-number"></span>
+                    <button id="move-forward" class="move-button">></button>
+                </div>
             </div>
             <div class="patch-a patch">
                 <!-- <div>Quality: <span class="move-tracker-quality-field"></span></div> -->

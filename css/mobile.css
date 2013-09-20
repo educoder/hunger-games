@@ -51,13 +51,6 @@ input {
 	background-color: #ddd
 }
 
-#list-screen {
-	border: 1px solid;
-	padding: 5px;
-	border-radius: 7px;
-	box-shadow: rgba(0,0,0,0.2) 1px 4px 15px;
-	background-color: #ddd
-}
 
 /*.container-header {
 	height: 40px;
@@ -149,19 +142,54 @@ input:disabled {
 	width: 65%;
 }
 
+#list-screen {
+	/*background-image: url('../img/background_final_smlegend.png');*/
+	border: 1px solid;
+	padding: 5px;
+	border-radius: 7px;
+	box-shadow: rgba(0,0,0,0.2) 1px 4px 15px;
+	background-color: #ddd;
+}
+
+#list-screen ul {
+	min-height: 200px;
+	max-height: 500px;						/* CHECK ME ON IPAD */
+	background-color: white;
+}
+
+#list-screen li {
+	margin-bottom: -1px;
+}
+
+.nav-list>li>a {
+	padding-top: 5px !important;
+}
+
+
+/* TODO: fix the author height 50% issue */
+
 #list-screen .list-item {
 	margin-left: -16px;
 }
 
 #list-screen .note {
+	position: relative;
 	border: 1px solid black;
 }
 
 #list-screen .author {
-	float: left;
+	position: absolute;
+	height: 100%;
+	width: 50px;
 	border: 1px solid black;
-	padding: 5px;
-	margin-right: 10px;
+	margin-top: -6px;
+	font-size: 20px;
+	text-align: center;
+
+}
+
+#list-screen .part {
+	margin-left: 60px;
 }
 
 
@@ -187,6 +215,17 @@ input:disabled {
 
 .bkg-large-legend {
 	background-image: url('../img/background_final_lglegend.png');
+}
+
+#move-tracker-title-box {
+    margin-left: -moz-calc(50% - 160px);
+    margin-left: -webkit-calc(50% - 160px);
+    margin-left: calc(50% - 160px);
+	width: 320px;
+	height: 40px;
+	background: white;
+	border-radius: 7px;
+
 }
 
 .map-title {
@@ -242,12 +281,15 @@ input:disabled {
 }
 
 .current-position {
-	border: 2px solid red;
+	background-color: #056839;
+	color: white;
 }
 
 .next-position {
-	border: 1px dashed green;
+	background-color: #F1592A;
+	color: white;
 }
-/*START HERE
-Dark green colour is: #056839
-Dark orange colour is: #f1592a*/
+
+.move-button {
+	margin: 7px;
+}
