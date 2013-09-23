@@ -358,6 +358,7 @@
       app.hideAllRows();
       jQuery('#move-tracker-screen').removeClass('hidden');
       jQuery('.username').text(username);
+      // jQuery('.username').text(username.toUpperCase());
     } else if (move === "next") {
       if (app.userMove < app.userLocations.length) {
         app.userMove++;  
