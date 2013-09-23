@@ -12,7 +12,7 @@
 
   var w = 650;
   var h = 600;
-  var padding = 50;
+  var padding = 30;
   var xScale;
   var yScale;
   var svg;

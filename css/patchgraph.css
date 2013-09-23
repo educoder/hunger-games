@@ -92,3 +92,11 @@ rect:hover {
     height: 40px;
     width: 225px;
 }
+
+.patchgraph {
+  margin-left: 3%;
+}
+
+.patchgraph-toolbar {
+  margin-left: 3%;
+}
