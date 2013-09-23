@@ -33,10 +33,9 @@
     <script id="list-view-template" type="text/template">
         <li class="list-item">
             <a class="note">
-                <span class="author"><%= author %></span>
-                <span class="part part-1"><%= part_1 %></span>
-                <br />
-                <span class="part part-2"><%= part_2 %></span>
+                <div class="author-container"><span class="author"><%= author %></span></div>
+                <div class="part part-1"><%= part_1 %></div>
+                <div class="part part-2"><%= part_2 %></div>
             </a>
         </li>
     </script>
@@ -58,7 +57,7 @@
 <!--                         <li class="active home"><a href="#">Home</a></li> -->
                         <li class="active refresh-button"><a href="#">Refresh</a></li>
                         <li class="active notes-button"><a href="#">Notes</a></li>
-                        <li class="active worth-remembering-button"><a href="#">Worth remembering</a></li>
+                        <!-- <li class="active worth-remembering-button"><a href="#">Worth remembering</a></li> -->
                         <li class="active equalization-button"><a href="#">Equalization</a></li>
                         <!-- <li class="active move-tracker-button"><a href="#">Move tracker</a></li> -->
                         <li class="active graphs-button"><a href="#">Harvest</a></li>

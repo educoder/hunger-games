@@ -175,7 +175,7 @@ input:disabled {
 	border: 1px solid black;
 }
 
-#list-screen .author {
+#list-screen .author-container {
 	position: absolute;
 	height: 100%;
 	width: 50px;
@@ -183,7 +183,12 @@ input:disabled {
 	margin-top: -6px;
 	font-size: 20px;
 	text-align: center;
+}
 
+.author {
+	position: absolute;
+	top: 27%;
+	left: 22%;
 }
 
 #list-screen .part {
