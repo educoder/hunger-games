@@ -244,7 +244,7 @@
     // user
     // mobile
     
-    // TODO: FIX THE WHOLE INDEX CONCEPT
+    // TODO: FIX THE WHOLE INDEX CONCEPT - ie does this kind of saving need to be applied to other screens
     if (app.indexView === null) {
       app.indexView = new app.View.IndexView({
         el: jQuery('#notes-screen')
@@ -506,6 +506,9 @@
         tryPullConfigurationData();
         tryPullStatisticsData();
         tryPullRecentBoutData();
+        if (app.users === null) {
+          tryPullUsersData();
+        }
       })
       .fail(function() { console.error("Error pulling state data..."); });
     }
@@ -542,11 +545,24 @@
         sortRecentBoutData();
       })
       .done(function() { console.log("Recent bout data pulled!"); })
-      .fail(function() { console.error("Error pulling configuration data..."); });
+      .fail(function() { console.error("Error pulling recent bout data..."); });
     }
   };
 
-
+  var tryPullUsersData = function() {
+    if (app.runId) {
+      app.rollcall.usersWithTags([app.runId])
+      .done(function (availableUsers) {
+        console.log("Users data pulled!");
+        // app.users = {};                                                         // TODO: check with Armin that this won't conflict - different structure for the app.user obj, addressable
+        // _.each(_.values(availableUsers.models), function(u) {
+        //   app.users[u.attributes.username] = u.attributes;
+        // });
+        app.users = availableUsers;
+      })
+      .fail(function() { console.error("Error pulling users data..."); });
+    }
+  };
 
 
   var idToTimestamp = function(id) {

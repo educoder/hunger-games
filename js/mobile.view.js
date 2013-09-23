@@ -86,6 +86,11 @@
 
             var listItem = _.template(jQuery(view.template).text(), data);
             list.append(listItem);
+
+            // update the colors of the author box
+            var color = app.users.findWhere({username:n.get('author')}).get('color');
+            //var color = app.users[n.get('author')].color;
+            jQuery("#list-screen li:nth-last-child(1) .author-container").css("background-color", color);
           }
         } else {
           console.warn('Malformed note...');
@@ -94,6 +99,23 @@
     }
 
   });
+
+
+
+          // if (n.get('related_activity') === jQuery('#activity-dropdown').val()) {
+          //   console.log('Showing each note...');
+          // // finds first user that corresponds with author
+          //   var u = _.findWhere(app.users, {username: n.get('author')});
+          //   if (u) {
+          //     n.color = u.color;
+             
+          //     var data = n.toJSON();
+             
+          //     var listItem = _.template(jQuery(view.template).text(), data);
+          //     list.append(listItem);
+          //   } else {
+          //     console.error('author of note not found in users collection - bad');
+          //   }
 
   /**
     DetailsView

@@ -151,7 +151,7 @@ input:disabled {
 
 #list-screen ul {
 	min-height: 200px;
-	max-height: 500px;						/* CHECK ME ON IPAD */
+	max-height: 485px;						/* CHECK ME ON IPAD */
 	background-color: white;
 }
 
@@ -183,6 +183,8 @@ input:disabled {
 	margin-top: -6px;
 	font-size: 20px;
 	text-align: center;
+	color: white;
+	background-color: red;
 }
 
 .author {
