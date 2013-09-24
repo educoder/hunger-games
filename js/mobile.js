@@ -24,7 +24,6 @@
 
   app.rollcall = null;
   app.runId= null;
-  app.user = 'TODO';
   app.users = null; // users collection
   app.username = null;
   app.runState = null;
@@ -32,9 +31,11 @@
 
   var DATABASE = null;
   app.stateData = null;
-  app.currentBout = null;
   app.configuationData = null;
   app.recentBoutData = null;
+
+  app.currentBout = null;
+  app.currentNote = null;
 
   // for use with the RecentBoutData
   app.userLocations = [];
@@ -240,20 +241,16 @@
 
   app.ready = function() {
     /* VIEW/MODEL SETUP */
-    // run
-    // user
-    // mobile
-    
-    // TODO: FIX THE WHOLE INDEX CONCEPT - ie does this kind of saving need to be applied to other screens
-    if (app.indexView === null) {
-      app.indexView = new app.View.IndexView({
-        el: jQuery('#notes-screen')
-      });
-    }
+    // if (app.indexView === null) {
+    //   app.indexView = new app.View.IndexView({
+    //     el: '#notes-screen'
+    //   });
+    // }
 
     if (app.inputView === null) {
       app.inputView = new app.View.InputView({
         el: '#notes-screen'
+        // model: app.currentNote
       });
     }
 
@@ -277,16 +274,19 @@
 
   //*************** MAIN FUNCTIONS (RENAME ME) ***************//
 
-  app.createNewNote = function (noteData) {
-    
-    noteData.created_at = new Date();
-    var noteModel = new Model.Note(noteData);
-    
-    noteModel.wake(app.config.wakeful.url);
-    noteModel.save();
+  app.addNote = function(noteData) {
+    app.currentNote = new Model.Note(noteData);
+    app.currentNote.wake(app.config.wakeful.url);
+    app.currentNote.save();
 
-    return Model.awake.notes.add(noteModel);
+    // return Model.awake.notes.add(noteModel);
   };
+
+  app.saveCurrentNote = function() {
+    // app.currentNote.published = true;
+    app.currentNote.save();
+    app.currentNote = null;
+  }
 
   var populateStaticEqualization = function() {
     // ok, are we using Backbone Views?
@@ -408,31 +408,13 @@
       // clear all locations
       jQuery('#move-tracker-screen .patch').removeClass('current-position');
       jQuery('#move-tracker-screen .patch').removeClass('next-position');
-      //jQuery('#move-tracker-screen .move-tracker-location-field').text('');
-      // if (app.userMove > 1) {
-      //   // app.userLocations[x].location = ie "patch-a"
-      //   jQuery('#move-tracker-screen .'+app.userLocations[app.userMove-2].location+' .move-tracker-location-field').text("Previous");
-      // }
       jQuery('#move-tracker-screen .'+app.userLocations[app.userMove-1].location).addClass('current-position');
-      //jQuery('#move-tracker-screen .'+app.userLocations[app.userMove-1].location+' .move-tracker-new-yield-field').text("N/A");
       jQuery('#move-tracker-screen .'+app.userLocations[app.userMove].location).addClass('next-position');
     }
 
   };
 
   var sortRecentBoutData = function() {
-    // this function manipulates the recentBoutData so that it is actually useful to us
-    //
-    // 7.x array (how many users on any patch) - better as an object!:
-    // time_stamp | patch-a | patch-b | patch-c | patch-d | patch-e | patch-f
-    // 5262672    |    3    |    1    |    2    |    1    |    6    |    3
-    // 5263672    |    2    |    1    |    3    |    1    |    6    |    3
-    //
-    // 2.x array (where for user_1):
-    // time_stamp | location
-    // 5262672    |  1
-    // 5264672    |  3
-
     // this object contains the running counts of the populations
     var populations = {"patch-a":0,"patch-b":0,"patch-c":0,"patch-d":0,"patch-e":0,"patch-f":0};
 
@@ -444,10 +426,6 @@
         var arr = e.payload.arrival;
         var dep = e.payload.departure;
 
-        // if (!app.patchPopulations[ts]) {
-        //   app.patchPopulations[ts] = {"patch-a":0,"patch-b":0,"patch-c":0,"patch-d":0,"patch-e":0,"patch-f":0};
-        // }
-        
         // update the patches for this timestamp with the arrivals and departures
         if (arr) {
           populations[arr]++;
@@ -459,34 +437,6 @@
         app.patchPopulations[ts] = clonedPopulationsObj;
       }
     });
-
-    // TESTING ONLY
-
-
-//     jQuery.ajax({
-//       type: "POST",
-//       url: "https://drowsy.badger.encorelab.org/hg-test/log-test/",
-//       data: postData
-//     });
-
-    // app.patchPopulations = {
-    //     "5262672": {
-    //         "patch-a": 3,
-    //         "patch-b": 1,
-    //         "patch-c": 5,
-    //         "patch-d": 0,
-    //         "patch-e": 1,
-    //         "patch-f": 2
-    //     },
-    //     "5263673": {
-    //         "patch-a": 4,
-    //         "patch-b": 1,
-    //         "patch-c": 4,
-    //         "patch-d": 0,
-    //         "patch-e": 1,
-    //         "patch-f": 2
-    //     }
-    // };
   };
 
   //*************** HELPER FUNCTIONS ***************//
@@ -564,6 +514,13 @@
     }
   };
 
+  var tryRestoreNote = function(activity) {
+    console.log('Restoring is under construction');
+    // grab all notes or use awake notes collection?
+    // check for user, published, activity
+    // set activity to activity
+    // set parts to parts
+  };
 
   var idToTimestamp = function(id) {
     var timestamp = id.substring(0,8);
@@ -675,7 +632,8 @@
     });
   };
 
-  app.autoSave = function(model, inputKey, inputValue, instantSave) {
+  // this version of autoSave has been depricated. Use method in Washago or CK instead
+  app.autoSave = function(note, inputKey, inputValue, instantSave) {
     app.keyCount++;
     //console.log("  saving stuff as we go at", app.keyCount);
 
@@ -696,8 +654,8 @@
     // } else {
       if (instantSave || app.keyCount > 9) {
         console.log('Saved');
-        //model.set(inputKey, inputValue);
-        //model.save(null, {silent:true});
+        note.set(inputKey, inputValue);
+        note.save(null, {silent:true});
         app.keyCount = 0;
       }
     //}

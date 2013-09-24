@@ -11,29 +11,29 @@
   /**
     MobileView
   **/
-  app.View.IndexView = Backbone.View.extend({
-    events: {
-      'keyup :input': function(ev) {
-        var view = this,
-          field = ev.target.name,
-          input = jQuery('#'+ev.target.id).val();
-        // clear timer on keyup so that a save doesn't happen while typing
-        window.clearTimeout(app.autoSaveTimer);
+  // app.View.IndexView = Backbone.View.extend({
+  //   events: {
+  //     'keyup :input': function(ev) {
+  //       var view = this,
+  //         field = ev.target.name,
+  //         input = jQuery('#'+ev.target.id).val();
+  //       // clear timer on keyup so that a save doesn't happen while typing
+  //       window.clearTimeout(app.autoSaveTimer);
 
-        // save after 10 keystrokes
-        app.autoSave(view.model, field, input, false);
+  //       // save after 10 keystrokes
+  //       app.autoSave(view.model, field, input, false);
 
-        // setting up a timer so that if we stop typing we save stuff after 5 seconds
-        app.autoSaveTimer = setTimeout(function(){
-          app.autoSave(view.model, field, input, true);
-        }, 5000);
-      }
-    },
+  //       // setting up a timer so that if we stop typing we save stuff after 5 seconds
+  //       app.autoSaveTimer = setTimeout(function(){
+  //         app.autoSave(view.model, field, input, true);
+  //       }, 5000);
+  //     }
+  //   },
 
-    initialize: function () {
-      console.log("Initializing IndexView...",this.el);
-    }
-  });
+  //   initialize: function () {
+  //     console.log("Initializing IndexView...",this.el);
+  //   }
+  // });
 
   /**
     ListView
@@ -100,23 +100,6 @@
 
   });
 
-
-
-          // if (n.get('related_activity') === jQuery('#activity-dropdown').val()) {
-          //   console.log('Showing each note...');
-          // // finds first user that corresponds with author
-          //   var u = _.findWhere(app.users, {username: n.get('author')});
-          //   if (u) {
-          //     n.color = u.color;
-             
-          //     var data = n.toJSON();
-             
-          //     var listItem = _.template(jQuery(view.template).text(), data);
-          //     list.append(listItem);
-          //   } else {
-          //     console.error('author of note not found in users collection - bad');
-          //   }
-
   /**
     DetailsView
   **/
@@ -128,47 +111,79 @@
     InputView
   **/
   app.View.InputView = Backbone.View.extend({
-    initialize: function () {
+    initialize: function() {
       var view = this;
       console.log('Initializing InputView...', this.el);
-      view.updatePrompts();
+      view.updateActivity();
     },
 
     events: {
-      'click #share-note-btn': 'shareNewNote',
-      'click .note-entry-field': 'updateEllipses',
-      'change #activity-dropdown': 'updatePrompts'
+      'click #share-note-btn': 'shareNote',
+      'click .note-entry-field': 'createNewNote',
+      'change #activity-dropdown': 'updateActivity',
+      'keyup :input': function(ev) {
+        var view = this,
+          field = ev.target.name,
+          input = jQuery('#'+ev.target.id).val();
+        // clear timer on keyup so that a save doesn't happen while typing
+        window.clearTimeout(app.autoSaveTimer);
+
+        // save after 10 keystrokes
+        app.autoSave(app.currentNote, field, input, false);
+
+        // setting up a timer so that if we stop typing we save stuff after 5 seconds
+        app.autoSaveTimer = setTimeout(function() {
+          if (app.currentNote) {
+            app.autoSave(app.currentNote, field, input, true);
+          }
+        }, 5000);
+      }
     },
 
-    shareNewNote: function () {
+    shareNote: function() {
       var view = this;
       var p1 = this.$el.find('#note-part-1-entry').val();
       var p2 = this.$el.find('#note-part-2-entry').val();
       if (p1.slice(-3) !== "..." && p2.slice(-3) !== "...") {
-        var newNote = {};
-        newNote.author = app.username;
-        newNote.part_1 = p1;
-        newNote.part_2 = p2;
-        newNote.related_activity = this.$el.find('#activity-dropdown').val();
-        newNote.worth_remembering = false;
+        app.currentNote.set('part_1', p1);
+        app.currentNote.set('part_2', p2);
+        app.currentNote.set('published', true);
+        // app.currentNote.worth_remembering = false;
 
-        HG.Mobile.createNewNote(newNote);
+        HG.Mobile.saveCurrentNote();
 
-        view.updatePrompts();       
+        view.updateActivity();       
       } else {
         jQuery().toastmessage('showErrorToast', "Please fill out both parts of the note");
       }
-
     },
 
-    updateEllipses: function (ev) {
+    createNewNote: function(ev) {
+      var view = this;
+      view.updateEllipses(ev);
+
+      if (app.currentNote === null) {
+        var note = {};
+        note.author = app.username;
+        note.part_1 = this.$el.find('#note-part-1-entry').val();
+        note.part_2 = this.$el.find('#note-part-2-entry').val();
+        note.related_activity = this.$el.find('#activity-dropdown').val();
+        note.created_at = new Date();
+        note.published = false;
+
+        HG.Mobile.addNote(note);       
+      }
+    },
+
+    updateEllipses: function(ev) {
       var str = jQuery(ev.target).val();
       if (str.slice(-3) === "...") {
         jQuery(ev.target).val(str.substring(0, str.length - 3) + " ");
       }
     },
 
-    updatePrompts: function () {
+    updateActivity: function() {
+      // dropdown and prompt UI
       var activity = jQuery('#activity-dropdown').val();
       if (activity === "activity-1") {
         jQuery('#note-part-1-entry').val("The strategy I tended to use was...");
@@ -180,6 +195,11 @@
         jQuery('#note-part-1-entry').val("");
         jQuery('#note-part-2-entry').val("");
       }
+
+      // new activity, new note
+      app.currentNote = null;
+      // if there's a note to restore, do it
+      app.HG.Mobile.tryRestoreNote(activity);
     },
 
     render: function () {
