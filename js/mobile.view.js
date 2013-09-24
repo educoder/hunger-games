@@ -140,6 +140,23 @@
       }
     },
 
+    createNewNote: function(ev) {
+      var view = this;
+      view.updateEllipses(ev);
+
+      if (app.currentNote === null) {
+        var note = {};
+        note.author = app.username;
+        note.part_1 = this.$el.find('#note-part-1-entry').val();
+        note.part_2 = this.$el.find('#note-part-2-entry').val();
+        note.related_activity = this.$el.find('#activity-dropdown').val();
+        note.created_at = new Date();
+        note.published = false;
+
+        HG.Mobile.addNote(note);
+      }
+    },
+
     shareNote: function() {
       var view = this;
       var p1 = this.$el.find('#note-part-1-entry').val();
@@ -158,23 +175,6 @@
       }
     },
 
-    createNewNote: function(ev) {
-      var view = this;
-      view.updateEllipses(ev);
-
-      if (app.currentNote === null) {
-        var note = {};
-        note.author = app.username;
-        note.part_1 = this.$el.find('#note-part-1-entry').val();
-        note.part_2 = this.$el.find('#note-part-2-entry').val();
-        note.related_activity = this.$el.find('#activity-dropdown').val();
-        note.created_at = new Date();
-        note.published = false;
-
-        HG.Mobile.addNote(note);       
-      }
-    },
-
     updateEllipses: function(ev) {
       var str = jQuery(ev.target).val();
       if (str.slice(-3) === "...") {
@@ -183,27 +183,34 @@
     },
 
     updateActivity: function() {
-      // dropdown and prompt UI
+      var view = this;
       var activity = jQuery('#activity-dropdown').val();
-      if (activity === "activity-1") {
-        jQuery('#note-part-1-entry').val("The strategy I tended to use was...");
-        jQuery('#note-part-2-entry').val("In order to do better next time I will...");
-      } else if (activity === "activity-2") {
-        jQuery('#note-part-1-entry').val("Compared to an ideal distribution, our results were...");
-        jQuery('#note-part-2-entry').val("This was because...");
-      } else {
-        jQuery('#note-part-1-entry').val("");
-        jQuery('#note-part-2-entry').val("");
-      }
-
-      // new activity, new note
-      app.currentNote = null;
       // if there's a note to restore, do it
-      app.HG.Mobile.tryRestoreNote(activity);
+      HG.Mobile.restoreLastNote(activity);
+      view.render();
     },
 
     render: function () {
-      console.log('Rendering InputView');
+      console.log('Rendering InputView...');
+
+      if (app.currentNote) {
+        this.$el.find('#note-part-1-entry').val(app.currentNote.get('part_1'));
+        this.$el.find('#note-part-2-entry').val(app.currentNote.get('part_2'));
+      } else {
+        // dropdown and prompt UI
+        var activity = jQuery('#activity-dropdown').val();
+        if (activity === "activity-1") {
+          jQuery('#note-part-1-entry').val("The strategy I tended to use was...");
+          jQuery('#note-part-2-entry').val("In order to do better next time I will...");
+        } else if (activity === "activity-2") {
+          jQuery('#note-part-1-entry').val("Compared to an ideal distribution, our results were...");
+          jQuery('#note-part-2-entry').val("This was because...");
+        } else {
+          jQuery('#note-part-1-entry').val("");
+          jQuery('#note-part-2-entry').val("");
+        }
+      }
+
     }
   });
 

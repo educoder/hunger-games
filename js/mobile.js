@@ -33,6 +33,7 @@
   app.stateData = null;
   app.configuationData = null;
   app.recentBoutData = null;
+  app.notesData = null;
 
   app.currentBout = null;
   app.currentNote = null;
@@ -70,12 +71,6 @@
     // TODO=
     app.runId= "5bj";
 
-    // grab the state data, the configuration data, the statistics data and the recent bout data
-    tryPullAll();
-
-
-    // // TODO: should ask at startup
-    // var DATABASE = app.config.drowsy.db;
 
     // hide all rows initially
     app.hideAllRows();
@@ -84,13 +79,21 @@
       app.rollcall = new Rollcall(app.config.drowsy.url, app.config.rollcall.db);
     }
 
-    /* initialize the model and wake it up */
+    /* pull users, then initialize the model and wake it up, then pull everything else */
     HG.Model.init(app.config.drowsy.url, DATABASE)
+    .then(function() {
+      if (app.users === null) {
+        tryPullUsersData();
+      }
+    })
     .then(function () {
       console.log('model initialized - now waking up');
       return HG.Model.wake(app.config.wakeful.url);
-    }).done(function () {
+    })
+    .done(function () {
       console.log('model awake - now calling setup');
+      // grab the state data, the configuration data, the statistics data and the recent bout data
+      tryPullAll();
       app.setup();
     });
   };
@@ -147,7 +150,7 @@
     // Refresh and repull data - this may go eventually
     jQuery('.refresh-button').click(function() {
       jQuery().toastmessage('showNoticeToast', "Refreshing...");
-      tryPullAll(); // why try? Just do it ;)
+      tryPullAll(); // why try? Just do it ;)    Umm, because it can fail?
 
       console.log('Refresh the harvest planning graph on user request');
       HG.Patchgraph.refresh();
@@ -456,9 +459,6 @@
         tryPullConfigurationData();
         tryPullStatisticsData();
         tryPullRecentBoutData();
-        if (app.users === null) {
-          tryPullUsersData();
-        }
       })
       .fail(function() { console.error("Error pulling state data..."); });
     }
@@ -514,12 +514,15 @@
     }
   };
 
-  var tryRestoreNote = function(activity) {
-    console.log('Restoring is under construction');
-    // grab all notes or use awake notes collection?
-    // check for user, published, activity
-    // set activity to activity
-    // set parts to parts
+  app.restoreLastNote = function(activity) {
+    console.log('Restoring notes...');
+    var unpublishedNotes = Model.awake.notes.where({author: app.username, related_activity: activity, published: false});
+    if (_.isEmpty(unpublishedNotes)) {
+      console.log('Nothing to restore');
+      app.currentNote = null;
+    } else {
+      app.currentNote = _.max(unpublishedNotes, function(n) { return n.get('created_at') });      
+    }
   };
 
   var idToTimestamp = function(id) {
@@ -534,7 +537,7 @@
   //*************** LOGIN FUNCTIONS ***************//
 
   app.loginUser = function (username) {
-    // retriev user with given username
+    // retrieve user with given username
     app.rollcall.user(username)
     .done(function (user) {
       if (user) {
