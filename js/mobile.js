@@ -282,7 +282,7 @@
     app.currentNote.wake(app.config.wakeful.url);
     app.currentNote.save();
 
-    // return Model.awake.notes.add(noteModel);
+    return Model.awake.notes.add(app.currentNote);
   };
 
   app.saveCurrentNote = function() {
@@ -636,10 +636,8 @@
   };
 
   // this version of autoSave has been depricated. Use method in Washago or CK instead
-  app.autoSave = function(note, inputKey, inputValue, instantSave) {
+  app.autoSave = function(instantSave) {
     app.keyCount++;
-    //console.log("  saving stuff as we go at", app.keyCount);
-
     // if (model.kind === 'buildOn') {
     //   if (instantSave || app.keyCount > 9) {
     //     // save to buildOn model to stay current with view
@@ -657,8 +655,9 @@
     // } else {
       if (instantSave || app.keyCount > 9) {
         console.log('Saved');
-        note.set(inputKey, inputValue);
-        note.save(null, {silent:true});
+        app.currentNote.set('part_1', jQuery('#note-part-1-entry').val());
+        app.currentNote.set('part_2', jQuery('#note-part-2-entry').val());
+        app.currentNote.save();
         app.keyCount = 0;
       }
     //}

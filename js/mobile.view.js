@@ -77,8 +77,12 @@
       var list = this.$el.find('ul');
       list.html('');                            // TODO: I'm going to cause problems later! Better to make the each smarter by using dropping an id into a data element to reside in the DOM
 
-      HG.Model.awake.notes.each(function(n) {
-        if (n.get('part_1') && n.get('part_2') && n.get('author')) {
+      var sortedList = _.sortBy(HG.Model.awake.notes.models, function(n) {
+        return -n.get('created_at');
+      })
+
+      _.each(sortedList, function(n) {
+        if (n.get('part_1') && n.get('part_2') && n.get('author') && (n.get('published') === true)) {
           // only display notes from the selected activity
           if (n.get('related_activity') === jQuery('#activity-dropdown').val()) {
             console.log('Showing each note...');
@@ -127,14 +131,12 @@
           input = jQuery('#'+ev.target.id).val();
         // clear timer on keyup so that a save doesn't happen while typing
         window.clearTimeout(app.autoSaveTimer);
-
         // save after 10 keystrokes
-        app.autoSave(app.currentNote, field, input, false);
-
+        app.autoSave(false);
         // setting up a timer so that if we stop typing we save stuff after 5 seconds
         app.autoSaveTimer = setTimeout(function() {
           if (app.currentNote) {
-            app.autoSave(app.currentNote, field, input, true);
+            app.autoSave(true);
           }
         }, 5000);
       }
