@@ -46,9 +46,12 @@
 
       console.log('Initializing InputView...', this.el);
 
-      HG.Model.awake.notes.on('add', function(n) {
-        console.log('Note added...');
-        view.render();
+      HG.Model.awake.notes.on('change', function(n) {
+        console.log('Note changed...');
+        // only render (ie show the note) if it's published (so the list won't be constantly getting refreshed)
+        if (n.get('published') === true) {
+          view.render();
+        }
       });
 
       jQuery('#activity-dropdown').on('change', function() {
@@ -62,11 +65,14 @@
     },
 
     events: {
-      'click #new-note-btn': 'createNewNote'
-    },
+      'click .create-reply-btn': function(ev) {
+        console.log(ev);
+        jQuery(ev.target).parent().parent().children().last().toggleClass('hidden');          // lovely!
+      },
 
-    createNewNote: function() {
-      console.log('New note clicked');
+      'click .submit-reply-btn': function() {
+        console.log('You clicked me but a do nothing, muahahahahaha');
+      }
     },
 
     render: function () {

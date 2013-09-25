@@ -159,13 +159,6 @@ input:disabled {
 	margin-bottom: -1px;
 }
 
-.nav-list>li>a {
-	padding-top: 5px !important;
-}
-
-
-/* TODO: fix the author height 50% issue */
-
 #list-screen .list-item {
 	margin-left: -16px;
 }
@@ -173,6 +166,8 @@ input:disabled {
 #list-screen .note {
 	position: relative;
 	border: 1px solid black;
+	padding-top: 5px !important;
+	color: black;	
 }
 
 #list-screen .author-container {
@@ -195,6 +190,30 @@ input:disabled {
 
 #list-screen .part {
 	margin-left: 60px;
+}
+
+#list-screen .create-reply-btn {
+	padding-left: 60px;
+	margin-top: 12px;
+	margin-bottom: 3px;
+	color: #08C;
+}
+
+#list-screen .reply-entry {
+	position: relative;
+	margin-left: 38px;
+	margin-top: -3px;
+}
+
+#list-screen .reply-text-entry {
+	width: 100%;
+}
+
+#list-screen .submit-reply-btn {
+	position: absolute;
+	top: 24px;
+	right: 2px;
+	border-radius: 3px;
 }
 
 
