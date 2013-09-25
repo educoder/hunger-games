@@ -19,7 +19,8 @@
       url: 'string'
     },
     rollcall: {db: 'string'},
-    login_picker:'boolean'
+    login_picker:'boolean',
+    runs:'object'
   };
 
   app.rollcall = null;
@@ -66,8 +67,8 @@
     // TODO: should ask at startup
     DATABASE = app.config.drowsy.db;
 
-    // TODO=
-    app.runId= "5bj";
+    // Now down via picker (we need to set possible combinations in config file)
+    // app.runId= "5bj";
 
     // grab the state data, the configuration data, the statistics data and the recent bout data
     tryPullAll();
@@ -96,12 +97,13 @@
 
   app.setup = function() {
     // retrieve user name from cookie if possible otherwise ask user to choose name
+    app.runId = jQuery.cookie('hunger-games_mobile_runId');
     app.username = jQuery.cookie('hunger-games_mobile_username');
 
-    if (app.username) {
+    if (app.username && app.runId) {
       // We have a user in cookies so we show stuff
       console.log('We found user: '+app.username);
-      jQuery('.username-display a').text(app.username);
+      jQuery('.username-display a').text(app.runId+'#'+app.username);
 
       // show notes-screen
       jQuery('#notes-screen').removeClass('hidden');
@@ -109,14 +111,28 @@
       hideLogin();
       showUsername();
 
-      app.ready();
+      // make sure the app.users collection is always filled
+      app.rollcall.usersWithTags([app.runId])
+      .done(function (usersInRun) {
+        console.log(usersInRun);
+        app.users = usersInRun;
+
+        // sort the collection by username
+        app.users.comparator = function(model) {
+          return model.get('username');
+        };
+        app.users.sort();
+
+        app.ready();
+      });
     } else {
-      console.log('No user found so prompt for username');
+      console.log('No user and run found so prompt for username and runId');
       hideUsername();
       // fill modal dialog with user login buttons
       if (app.config.login_picker) {
         hideLogin();
-        showUserLoginPicker(app.runId);
+        showRunPicker();
+        // showUserLoginPicker(app.runId);
       } else {
         showLogin();
         hideUserLoginPicker();
@@ -570,7 +586,7 @@
         app.username = user.get('username');
 
         jQuery.cookie('hunger-games_mobile_username', app.username, { expires: 1, path: '/' });
-        jQuery('.username-display a').text(app.username);
+        jQuery('.username-display a').text(app.runId+'#'+app.username);
 
         // show notes-screen
         jQuery('#notes-screen').removeClass('hidden');
@@ -595,6 +611,7 @@
 
   var logoutUser = function () {
     jQuery.removeCookie('hunger-games_mobile_username',  { path: '/' });
+    jQuery.removeCookie('hunger-games_mobile_runId',  { path: '/' });
     window.location.reload();
   };
 
@@ -619,6 +636,29 @@
 
   var hideUsername = function() {
     jQuery('.username-display').addClass('hide');
+  };
+
+  var showRunPicker = function(runs) {
+    jQuery('.login-buttons').html(''); //clear the house
+    console.log(app.config.runs);
+
+    _.each(app.config.runs, function(run) {
+      var button = jQuery('<button class="btn btn-large btn-primary login-button">');
+      button.val(run);
+      button.text(run);
+      jQuery('.login-buttons').append(button);
+    });
+
+    // register click listeners
+    jQuery('.login-button').click(function() {
+      app.runId = jQuery(this).val();
+      jQuery.cookie('hunger-games_mobile_runId', app.runId, { expires: 1, path: '/' });
+      // jQuery('#login-picker').modal("hide");
+      showUserLoginPicker(app.runId);
+    });
+
+    // show modal dialog
+    jQuery('#login-picker').modal({backdrop: 'static'});
   };
 
   var showUserLoginPicker = function(runId) {
@@ -649,7 +689,7 @@
       });
 
       // show modal dialog
-      jQuery('#login-picker').modal({backdrop: 'static'});
+      // jQuery('#login-picker').modal({backdrop: 'static'});
     }); 
   };
 

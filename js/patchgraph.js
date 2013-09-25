@@ -12,7 +12,7 @@
 
   var w = 650;
   var h = 600;
-  var padding = 30;
+  var padding = 45;
   var xScale;
   var yScale;
   var svg;
@@ -45,7 +45,11 @@
       return parseInt(d.bout_id, 10) === parseInt(bout, 10);
     });
 
-    draw(bout_data.user_stats);
+    if (bout_data) {
+      draw(bout_data.user_stats);
+    } else {
+      console.warn('No bout data found for bout: '+bout);
+    }
   };
 
   /*
@@ -56,11 +60,15 @@
   var fetchDataSetAndRedraw = function () { 
     var jqXHR = jQuery.ajax(baseUrl+'/'+DATABASE+'/statistics?selector=%7B%22run_id%22%3A%22'+runId+'%22%7D')
       .done (function (data) {
-        console.log('successfully fetched patchgraph data');
-        updateBoutPicker(data);
+        if (data && data.length > 0) {
+          console.log('successfully fetched patchgraph data');
+          updateBoutPicker(data);
 
-        draw(_.first(data).user_stats);
-        statistics_data = data;
+          draw(_.first(data).user_stats);
+          statistics_data = data;
+        } else {
+          console.warn('No data found for run: '+runId);
+        }
       })
       .fail(function(error) {
         console.error('Ajax request failed with status code: '+jqXHR.status);
