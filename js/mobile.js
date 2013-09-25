@@ -305,7 +305,7 @@
     // app.currentNote.published = true;
     app.currentNote.save();
     app.currentNote = null;
-  }
+  };
 
   var populateStaticEqualization = function() {
     // ok, are we using Backbone Views?
@@ -537,7 +537,7 @@
       console.log('Nothing to restore');
       app.currentNote = null;
     } else {
-      app.currentNote = _.max(unpublishedNotes, function(n) { return n.get('created_at') });      
+      app.currentNote = _.max(unpublishedNotes, function(n) { return n.get('created_at'); });      
     }
   };
 
