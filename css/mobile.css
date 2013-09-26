@@ -154,7 +154,7 @@ input:disabled {
 
 #list-screen ul {
 	min-height: 200px;
-	max-height: 485px;						/* CHECK ME ON IPAD */
+	max-height: 485px;
 	background-color: white;
 }
 
@@ -206,30 +206,38 @@ input:disabled {
 	position: relative;
 	margin-left: 47px;
 	margin-top: -3px;
+	width: -moz-calc(100% - 62px);
+	width: -webkit-calc(100% - 62px);
+	width: calc(100% - 62px);
 }
 
 #list-screen .reply-text-entry {
-	width: 100%;
+	padding-right: 64px;
+	width: calc(100% - 60px);
 }
 
 #list-screen .submit-reply-btn {
 	position: absolute;
-	top: 24px;
-	right: 2px;
+	/*top: 24px;*/
+	bottom: 16px;
+	right: 5px;
 	border-radius: 3px;
 }
 
 #list-screen .reply {
 	position: relative;
-	width: -moz-calc(100% + 15px);
-	width: -webkit-calc(100% + 15px);
-	width: calc(100% + 15px);
+	width: -moz-calc(100% - 62px);
+	width: -webkit-calc(100% - 62px);
+	width: calc(100% - 62px);
 	margin: 2px 0px -2px 47px;
 	min-height: 60px;
 }
 
 #list-screen .content {
 	height: 100%;
+	width: -moz-calc(100% - 62px);
+	width: -webkit-calc(100% - 62px);
+	width: calc(100% - 62px);
 	min-height: 51px;
 	margin: -6px 61px;
 	padding: 7px;

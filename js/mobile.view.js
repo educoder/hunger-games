@@ -69,7 +69,7 @@
       'click .create-reply-btn': function(ev) {
         jQuery('#list-screen .reply-entry').addClass('hidden');
         // removing hidden class from sibling element (ie show the reply text entry box)
-        jQuery(ev.target).parent().parent().children().last().removeClass('hidden');       // lovely!
+        jQuery(ev.target).parent().siblings().removeClass('hidden');       // lovely!
         var relatedNoteId = jQuery(ev.target).parent().attr('id').slice(8);
         app.createReply(relatedNoteId);
       },
