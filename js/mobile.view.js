@@ -40,6 +40,7 @@
   **/
   app.View.ListView = Backbone.View.extend({
     template: "#list-view-template",
+    replyTemplate: "#reply-view-template",
 
     initialize: function () {
       var view = this;
@@ -109,11 +110,30 @@
             var listItem = _.template(jQuery(view.template).text(), data);
             list.append(listItem);
 
-            // these selectors are pretty awkward... are we still really liking templates?
+            // these selectors are pretty awkward... are we still really liking templates? Is there some DOM ev.target/this/iterator type thing I can grab?
             jQuery('#list-screen li:nth-last-child(1) .note').attr('id','note-id-'+n.get('_id'));
             // update the colors of the author box
             var color = app.users.findWhere({username:n.get('author')}).get('color');
             jQuery('#list-screen li:nth-last-child(1) .author-container').css('background-color', color);
+
+            // if there are buildOns/replies
+            if (n.get('build_ons')) {
+              // determine the DOM element that we'll start adding the templated items to
+              var el = jQuery('#list-screen li:nth-last-child(1)');    // do we need to clear it out first?
+              // each through the replies
+              _.each(n.get('build_ons'), function(r) {
+                // attach them to the list item or preceeding item
+                var replyItem = _.template(jQuery(view.replyTemplate).text(), r);
+                el.append(replyItem);
+                // add the author color
+                var c = app.users.findWhere({username:r.author}).get('color');       // check me!!
+                jQuery('#list-screen li:nth-last-child(1) ').children().last().children().first().css('background-color', c)
+              });
+            }
+            
+            
+
+
           }
         } else {
           console.warn("Malformed note...");

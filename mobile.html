@@ -34,7 +34,6 @@
     <script type="text/javascript" src="js/mobile.js"></script>
     <script type="text/javascript" src="js/mobile.view.js"></script>
 
-    <!-- Testing out some templating -->
     <script id="list-view-template" type="text/template">
         <li class="list-item">
             <a class="note">
@@ -49,7 +48,14 @@
             </a>
         </li>
     </script>
+    <script id="reply-view-template" type="text/template">
+        <a class="reply">
+            <div class="author-container"><span class="author"><%= author %></span></div>
+            <div class="content"><%= content %></div>
+        </a>
+    </script>
 </head>
+
 
 <body>
     <div class="navbar navbar-inverse">

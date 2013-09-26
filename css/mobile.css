@@ -140,6 +140,9 @@ input:disabled {
 	width: 65%;
 }
 
+
+/* LET THE GROSSNESS BEGIN */
+
 #list-screen {
 	/*background-image: url('../img/background_final_smlegend.png');*/
 	border: 1px solid;
@@ -167,7 +170,7 @@ input:disabled {
 	position: relative;
 	border: 1px solid black;
 	padding-top: 5px !important;
-	color: black;	
+	color: black;
 }
 
 #list-screen .author-container {
@@ -182,7 +185,7 @@ input:disabled {
 	background-color: red;
 }
 
-.author {
+#list-screen .author {
 	position: absolute;
 	top: 35%;
 	left: 25%;
@@ -216,16 +219,31 @@ input:disabled {
 	border-radius: 3px;
 }
 
+#list-screen .reply {
+	position: relative;
+	width: -moz-calc(100% + 15px);
+	width: -webkit-calc(100% + 15px);
+	width: calc(100% + 15px);
+	margin: 2px 0px -2px 47px;
+	min-height: 60px;
+}
+
+#list-screen .content {
+	height: 100%;
+	min-height: 51px;
+	margin: -6px 61px;
+	padding: 7px;
+	border: 1px solid black;
+	color: black;
+}
+
 
 .icon-chevron-right {
 	float: right;
 }
 
-/* DETAILS SCREEN */
 
-/* INPUT SCREEN */
 
-/* MAP SCREENS */
 
 .map-screen {
 	background-size: 100% 100%;
