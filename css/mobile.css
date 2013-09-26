@@ -173,7 +173,7 @@ input:disabled {
 #list-screen .author-container {
 	position: absolute;
 	height: 100%;
-	width: 50px;
+	width: 60px;
 	border: 1px solid black;
 	margin-top: -6px;
 	font-size: 20px;
@@ -184,16 +184,16 @@ input:disabled {
 
 .author {
 	position: absolute;
-	top: 27%;
-	left: 22%;
+	top: 35%;
+	left: 25%;
 }
 
 #list-screen .part {
-	margin-left: 60px;
+	margin-left: 70px;
 }
 
 #list-screen .create-reply-btn {
-	padding-left: 60px;
+	padding-left: 70px;
 	margin-top: 12px;
 	margin-bottom: 3px;
 	color: #08C;
@@ -201,7 +201,7 @@ input:disabled {
 
 #list-screen .reply-entry {
 	position: relative;
-	margin-left: 38px;
+	margin-left: 47px;
 	margin-top: -3px;
 }
 

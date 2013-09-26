@@ -38,6 +38,13 @@
 
   app.currentBout = null;
   app.currentNote = null;
+  app.currentReply = {};
+  /*
+  app.currentReply = {
+    text:"bla bla",
+    related_note_id:"13ad6a54cb08c806f8f00000"
+  }
+  */
 
   // for use with the RecentBoutData
   app.userLocations = [];
@@ -297,14 +304,27 @@
     app.currentNote = new Model.Note(noteData);
     app.currentNote.wake(app.config.wakeful.url);
     app.currentNote.save();
-
-    return Model.awake.notes.add(app.currentNote);
+    Model.awake.notes.add(app.currentNote);
   };
 
   app.saveCurrentNote = function() {
     // app.currentNote.published = true;
     app.currentNote.save();
     app.currentNote = null;
+  };
+
+  app.createReply = function(noteId) {
+    app.currentReply.content = '';
+    app.currentReply.author = app.username;
+    app.currentReply.related_note_id = noteId;
+  };
+
+  app.saveCurrentReply = function(replyText) {
+    var note = HG.Model.awake.notes.get(app.currentReply.related_note_id);
+    note.addBuildOn(app.username, replyText);
+    note.wake(app.config.wakeful.url);
+    note.save();
+    app.currentReply = {};
   }
 
   var populateStaticEqualization = function() {
@@ -537,7 +557,7 @@
       console.log('Nothing to restore');
       app.currentNote = null;
     } else {
-      app.currentNote = _.max(unpublishedNotes, function(n) { return n.get('created_at') });      
+      app.currentNote = _.max(unpublishedNotes, function(n) { return n.get('created_at'); });
     }
   };
 
@@ -676,31 +696,20 @@
   };
 
   // this version of autoSave has been depricated. Use method in Washago or CK instead
-  app.autoSave = function(instantSave) {
+  app.autoSave = function(field, input, instantSave) {
     app.keyCount++;
-    // if (model.kind === 'buildOn') {
-    //   if (instantSave || app.keyCount > 9) {
-    //     // save to buildOn model to stay current with view
-    //     // app.buildOn = inputValue;
-    //     // save to contribution model so that it actually saves
-    //     // var buildOnArray = app.contribution.get('build_ons');
-    //     // var buildOnToUpdate = _.find(buildOnArray, function(b) {
-    //     //   return b.author === app.userData.account.login && b.published === false;
-    //     // });
-    //     // buildOnToUpdate.content = inputValue;
-    //     // app.contribution.set('build_ons',buildOnArray);
-    //     // app.contribution.save(null, {silent:true});
-    //     // app.keyCount = 0;
-    //   }
-    // } else {
-      if (instantSave || app.keyCount > 9) {
-        console.log('Saved');
-        app.currentNote.set('part_1', jQuery('#note-part-1-entry').val());
-        app.currentNote.set('part_2', jQuery('#note-part-2-entry').val());
-        app.currentNote.save();
-        app.keyCount = 0;
-      }
-    //}
+
+    if ((field === 'part_1' || field === 'part_2') && (instantSave || app.keyCount > 9)) {
+      console.log('Note saved');
+      app.currentNote.set('part_1', jQuery('#note-part-1-entry').val());
+      app.currentNote.set('part_2', jQuery('#note-part-2-entry').val());
+      app.currentNote.save();
+      app.keyCount = 0;
+    } else if ((field === 'reply') && (instantSave || app.keyCount > 9)) {
+      console.log('Reply saved');
+      app.currentReply.content = input;
+      app.keyCount = 0;
+    }
   };
 
   /**

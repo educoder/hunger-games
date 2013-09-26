@@ -66,18 +66,30 @@
 
     events: {
       'click .create-reply-btn': function(ev) {
-        console.log(ev);
-        jQuery(ev.target).parent().parent().children().last().toggleClass('hidden');          // lovely!
+        jQuery('#list-screen .reply-entry').addClass('hidden');
+        // removing hidden class from sibling element (ie show the reply text entry box)
+        jQuery(ev.target).parent().parent().children().last().removeClass('hidden');       // lovely!
+        var relatedNoteId = jQuery(ev.target).parent().attr('id').slice(8);
+        app.createReply(relatedNoteId);
       },
 
-      'click .submit-reply-btn': function() {
-        console.log('You clicked me but a do nothing, muahahahahaha');
+      'click .submit-reply-btn': function(ev) {
+        var replyText = jQuery(ev.target).prev().val();
+        if (replyText !== '') {
+          console.log("Attaching and saving reply...");
+          // grab the reply content from the text field
+          app.saveCurrentReply(replyText);
+          jQuery('#list-screen .reply-text-entry').val('');
+          jQuery('#list-screen .reply-entry').addClass('hidden');          
+        } else {
+          jQuery().toastmessage('showErrorToast', "Cannot submit empty replies");
+        }
       }
     },
 
     render: function () {
       var view = this;
-      console.log('Rendering InputView');
+      console.log("Rendering InputView");
 
       // find the list where items are rendered into
       var list = this.$el.find('ul');
@@ -97,13 +109,14 @@
             var listItem = _.template(jQuery(view.template).text(), data);
             list.append(listItem);
 
+            // these selectors are pretty awkward... are we still really liking templates?
+            jQuery('#list-screen li:nth-last-child(1) .note').attr('id','note-id-'+n.get('_id'));
             // update the colors of the author box
             var color = app.users.findWhere({username:n.get('author')}).get('color');
-            //var color = app.users[n.get('author')].color;
-            jQuery("#list-screen li:nth-last-child(1) .author-container").css("background-color", color);
+            jQuery('#list-screen li:nth-last-child(1) .author-container').css('background-color', color);
           }
         } else {
-          console.warn('Malformed note...');
+          console.warn("Malformed note...");
         }
       });
     }
@@ -138,11 +151,11 @@
         // clear timer on keyup so that a save doesn't happen while typing
         window.clearTimeout(app.autoSaveTimer);
         // save after 10 keystrokes
-        app.autoSave(false);
+        app.autoSave(field, input, false);
         // setting up a timer so that if we stop typing we save stuff after 5 seconds
         app.autoSaveTimer = setTimeout(function() {
           if (app.currentNote) {
-            app.autoSave(true);
+            app.autoSave(field, input, true);
           }
         }, 5000);
       }
@@ -161,7 +174,7 @@
         note.created_at = new Date();
         note.published = false;
 
-        HG.Mobile.addNote(note);
+        app.addNote(note);
       }
     },
 
@@ -175,7 +188,7 @@
         app.currentNote.set('published', true);
         // app.currentNote.worth_remembering = false;
 
-        HG.Mobile.saveCurrentNote();
+        app.saveCurrentNote();
 
         view.updateActivity();       
       } else {
@@ -194,7 +207,7 @@
       var view = this;
       var activity = jQuery('#activity-dropdown').val();
       // if there's a note to restore, do it
-      HG.Mobile.restoreLastNote(activity);
+      app.restoreLastNote(activity);
       view.render();
     },
 
