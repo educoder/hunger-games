@@ -179,14 +179,16 @@
       })
       .attr("height", yScale.rangeBand())
       .attr("fill", function(d) {
-        if (d.color) {
-          var color = "rgba(";
-          color += d.color.r +", ";
-          color += d.color.g +", ";
-          color += d.color.b +", ";
-          color += ".7)";
+        if (d.name) {
+          var userColor = HG.Mobile.users.findWhere({username:d.name}).get('color');
 
-          return color;
+          // var color = "rgba(";
+          // color += d.color.r +", ";
+          // color += d.color.g +", ";
+          // color += d.color.b +", ";
+          // color += ".7)";
+
+          return userColor;
         } else {
           return "rgba(75, 75, 75, 1)";
         }

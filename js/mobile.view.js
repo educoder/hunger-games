@@ -97,7 +97,7 @@
 
       var sortedList = _.sortBy(HG.Model.awake.notes.models, function(n) {
         return -n.get('created_at');
-      })
+      });
 
       _.each(sortedList, function(n) {
         if (n.get('part_1') && n.get('part_2') && n.get('author') && (n.get('published') === true)) {
