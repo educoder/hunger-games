@@ -325,7 +325,7 @@
     note.wake(app.config.wakeful.url);
     note.save();
     app.currentReply = {};
-  }
+  };
 
   var populateStaticEqualization = function() {
     // ok, are we using Backbone Views?

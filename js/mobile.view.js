@@ -133,7 +133,7 @@
                 el.append(replyItem);
                 // add the author color
                 var c = app.users.findWhere({username:r.author}).get('color');       // check me!!
-                jQuery('#list-screen li:nth-last-child(1) ').children().last().children().first().css('background-color', c)
+                jQuery('#list-screen li:nth-last-child(1) ').children().last().children().first().css('background-color', c);
               });
             }
           }
