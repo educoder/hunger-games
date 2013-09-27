@@ -96,9 +96,15 @@
       var list = this.$el.find('ul');
       list.html('');                            // TODO: I'm going to cause problems later! Better to make the each smarter by using dropping an id into a data element to reside in the DOM
 
+      // TODO: switch to comparator method
       var sortedList = _.sortBy(HG.Model.awake.notes.models, function(n) {
         return -n.get('created_at');
       });
+
+// 1. use hasChanged() to stop the notes from being rerendered (but needs to get far enough to do buildOns)
+// Note that the list item has changed if and only if there is a new reply
+
+
 
       _.each(sortedList, function(n) {
         if (n.get('part_1') && n.get('part_2') && n.get('author') && (n.get('published') === true)) {
@@ -130,10 +136,6 @@
                 jQuery('#list-screen li:nth-last-child(1) ').children().last().children().first().css('background-color', c)
               });
             }
-            
-            
-
-
           }
         } else {
           console.warn("Malformed note...");
