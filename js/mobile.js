@@ -36,7 +36,6 @@
   app.recentBoutData = null;
   app.notesData = null;
 
-  app.currentBout = null;
   app.currentNote = null;
   app.currentReply = {};
   /*
@@ -175,13 +174,13 @@
     });
 
     // Show move tracker screen - TODO: remove me before going to prod
-    jQuery('.move-tracker-button').click(function() {
-      if (app.username) {
-        app.hideAllRows();
-        jQuery('#move-tracker-screen').removeClass('hidden');
-        app.populateMoveTracker(app.username);
-      }
-    });
+    // jQuery('.move-tracker-button').click(function() {
+    //   if (app.username) {
+    //     app.hideAllRows();
+    //     jQuery('#move-tracker-screen').removeClass('hidden');
+    //     app.populateMoveTracker(app.username);
+    //   }
+    // });
 
     /*
      * =========================================================
@@ -351,8 +350,10 @@
     }
   };
 
+  // app.populateMoveTracker = function(username, boutId) {
   app.populateMoveTracker = function(username) {
-    jQuery('.bout-number').text(app.currentBout);
+    var boutId = 2;
+    jQuery('.bout-number').text(boutId);
 
     // go over the array and pull out all 'rfid_update' events that are related to username
     _.each(app.recentBoutData, function(e) {
@@ -374,17 +375,26 @@
       jQuery('#move-tracker-screen').removeClass('hidden');
       jQuery('.username').text(username);
       // jQuery('.username').text(username.toUpperCase());
+
+      // TODO: check me
+      if (HG.Mobile.stateData.state.current_habitat_configuration === "predation") {
+        _.each(HG.Mobile.configurationData.patches, function(p) {
+          jQuery('#move-tracker-screen .' + p.patch_id + ' .move-tracker-risk-field').text(p.risk_label);
+        });
+        jQuery('#move-tracker-screen .hidden').removeClass('hidden');
+      }
+
     } else if (move === "next") {
       if (app.userMove < app.userLocations.length) {
         app.userMove++;  
       } else {
-        console.log("Last move reached - should this be a toast?");
+        jQuery().toastmessage('showWarningToast', "Last move reached");
       }
     } else if (move === "previous") {
       if (app.userMove > 1) {
         app.userMove--;
       } else {
-        console.log("First move reached - should this be a toast?");
+        jQuery().toastmessage('showWarningToast', "First move reached");
       }
     } else {
       console.error("Unknown move type");
@@ -423,6 +433,7 @@
       // clear all locations
       jQuery('#move-tracker-screen .patch').removeClass('current-position');
       jQuery('#move-tracker-screen .patch').removeClass('next-position');
+      // add the new locations
       jQuery('#move-tracker-screen .'+app.userLocations[app.userMove-1].location).addClass('current-position');
       jQuery('#move-tracker-screen .'+app.userLocations[app.userMove].location).addClass('next-position');
     }
@@ -434,7 +445,6 @@
     var populations = {"patch-a":0,"patch-b":0,"patch-c":0,"patch-d":0,"patch-e":0,"patch-f":0};
 
     _.each(app.recentBoutData, function(e) {
-      // this only checks the first arrival (so far it seems like there's never more than 1, but could be an issue)
       if (e.event === "rfid_update" && e.payload.arrival !== "fg-den") {
         // if this event's timestamp does not already exist in the patchPopulations object, create it
         var ts = idToTimestamp(e._id.$oid);
@@ -464,7 +474,6 @@
     if (app.runId) {
       jQuery.get(app.config.drowsy.uic_url+'/'+DATABASE+'/state?selector=%7B%22run_id%22%3A%22'+app.runId+'%22%7D', function(data) {
         app.stateData = data[0];
-        app.currentBout = app.stateData.state.current_bout_id;
       })
       .done(function() {
         console.log("State data pulled!");

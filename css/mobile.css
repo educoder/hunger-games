@@ -280,6 +280,7 @@ input:disabled {
 
 .map-title {
 	font-size: 16px;
+	font-weight: bold;
 	text-align: center;
 }
 
@@ -298,7 +299,7 @@ input:disabled {
 
 .patch-b {
 	position: absolute;
-	top: 60%;
+	top: 62%;
 	left: 48%;
 }
 
@@ -316,7 +317,7 @@ input:disabled {
 
 .patch-e {
 	position: absolute;
-	top: 8%;
+	top: 13%;
 	left: 22%;
 }
 
