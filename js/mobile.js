@@ -354,6 +354,7 @@
   app.populateMoveTracker = function(username) {
     jQuery('.bout-number').text(app.currentBout);
 
+    // START HERE!
     // go over the array and pull out all 'rfid_update' events that are related to username
     _.each(app.recentBoutData, function(e) {
       // this only checks the first arrival (so far it seems like there's never more than 1, but could be an issue)
@@ -374,17 +375,26 @@
       jQuery('#move-tracker-screen').removeClass('hidden');
       jQuery('.username').text(username);
       // jQuery('.username').text(username.toUpperCase());
+
+      // TODO: check me
+      if (HG.Mobile.stateData.state.current_habitat_configuration === "predation") {
+        _.each(HG.Mobile.configurationData.patches, function(p) {
+          jQuery('#move-tracker-screen .' + p.patch_id + ' .move-tracker-risk-field').text(p.risk_label);
+        });
+        jQuery('#move-tracker-screen .hidden').removeClass('hidden');
+      }
+
     } else if (move === "next") {
       if (app.userMove < app.userLocations.length) {
         app.userMove++;  
       } else {
-        console.log("Last move reached - should this be a toast?");
+        jQuery().toastmessage('showWarningToast', "Last move reached");
       }
     } else if (move === "previous") {
       if (app.userMove > 1) {
         app.userMove--;
       } else {
-        console.log("First move reached - should this be a toast?");
+        jQuery().toastmessage('showWarningToast', "First move reached");
       }
     } else {
       console.error("Unknown move type");
@@ -423,6 +433,7 @@
       // clear all locations
       jQuery('#move-tracker-screen .patch').removeClass('current-position');
       jQuery('#move-tracker-screen .patch').removeClass('next-position');
+      // add the new locations
       jQuery('#move-tracker-screen .'+app.userLocations[app.userMove-1].location).addClass('current-position');
       jQuery('#move-tracker-screen .'+app.userLocations[app.userMove].location).addClass('next-position');
     }
