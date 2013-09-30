@@ -9,6 +9,7 @@
   var DATABASE = null;
   var runId = null;
 
+  var PREDATION = 'predation';
 
   var w = 650;
   var h = 600;
@@ -28,11 +29,17 @@
     DATABASE = database;
     runId = run_id;
 
+    // hide predation button until data tells us otherwise
+    showPredationButton(false);
+
     fetchDataSetAndRedraw();
   };
 
   Patchgraph.refresh = function () {
     d3.select(".patchgraph").remove();
+
+    // hide predation button until data tells us otherwise
+    showPredationButton(false);
 
     fetchDataSetAndRedraw();
   };
@@ -46,6 +53,12 @@
     });
 
     if (bout_data) {
+      if (bout_data.habitat_configuration === PREDATION) {
+        showPredationButton(true);
+      } else {
+        showPredationButton(false);
+      }
+
       draw(bout_data.user_stats);
     } else {
       console.warn('No bout data found for bout: '+bout);
@@ -63,6 +76,10 @@
         if (data && data.length > 0) {
           console.log('successfully fetched patchgraph data');
           updateBoutPicker(data);
+
+          if (_.first(data).habitat_configuration === PREDATION) {
+            showPredationButton(true);  
+          }
 
           draw(_.first(data).user_stats);
           statistics_data = data;
@@ -462,6 +479,20 @@
       listItem.append('<a tabindex="-1" href="#" data-bout='+d.bout_id+'>'+d.bout_id+'</a>');
       jQuery('#bout-picker').append(listItem);
     });
+  };
+
+  var showPredationButton = function(visible) {
+    if (visible) {
+      if (jQuery('#predation').exists()) {
+        console.log('predation button already there, nothing to add...');
+      } else {
+        var predationButton = jQuery('<button type="button" class="btn btn-large btn-success graph-sort-btn" id="predation" data-selector="predation">Predation</button>');
+        // jQuery('#predation').removeClass('hidden');
+        jQuery('.sort-buttons').append(predationButton);
+      }
+    } else {
+      jQuery('#predation').remove();
+    }
   };
 
   Patchgraph.svg = svg;
