@@ -76,10 +76,6 @@
     // TODO: should ask at startup
     DATABASE = app.config.drowsy.db;
 
-    // Now down via picker (we need to set possible combinations in config file)
-    // app.runId= "5bj";
-
-
     // hide all rows initially
     app.hideAllRows();
 
@@ -89,19 +85,12 @@
 
     /* pull users, then initialize the model and wake it up, then pull everything else */
     HG.Model.init(app.config.drowsy.url, DATABASE)
-    .then(function() {
-      if (app.users === null) {
-        tryPullUsersData();
-      }
-    })
     .then(function () {
       console.log('model initialized - now waking up');
       return HG.Model.wake(app.config.wakeful.url);
     })
     .done(function () {
       console.log('model awake - now calling setup');
-      // grab the state data, the configuration data, the statistics data and the recent bout data
-      tryPullAll();
       app.setup();
     });
   };
@@ -115,9 +104,6 @@
       // We have a user in cookies so we show stuff
       console.log('We found user: '+app.username);
       jQuery('.username-display a').text(app.runId+'#'+app.username);
-
-      // show notes-screen
-      jQuery('#notes-screen').removeClass('hidden');
 
       hideLogin();
       showUsername();
@@ -232,20 +218,6 @@
      * =========================================================
     */
 
-
-    // INNER CLICK LISTENERS - DUMP THOSE THAT ARE GOING TO USE BACKBONE VIEWS //
-
-
-    // TODO: readd me if the incrementers are gone
-    // jQuery('.equalization-squirrels-field').click(function() {
-    //   jQuery(this).val('');
-    // });
-    // jQuery('.equalization-squirrels-field').focusout(function() {
-    //   if (jQuery(this).val() == '') {
-    //     jQuery(this).val('0');
-    //   }
-    // });
-
     jQuery('.equalization-squirrels-field').change(function(ev) {
       updateEqualization(ev);
     });
@@ -256,7 +228,6 @@
     jQuery('#move-backward').click(function() {
       updateMoveTracker("previous");
     });
-
 
     /* MISC */
     jQuery().toastmessage({
@@ -273,6 +244,8 @@
     //   });
     // }
 
+    tryPullAll();
+
     if (app.inputView === null) {
       app.inputView = new app.View.InputView({
         el: '#notes-screen'
@@ -285,6 +258,9 @@
         el: '#list-screen'
       });
     }
+
+    // show notes-screen
+    jQuery('#notes-screen').removeClass('hidden');
 
     // if (app.loginButtonsView === null) {
     //   app.loginButtonsView = new app.View.LoginButtonsView({
