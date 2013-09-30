@@ -93,7 +93,7 @@
                             see also:
                             http://stackoverflow.com/questions/905222/enter-key-press-event-in-javascript
                         -->
-                        <input id="username" type="text" name="username" autocomplete="on" placeholder="Please enter name" title="error" pattern="^[a-zA-Z0-9]+$" maxlength="25" onkeypress="return HG.Mobile.interceptKeypress(event)" />
+                        <input class="hidden" id="username" type="text" name="username" autocomplete="on" placeholder="Please enter name" title="error" pattern="^[a-zA-Z0-9]+$" maxlength="25" onkeypress="return HG.Mobile.interceptKeypress(event)" />
                         <div class="alert alert-error input-alert">
                             <strong>Error!</strong> Name can only be alphanumerical without whitespace!
                         </div>

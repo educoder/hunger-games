@@ -94,7 +94,6 @@
 
       // find the list where items are rendered into
       var list = this.$el.find('ul');
-      //list.html('');                            // TODO: I'm going to cause problems later! Better to make the each smarter by using dropping an id into a data element to reside in the DOM
 
       // TODO: switch to comparator method
       var sortedList = _.sortBy(HG.Model.awake.notes.models, function(n) {
