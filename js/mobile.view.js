@@ -94,22 +94,110 @@
 
       // find the list where items are rendered into
       var list = this.$el.find('ul');
-      list.html('');                            // TODO: I'm going to cause problems later! Better to make the each smarter by using dropping an id into a data element to reside in the DOM
+      //list.html('');                            // TODO: I'm going to cause problems later! Better to make the each smarter by using dropping an id into a data element to reside in the DOM
 
       // TODO: switch to comparator method
       var sortedList = _.sortBy(HG.Model.awake.notes.models, function(n) {
         return -n.get('created_at');
       });
 
-// 1. use hasChanged() to stop the notes from being rerendered (but needs to get far enough to do buildOns)
-// Note that the list item has changed if and only if there is a new reply
-
-
 
       _.each(sortedList, function(n) {
-        if (n.hasChanged() || jQuery('#note-id-' + n.id).length === 0) {
+        // case 1: new note
+        // if (jQuery('#note-id-' + n.id).length === 0) {
+        //   if (n.get('part_1') && n.get('part_2') && n.get('author') && (n.get('published') === true)) {
+        //     // only display notes from the selected activity
+        //     if (n.get('related_activity') === jQuery('#activity-dropdown').val()) {
+        //       console.log('Showing each note...');
+        //       var data = n.toJSON();
+
+        //       var listItem = _.template(jQuery(view.template).text(), data);
+        //       list.append(listItem);
+
+        //       // these selectors are pretty awkward... are we still really liking templates? Is there some DOM ev.target/this/iterator type thing I can grab?
+        //       jQuery('#list-screen li:nth-last-child(1) .note').attr('id','note-id-'+n.get('_id'));
+        //       // update the colors of the author box
+        //       var color = app.users.findWhere({username:n.get('author')}).get('color');
+        //       jQuery('#list-screen li:nth-last-child(1) .author-container').css('background-color', color);
+
+        //       // if there are buildOns/replies
+        //       if (n.get('build_ons')) {
+        //         // determine the DOM element that we'll start adding the templated items to
+        //         var el = jQuery('#list-screen li:nth-last-child(1)');
+        //         // each through the replies
+        //         _.each(n.get('build_ons'), function(r) {
+        //           // attach them to the list item or preceeding item
+        //           var replyItem = _.template(jQuery(view.replyTemplate).text(), r);
+        //           el.append(replyItem);
+        //           // add the author color
+        //           var c = app.users.findWhere({username:r.author}).get('color');
+        //           jQuery('#list-screen li:nth-last-child(1) ').children().last().children().first().css('background-color', c);
+        //         });
+        //       }
+        //     }
+        //   } else {
+        //     console.warn("Malformed note...");
+        //   }
+        // }
+
+        // // case 2: note has changed (ie reply added)
+        // else if (n.hasChanged()) {
+        //   // this can be assumed, right?
+        //   if (n.get('build_ons')) {
+        //     // remove all replies (but leave the reply-entry)
+        //     // jQuery('#note-id-' + n.id).siblings().each(function() {
+        //     //   if (jQuery(this).hasClass('reply')) {
+        //     //     jQuery(this).remove();
+        //     //   }
+        //     // });
+
+        //     var el = jQuery('#note-id-' + n.id).siblings().last();
+        //     _.each(n.get('build_ons'), function(r) {
+        //       // attach them to the list item or preceeding item
+        //       var replyItem = _.template(jQuery(view.replyTemplate).text(), r);
+        //       el.append(replyItem);
+        //       // add the author color
+        //       // var c = app.users.findWhere({username:r.author}).get('color');       // check me!!
+        //       // jQuery('#list-screen li:nth-last-child(1) ').children().last().children().first().css('background-color', c);
+        //     });
+        //   }
+
+
+
+        //   // if (n.get('build_ons')) {
+        //   //   // determine the DOM element that we'll start adding the templated items to
+        //   //   var el = jQuery('#list-screen li:nth-last-child(1)');    // do we need to clear it out first?
+        //   //   // each through the replies
+        //   //   _.each(n.get('build_ons'), function(r) {
+        //   //     // attach them to the list item or preceeding item
+        //   //     var replyItem = _.template(jQuery(view.replyTemplate).text(), r);
+        //   //     el.append(replyItem);
+        //   //     // add the author color
+        //   //     var c = app.users.findWhere({username:r.author}).get('color');       // check me!!
+        //   //     jQuery('#list-screen li:nth-last-child(1) ').children().last().children().first().css('background-color', c);
+        //   //   });
+        //   //}
+        // }
+
+        // // case 3: else skip this note
+        // else {
+        //   return;
+        // }
+
+        // this is a hacky way of preventing the list from rerendering if the user is currently replying
+        var replyOpenFlag = false;
+        jQuery('#list-screen .reply-entry').each(function() {
+          if (jQuery(this).hasClass('hidden')) {
+            console.log('not open');
+          } else {
+            replyOpenFlag = true;
+          }
+        });
+
+        // TODO: fix the ordering issue! Likely easiest to change remove() to html('') and keep the id? With an if in the append?
+        if (replyOpenFlag === false && (n.hasChanged() || jQuery('#note-id-' + n.id).length === 0)) {
           // if this n has changed
-          jQuery('#note-li-' + n.id).remove();
+          jQuery('#note-id-' + n.id).remove();
         } else {
           // else break out
           return;

@@ -159,7 +159,7 @@
     // Refresh and repull data - this may go eventually
     jQuery('.refresh-button').click(function() {
       jQuery().toastmessage('showNoticeToast', "Refreshing...");
-      tryPullAll(); // why try? Just do it ;)    Umm, because it can fail?
+      tryPullAll();
 
       console.log('Refresh the harvest planning graph on user request');
       HG.Patchgraph.refresh();
