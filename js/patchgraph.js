@@ -8,6 +8,7 @@
   var baseUrl = null;
   var DATABASE = null;
   var runId = null;
+  var boutId = null;
 
   var PREDATION = 'predation';
 
@@ -47,6 +48,8 @@
   Patchgraph.showGraphForBout = function(bout) {
     d3.select(".patchgraph").remove();
 
+    boutId = bout;
+
     // retrieve data for selected bout
     var bout_data = _.find(statistics_data, function (d) {
       return parseInt(d.bout_id, 10) === parseInt(bout, 10);
@@ -80,6 +83,8 @@
           if (_.first(data).habitat_configuration === PREDATION) {
             showPredationButton(true);  
           }
+
+          boutId = _.first(data).bout_id;
 
           draw(_.first(data).user_stats);
           statistics_data = data;
@@ -217,7 +222,7 @@
         // this is the result of weird usernames. Embrace for impact! 
         var username = this.__data__.name;
         // TODO call Colin's 
-        HG.Mobile.populateMoveTracker(username);
+        HG.Mobile.populateMoveTracker(username, boutId);
       });
       // .on("mouseover", function(d){    
       //   var yPosition = parseFloat(d3.select(this).attr("y")) + yScale.rangeBand() /2;
