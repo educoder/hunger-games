@@ -252,7 +252,8 @@
       .enter()
       .append("text")
       .text(function(d) {
-          return d.harvest;
+          // return Math.round(d.harvest*10)/10; // round to one decimal after the point
+          return Math.round(d.harvest); // round to full integer
       })
       .attr("text-anchor", "middle")
       .attr("y", function(d, i) {
