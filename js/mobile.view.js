@@ -107,6 +107,14 @@
 
 
       _.each(sortedList, function(n) {
+        if (n.hasChanged() || jQuery('#note-id-' + n.id).length === 0) {
+          // if this n has changed
+          jQuery('#note-li-' + n.id).remove();
+        } else {
+          // else break out
+          return;
+        }
+
         if (n.get('part_1') && n.get('part_2') && n.get('author') && (n.get('published') === true)) {
           // only display notes from the selected activity
           if (n.get('related_activity') === jQuery('#activity-dropdown').val()) {
