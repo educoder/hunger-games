@@ -85,19 +85,21 @@
       app.rollcall = new Rollcall(app.config.drowsy.url, app.config.rollcall.db);
     }
 
-    /* pull users, then initialize the model and wake it up, then pull everything else */
-    HG.Model.init(app.config.drowsy.url, DATABASE)
-    .then(function () {
-      console.log('model initialized - now waking up');
-      return HG.Model.wake(app.config.wakeful.url);
-    })
-    .done(function () {
-      console.log('model awake - now calling setup');
-      app.setup();
-    });
+    app.handleLogin();
+
+    // /* pull users, then initialize the model and wake it up, then pull everything else */
+    // HG.Model.init(app.config.drowsy.url, DATABASE)
+    // .then(function () {
+    //   console.log('model initialized - now waking up');
+    //   return HG.Model.wake(app.config.wakeful.url);
+    // })
+    // .done(function () {
+    //   console.log('model awake - now calling handleLogin');
+    //   app.handleLogin();
+    // });
   };
 
-  app.setup = function() {
+  app.handleLogin = function () {
     // retrieve user name from cookie if possible otherwise ask user to choose name
     app.runId = jQuery.cookie('hunger-games_mobile_runId');
     app.username = jQuery.cookie('hunger-games_mobile_username');
@@ -122,7 +124,7 @@
         };
         app.users.sort();
 
-        app.ready();
+        app.setup();
       });
     } else {
       console.log('No user and run found so prompt for username and runId');
@@ -149,6 +151,19 @@
     jQuery('.logout-user').click(function() {
       logoutUser();
     });
+  };
+
+  app.setup = function() {
+    /* pull users, then initialize the model and wake it up, then pull everything else */
+    HG.Model.init(app.config.drowsy.url, DATABASE+'-'+app.runId)
+    .then(function () {
+      console.log('model initialized - now waking up');
+      return HG.Model.wake(app.config.wakeful.url);
+    })
+    .done(function () {
+      console.log('model awake - now calling ready');
+      app.ready();
+    });
 
     /* MISC */
     jQuery().toastmessage({
@@ -165,8 +180,7 @@
     //   });
     // }
 
-    jQuery.when(tryPullAll(), HG.Patchgraph.init(app.config.drowsy.uic_url, DATABASE, app.runId))
-    .done(function() {
+    jQuery.when(tryPullAll()).done(function(stateData, configurationData, recentBoutData) {
       console.log('tryPullAll and Patchgraph.init() finished so we do the rest of ready()');
 
       if (app.inputView === null) {
@@ -195,7 +209,7 @@
       }
 
       // Init the Patchgraph
-      // HG.Patchgraph.init(app.config.drowsy.uic_url, DATABASE, app.runId);
+      HG.Patchgraph.init(app.config.drowsy.uic_url, DATABASE, app.runId);
 
       setUpClickListeners();
 
@@ -657,7 +671,7 @@
         hideUserLoginPicker();
         showUsername();
 
-        app.ready();
+        app.setup();
       } else {
         console.log('User '+username+' not found!');
         if (confirm('User '+username+' not found! Do you want to create the user to continue?')) {
