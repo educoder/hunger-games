@@ -33,7 +33,9 @@
     // hide predation button until data tells us otherwise
     showPredationButton(false);
 
-    fetchDataSetAndRedraw();
+    var promise = fetchDataSetAndRedraw();
+
+    return promise;
   };
 
   Patchgraph.refresh = function () {
@@ -42,7 +44,9 @@
     // hide predation button until data tells us otherwise
     showPredationButton(false);
 
-    fetchDataSetAndRedraw();
+    var promise = fetchDataSetAndRedraw();
+
+    return promise;
   };
 
   Patchgraph.showGraphForBout = function(bout) {
@@ -75,7 +79,7 @@
   */
   var fetchDataSetAndRedraw = function () { 
     var jqXHR = jQuery.ajax(baseUrl+'/'+DATABASE+'/statistics?selector=%7B%22run_id%22%3A%22'+runId+'%22%7D')
-      .done (function (data) {
+      .then (function (data) {
         if (data && data.length > 0) {
           console.log('successfully fetched patchgraph data');
           updateBoutPicker(data);
@@ -95,6 +99,8 @@
       .fail(function(error) {
         console.error('Ajax request failed with status code: '+jqXHR.status);
       });
+
+    return jqXHR;
   };
 
   var draw = function (dataset) {
