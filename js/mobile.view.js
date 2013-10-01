@@ -369,23 +369,22 @@
 
     events: {
       'click #share-worth-remembering-btn': 'shareNote',
-      'click .worth-remembering-entry-field': 'createNewNote'
-      //,
-      // 'keyup :input': function(ev) {
-      //   var view = this,
-      //     field = ev.target.name,
-      //     input = jQuery('#'+ev.target.id).val();
-      //   // clear timer on keyup so that a save doesn't happen while typing
-      //   window.clearTimeout(app.autoSaveTimer);
-      //   // save after 10 keystrokes
-      //   app.autoSave(field, input, false);
-      //   // setting up a timer so that if we stop typing we save stuff after 5 seconds
-      //   app.autoSaveTimer = setTimeout(function() {
-      //     if (app.currentNote) {
-      //       app.autoSave(field, input, true);
-      //     }
-      //   }, 5000);
-      //}
+      'click .worth-remembering-entry-field': 'createNewNote',
+      'keyup :input': function(ev) {
+        var view = this,
+          field = ev.target.name,
+          input = jQuery('#'+ev.target.id).val();
+        // clear timer on keyup so that a save doesn't happen while typing
+        window.clearTimeout(app.autoSaveTimer);
+        // save after 10 keystrokes
+        app.autoSave(field, input, false);
+        // setting up a timer so that if we stop typing we save stuff after 5 seconds
+        app.autoSaveTimer = setTimeout(function() {
+          if (app.currentWorthRemembering) {
+            app.autoSave(field, input, true);
+          }
+        }, 5000);
+      }
     },
 
     createNewNote: function() {
@@ -424,7 +423,7 @@
     tryRestore: function() {
       var view = this;
       // if there's a wr to restore, do it
-      // app.restoreWorthRemembering(teacherId); ?
+      app.restoreWorthRemembering();
       view.render();
     },
 

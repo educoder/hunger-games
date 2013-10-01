@@ -521,6 +521,7 @@
     if (_.isEmpty(unpublishedWRs)) {
       console.log('Nothing to restore');
       app.currentWorthRemembering = null;
+      jQuery('#worth-remembering-entry').val('');
     } else {
       app.currentWorthRemembering = _.max(unpublishedWRs, function(n) { return n.get('created_at'); });
     }
@@ -771,6 +772,10 @@
     } else if ((field === 'reply') && (instantSave || app.keyCount > 9)) {
       console.log('Reply saved');
       app.currentReply.content = input;
+      app.keyCount = 0;
+    } else if ((field === 'worth_remembering') && (instantSave || app.keyCount > 9)) {
+      app.currentWorthRemembering.set('part_1', jQuery('#worth-remembering-entry').val());
+      app.currentWorthRemembering.save();
       app.keyCount = 0;
     }
   };
