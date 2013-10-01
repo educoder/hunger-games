@@ -425,12 +425,12 @@
       _.each(app.patchPopulations[ts], function(numSq, p) {
         jQuery('#move-tracker-screen .'+p+' .move-tracker-squirrels-field').text(numSq);
         if (numSq > 0) {
-          jQuery('#move-tracker-screen .'+p+' .move-tracker-yield-field').text(qualObj[p] / numSq);
+          jQuery('#move-tracker-screen .'+p+' .move-tracker-yield-field').text(Math.round(qualObj[p] / numSq));
         } else {
           jQuery('#move-tracker-screen .'+p+' .move-tracker-yield-field').text("0");
         }
         
-        jQuery('#move-tracker-screen .'+p+' .move-tracker-new-yield-field').text(qualObj[p] / (numSq + 1));
+        jQuery('#move-tracker-screen .'+p+' .move-tracker-new-yield-field').text(Math.round(qualObj[p] / (numSq + 1)));
       });
     } else {
       console.error("No timestamp for this move in the patchPopulations");
@@ -533,10 +533,6 @@
       app.rollcall.usersWithTags([app.runId])
       .done(function (availableUsers) {
         console.log("Users data pulled!");
-        // app.users = {};                                                         // TODO: check with Armin that this won't conflict - different structure for the app.user obj, addressable
-        // _.each(_.values(availableUsers.models), function(u) {
-        //   app.users[u.attributes.username] = u.attributes;
-        // });
         app.users = availableUsers;
       })
       .fail(function() { console.error("Error pulling users data..."); });
