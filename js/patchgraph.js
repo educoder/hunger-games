@@ -48,7 +48,7 @@
   Patchgraph.showGraphForBout = function(bout) {
     d3.select(".patchgraph").remove();
 
-    boutId = bout;
+    boutId = bout.toString();
 
     // retrieve data for selected bout
     var bout_data = _.find(statistics_data, function (d) {
@@ -220,7 +220,8 @@
       .on("click", function(){
         console.log('clicked on bar in graph');
         // this is the result of weird usernames. Embrace for impact! 
-        var username = this.__data__.name;
+        // var username = this.__data__.name; //hack
+        var username = _.first(d3.select(this).data()).name;
         // TODO call Colin's 
         HG.Mobile.populateMoveTracker(username, boutId);
       });
