@@ -79,6 +79,7 @@
         note.related_activity = this.$el.find('#activity-dropdown').val();
         note.created_at = new Date();
         note.published = false;
+        note.worth_remembering = false;
 
         app.addNote(note);
       }
@@ -92,7 +93,6 @@
         app.currentNote.set('part_1', p1);
         app.currentNote.set('part_2', p2);
         app.currentNote.set('published', true);
-        // app.currentNote.worth_remembering = false;
 
         app.saveCurrentNote();
 
@@ -355,9 +355,7 @@
     initialize: function() {
       var view = this;
       console.log('Initializing WorthRememberingInputView...', this.el);
-      // var temp = true;
       if (app.users.findWhere({'username':app.username}).isTeacher()) {
-      //if (temp) {
         console.log('Hey there teacher');
         this.$el.find('#share-worth-remembering-btn').attr("disabled", false);
         this.$el.find('#worth-remembering-entry').attr("disabled", false);
@@ -401,21 +399,20 @@
         note.worth_remembering = true;
         note.published = false;
 
-        app.addNote(note);
+        app.createWorthRemembering(note);
       }
     },
 
     shareNote: function() {
       var view = this;
       var w = this.$el.find('#worth-remembering-entry').val();
-      if (app.users.findWhere({'username':app.username}).isTeacher()) {
       // because jquery disabled doesn't disable the click event
-      //if (true) {
+      if (app.users.findWhere({'username':app.username}).isTeacher()) {
         if (w !== '') {
           app.currentWorthRemembering.set('part_1', w);
           app.currentWorthRemembering.set('published', true);
 
-          app.saveCurrentNote();
+          app.saveCurrentWorthRemembering();
 
           view.tryRestore();       
         } else {
