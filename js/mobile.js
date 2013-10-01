@@ -351,7 +351,6 @@
   };
 
   app.populateMoveTracker = function(username, boutId) {
-    var boutId = "1";
     jQuery('.bout-number').text(boutId);
 
     var startFlag = false;
