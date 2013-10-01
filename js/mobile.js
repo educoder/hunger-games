@@ -150,95 +150,6 @@
       logoutUser();
     });
 
-    // Show notes screen
-    jQuery('.notes-button').click(function() {
-      if (app.username) {
-        app.hideAllRows();
-        jQuery('#notes-screen').removeClass('hidden');
-      }
-    });
-
-    // Show notes screen
-    jQuery('.worth-remembering-button').click(function() {
-      if (app.username) {
-        app.hideAllRows();
-        jQuery('#worth-remembering-screen').removeClass('hidden');
-      }
-    });
-
-    // Refresh and repull data - this may go eventually
-    jQuery('.refresh-button').click(function() {
-      jQuery().toastmessage('showNoticeToast', "Refreshing...");
-      tryPullAll();
-
-      console.log('Refresh the harvest planning graph on user request');
-      HG.Patchgraph.refresh();
-    });
-
-    // Show harvest planning tool
-    jQuery('.equalization-button').click(function() {
-      if (app.username) {
-        app.hideAllRows();
-        jQuery('#equalization-screen').removeClass('hidden');
-        populateStaticEqualization();
-      }
-    });
-
-    // Show move tracker screen - TODO: remove me before going to prod
-    // jQuery('.move-tracker-button').click(function() {
-    //   if (app.username) {
-    //     app.hideAllRows();
-    //     jQuery('#move-tracker-screen').removeClass('hidden');
-    //     app.populateMoveTracker(app.username);
-    //   }
-    // });
-
-    /*
-     * =========================================================
-     * Section with functions for the harvest/patch graph
-     * =========================================================
-    */
-    jQuery('.graphs-button').click(function() {
-      if (app.username) {
-        app.hideAllRows();
-        jQuery('#graphs-screen').removeClass('hidden');
-        // populateStaticHarvestEqualization();
-      } else {
-        alert ("Show a nicer popup and hide everything until logged in");
-        console.log('User not logged in so show nothing and prompt for user');
-        app.hideAllRows();
-      }
-    });
-
-    // click listener for bout-picker dropdown to re-draw graph for selected bout (no data reload)
-    jQuery(document).on('click', '#bout-picker li a', function () {
-      console.log("Selected Option:"+ jQuery(this).text());
-      console.log("Selected Option:"+ jQuery(this).data("bout"));
-      HG.Patchgraph.showGraphForBout(jQuery(this).data("bout"));
-    });
-
-    // Click listener for graph refresh button - this will reload data and re-draw bout
-    // jQuery('#refresh-graph').click(function () {
-    //   console.log('Refresh the harvest planning graph on user request');
-    //   HG.Patchgraph.refresh();
-    // });
-    /*
-     * =========================================================
-     * End of - Section with functions for the harvest/patch graph
-     * =========================================================
-    */
-
-    jQuery('.equalization-squirrels-field').change(function(ev) {
-      updateEqualization(ev);
-    });
-
-    jQuery('#move-forward').click(function() {
-      updateMoveTracker("next");
-    });
-    jQuery('#move-backward').click(function() {
-      updateMoveTracker("previous");
-    });
-
     /* MISC */
     jQuery().toastmessage({
       position : 'middle-center'
@@ -254,45 +165,42 @@
     //   });
     // }
 
-    tryPullAll();
+    tryPullAll().done(function(stateData, configurationData, recentBoutData) {
+      console.log('tryPullAll finished so we do the rest of ready()');
 
-    if (app.inputView === null) {
-      app.inputView = new app.View.InputView({
-        el: '#notes-screen'
-        // model: app.currentNote
-      });
-    }
+      if (app.inputView === null) {
+        app.inputView = new app.View.InputView({
+          el: '#notes-screen'
+          // model: app.currentNote
+        });
+      }
 
-    if (app.listView === null) {
-      app.listView = new app.View.ListView({
-        el: '#list-screen'
-      });
-    }
+      if (app.listView === null) {
+        app.listView = new app.View.ListView({
+          el: '#list-screen'
+        });
+      }
 
-    if (app.worthRememberingInputView === null) {
-      app.worthRememberingInputView = new app.View.WorthRememberingInputView({
-        el: '#worth-remembering-screen'
-      });
-    }
+      if (app.worthRememberingInputView === null) {
+        app.worthRememberingInputView = new app.View.WorthRememberingInputView({
+          el: '#worth-remembering-screen'
+        });
+      }
 
-    if (app.worthRememberingListView === null) {
-      app.worthRememberingListView = new app.View.WorthRememberingListView({
-        el: '#worth-remembering-list-screen'
-      });
-    }    
+      if (app.worthRememberingListView === null) {
+        app.worthRememberingListView = new app.View.WorthRememberingListView({
+          el: '#worth-remembering-list-screen'
+        });
+      }
 
-    // show notes-screen - is this the default? TODO: check with design team where the first pedagogical step should be
-    jQuery('#notes-screen').removeClass('hidden');
+      // Init the Patchgraph
+      HG.Patchgraph.init(app.config.drowsy.uic_url, DATABASE, app.runId);
 
-    // if (app.loginButtonsView === null) {
-    //   app.loginButtonsView = new app.View.LoginButtonsView({
-    //     el: '#login-picker'
-    //   });
-    // }
+      setUpClickListeners();
 
-    // Init the Patchgraph
-    HG.Patchgraph.init(app.config.drowsy.uic_url, DATABASE, app.runId);
-
+      // show notes-screen - is this the default? TODO: check with design team where the first pedagogical step should be
+      jQuery('#notes-screen').removeClass('hidden');
+    });
   };
 
 
@@ -511,32 +419,47 @@
   //*************** HELPER FUNCTIONS ***************//
 
   var tryPullAll = function() {
-    tryPullStateData();
+    // tryPullStateData();
+    // tryPullConfigurationData();
+    // // tryPullStatisticsData();
+    // tryPullRecentBoutData();
+
+    return jQuery.when(tryPullStateData(), tryPullConfigurationData(), tryPullRecentBoutData());
   };
 
   var tryPullStateData = function() {
-    if (app.runId) {
-      jQuery.get(app.config.drowsy.uic_url+'/'+DATABASE+'/state?selector=%7B%22run_id%22%3A%22'+app.runId+'%22%7D', function(data) {
-        app.stateData = data[0];
-      })
-      .done(function() {
+    // if (app.runId) {
+      var promise = jQuery.get(app.config.drowsy.uic_url+'/'+DATABASE+'/state?selector=%7B%22run_id%22%3A%22'+app.runId+'%22%7D')
+      // jQuery.get(app.config.drowsy.uic_url+'/'+DATABASE+'/state?selector=%7B%22run_id%22%3A%22'+app.runId+'%22%7D', function(data) {
+      //   app.stateData = data[0];
+      // })
+      .then(function(data) {
         console.log("State data pulled!");
-        tryPullConfigurationData();
-        tryPullStatisticsData();
-        tryPullRecentBoutData();
+        app.stateData = data[0];
+        // tryPullConfigurationData();
+        // tryPullStatisticsData();
+        // tryPullRecentBoutData();
+        return data;
       })
       .fail(function() { console.error("Error pulling state data..."); });
-    }
+
+      return promise;
+    // }
   };
 
   var tryPullConfigurationData = function() {
-    if (app.runId) {
-      jQuery.get(app.config.drowsy.uic_url+'/'+DATABASE+'/configuration?selector=%7B%22run_id%22%3A%22'+app.runId+'%22%7D', function(data) {
+    // if (app.runId) {
+      var promise = jQuery.get(app.config.drowsy.uic_url+'/'+DATABASE+'/configuration?selector=%7B%22run_id%22%3A%22'+app.runId+'%22%7D')
+      .then( function(data) {
         app.configurationData = data[0];
+        console.log("Configuration data pulled!");
+
+        return data;
       })
-      .done(function() { console.log("Configuration data pulled!"); })
       .fail(function() { console.error("Error pulling configuration data..."); });
-    }
+
+      return promise;
+    // }
   };
 
   var tryPullStatisticsData = function() {
@@ -553,15 +476,21 @@
   var tryPullRecentBoutData = function() {
     // to determine the selector, we need the run_id, habitat_configuration, the bout_id
     // in the log collection (chose which based on run) get all events between the bouts' 'game_start' and 'game_stop' timestamps
-    if (app.runId) {
+    // if (app.runId) {
       // +'%3F%253Fsort%253D%5B%22_id%22%252C%22ASC%22%5D'
-      jQuery.get(app.config.drowsy.uic_url+'/'+DATABASE+'/log-'+app.runId, function(data) {
+      var promise = jQuery.get(app.config.drowsy.uic_url+'/'+DATABASE+'/log-'+app.runId)
+      .then( function(data) {
         app.recentBoutData = data;
         sortRecentBoutData();
+        console.log("Recent bout data pulled!");
+
+        return data;
       })
-      .done(function() { console.log("Recent bout data pulled!"); })
+      // .done(function() { console.log("Recent bout data pulled!"); })
       .fail(function() { console.error("Error pulling recent bout data..."); });
-    }
+
+      return promise;
+    // }
   };
 
   var tryPullUsersData = function() {
@@ -603,6 +532,104 @@
     return seconds;
     // date = new Date( parseInt(timestamp, 16) * 1000 );
     // return date;
+  };
+
+  /**
+   *  Function where most of the click listener should be setup
+   *  called very late in the init process, will try to look it with Promise
+   */
+  var setUpClickListeners = function () {
+    // Show notes screen
+    jQuery('.notes-button').click(function() {
+      if (app.username) {
+        app.hideAllRows();
+        jQuery('#notes-screen').removeClass('hidden');
+      }
+    });
+
+    // Show notes screen
+    jQuery('.worth-remembering-button').click(function() {
+      if (app.username) {
+        app.hideAllRows();
+        jQuery('#worth-remembering-screen').removeClass('hidden');
+      }
+    });
+
+    // Refresh and repull data - this may go eventually
+    jQuery('.refresh-button').click(function() {
+      jQuery().toastmessage('showNoticeToast', "Refreshing...");
+      
+      tryPullAll().done(function(stateData, configurationData, recentBoutData) {
+        console.log('tryPullAll finished and we could wait for it or even manipulate data');
+      });
+
+      console.log('Refresh the harvest planning graph on user request');
+      HG.Patchgraph.refresh();
+    });
+
+    // Show harvest planning tool
+    jQuery('.equalization-button').click(function() {
+      if (app.username) {
+        app.hideAllRows();
+        jQuery('#equalization-screen').removeClass('hidden');
+        populateStaticEqualization();
+      }
+    });
+
+    // Show move tracker screen - TODO: remove me before going to prod
+    // jQuery('.move-tracker-button').click(function() {
+    //   if (app.username) {
+    //     app.hideAllRows();
+    //     jQuery('#move-tracker-screen').removeClass('hidden');
+    //     app.populateMoveTracker(app.username);
+    //   }
+    // });
+
+    /*
+     * =========================================================
+     * Section with functions for the harvest/patch graph
+     * =========================================================
+    */
+    jQuery('.graphs-button').click(function() {
+      if (app.username) {
+        app.hideAllRows();
+        jQuery('#graphs-screen').removeClass('hidden');
+        // populateStaticHarvestEqualization();
+      } else {
+        alert ("Show a nicer popup and hide everything until logged in");
+        console.log('User not logged in so show nothing and prompt for user');
+        app.hideAllRows();
+      }
+    });
+
+    // click listener for bout-picker dropdown to re-draw graph for selected bout (no data reload)
+    jQuery(document).on('click', '#bout-picker li a', function () {
+      console.log("Selected Option:"+ jQuery(this).text());
+      console.log("Selected Option:"+ jQuery(this).data("bout"));
+      HG.Patchgraph.showGraphForBout(jQuery(this).data("bout"));
+    });
+
+    // Click listener for graph refresh button - this will reload data and re-draw bout
+    // jQuery('#refresh-graph').click(function () {
+    //   console.log('Refresh the harvest planning graph on user request');
+    //   HG.Patchgraph.refresh();
+    // });
+    /*
+     * =========================================================
+     * End of - Section with functions for the harvest/patch graph
+     * =========================================================
+    */
+
+    jQuery('.equalization-squirrels-field').change(function(ev) {
+      updateEqualization(ev);
+    });
+
+    jQuery('#move-forward').click(function() {
+      updateMoveTracker("next");
+    });
+    jQuery('#move-backward').click(function() {
+      updateMoveTracker("previous");
+    });
   };
 
 
