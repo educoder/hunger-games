@@ -165,8 +165,9 @@
     //   });
     // }
 
-    tryPullAll().done(function(stateData, configurationData, recentBoutData) {
-      console.log('tryPullAll finished so we do the rest of ready()');
+    jQuery.when(tryPullAll(), HG.Patchgraph.init(app.config.drowsy.uic_url, DATABASE, app.runId))
+    .done(function() {
+      console.log('tryPullAll and Patchgraph.init() finished so we do the rest of ready()');
 
       if (app.inputView === null) {
         app.inputView = new app.View.InputView({
@@ -194,7 +195,7 @@
       }
 
       // Init the Patchgraph
-      HG.Patchgraph.init(app.config.drowsy.uic_url, DATABASE, app.runId);
+      // HG.Patchgraph.init(app.config.drowsy.uic_url, DATABASE, app.runId);
 
       setUpClickListeners();
 
@@ -538,13 +539,15 @@
     // Refresh and repull data - this may go eventually
     jQuery('.refresh-button').click(function() {
       jQuery().toastmessage('showNoticeToast', "Refreshing...");
-      
+
       tryPullAll().done(function(stateData, configurationData, recentBoutData) {
         console.log('tryPullAll finished and we could wait for it or even manipulate data');
       });
 
       console.log('Refresh the harvest planning graph on user request');
-      HG.Patchgraph.refresh();
+      HG.Patchgraph.refresh().done(function(){
+        console.log('Patchgraph data refreshed');
+      });
     });
 
     // Show harvest planning tool
