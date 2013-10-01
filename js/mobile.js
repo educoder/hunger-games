@@ -325,6 +325,19 @@
     app.currentReply = {};
   };
 
+  app.createWorthRemembering = function(wrData) {
+    app.currentWorthRemembering = new Model.Note(wrData);
+    app.currentWorthRemembering.wake(app.config.wakeful.url);
+    app.currentWorthRemembering.save();
+    Model.awake.notes.add(app.currentWorthRemembering);
+  };
+
+  app.saveCurrentWorthRemembering = function() {
+    // app.currentNote.published = true;
+    app.currentWorthRemembering.save();
+    app.currentWorthRemembering = null;
+  };
+
   var populateStaticEqualization = function() {
     // ok, are we using Backbone Views?
     jQuery('#equalization-minutes-field').text(app.configurationData.harvest_calculator_bout_length_in_minutes);
@@ -564,7 +577,7 @@
 
   app.restoreLastNote = function(activity) {
     console.log('Restoring notes...');
-    var unpublishedNotes = Model.awake.notes.where({author: app.username, related_activity: activity, published: false});
+    var unpublishedNotes = Model.awake.notes.where({author: app.username, related_activity: activity, published: false, worth_remembering: false});
     if (_.isEmpty(unpublishedNotes)) {
       console.log('Nothing to restore');
       app.currentNote = null;
@@ -573,9 +586,16 @@
     }
   };
 
-  app.restoreWorthRemembering = function(teacherId) {
-    console.log('under construction');
-  }
+  app.restoreWorthRemembering = function() {
+    console.log('Restoring worth rememberings...');
+    var unpublishedWRs = Model.awake.notes.where({author: app.username, published: false, worth_remembering: true});
+    if (_.isEmpty(unpublishedWRs)) {
+      console.log('Nothing to restore');
+      app.currentWorthRemembering = null;
+    } else {
+      app.currentWorthRemembering = _.max(unpublishedWRs, function(n) { return n.get('created_at'); });
+    }
+  };
 
   var idToTimestamp = function(id) {
     var timestamp = id.substring(0,8);
