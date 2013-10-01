@@ -150,95 +150,6 @@
       logoutUser();
     });
 
-    // Show notes screen
-    jQuery('.notes-button').click(function() {
-      if (app.username) {
-        app.hideAllRows();
-        jQuery('#notes-screen').removeClass('hidden');
-      }
-    });
-
-    // Show notes screen
-    jQuery('.worth-remembering-button').click(function() {
-      if (app.username) {
-        app.hideAllRows();
-        jQuery('#worth-remembering-screen').removeClass('hidden');
-      }
-    });
-
-    // Refresh and repull data - this may go eventually
-    jQuery('.refresh-button').click(function() {
-      jQuery().toastmessage('showNoticeToast', "Refreshing...");
-      tryPullAll();
-
-      console.log('Refresh the harvest planning graph on user request');
-      HG.Patchgraph.refresh();
-    });
-
-    // Show harvest planning tool
-    jQuery('.equalization-button').click(function() {
-      if (app.username) {
-        app.hideAllRows();
-        jQuery('#equalization-screen').removeClass('hidden');
-        populateStaticEqualization();
-      }
-    });
-
-    // Show move tracker screen - TODO: remove me before going to prod
-    // jQuery('.move-tracker-button').click(function() {
-    //   if (app.username) {
-    //     app.hideAllRows();
-    //     jQuery('#move-tracker-screen').removeClass('hidden');
-    //     app.populateMoveTracker(app.username);
-    //   }
-    // });
-
-    /*
-     * =========================================================
-     * Section with functions for the harvest/patch graph
-     * =========================================================
-    */
-    jQuery('.graphs-button').click(function() {
-      if (app.username) {
-        app.hideAllRows();
-        jQuery('#graphs-screen').removeClass('hidden');
-        // populateStaticHarvestEqualization();
-      } else {
-        alert ("Show a nicer popup and hide everything until logged in");
-        console.log('User not logged in so show nothing and prompt for user');
-        app.hideAllRows();
-      }
-    });
-
-    // click listener for bout-picker dropdown to re-draw graph for selected bout (no data reload)
-    jQuery(document).on('click', '#bout-picker li a', function () {
-      console.log("Selected Option:"+ jQuery(this).text());
-      console.log("Selected Option:"+ jQuery(this).data("bout"));
-      HG.Patchgraph.showGraphForBout(jQuery(this).data("bout"));
-    });
-
-    // Click listener for graph refresh button - this will reload data and re-draw bout
-    // jQuery('#refresh-graph').click(function () {
-    //   console.log('Refresh the harvest planning graph on user request');
-    //   HG.Patchgraph.refresh();
-    // });
-    /*
-     * =========================================================
-     * End of - Section with functions for the harvest/patch graph
-     * =========================================================
-    */
-
-    jQuery('.equalization-squirrels-field').change(function(ev) {
-      updateEqualization(ev);
-    });
-
-    jQuery('#move-forward').click(function() {
-      updateMoveTracker("next");
-    });
-    jQuery('#move-backward').click(function() {
-      updateMoveTracker("previous");
-    });
-
     /* MISC */
     jQuery().toastmessage({
       position : 'middle-center'
@@ -279,19 +190,15 @@
       app.worthRememberingListView = new app.View.WorthRememberingListView({
         el: '#worth-remembering-list-screen'
       });
-    }    
-
-    // show notes-screen - is this the default? TODO: check with design team where the first pedagogical step should be
-    jQuery('#notes-screen').removeClass('hidden');
-
-    // if (app.loginButtonsView === null) {
-    //   app.loginButtonsView = new app.View.LoginButtonsView({
-    //     el: '#login-picker'
-    //   });
-    // }
+    }
 
     // Init the Patchgraph
     HG.Patchgraph.init(app.config.drowsy.uic_url, DATABASE, app.runId);
+
+    setUpClickListeners();
+
+    // show notes-screen - is this the default? TODO: check with design team where the first pedagogical step should be
+    jQuery('#notes-screen').removeClass('hidden');
 
   };
 
@@ -575,7 +482,7 @@
 
   app.restoreWorthRemembering = function(teacherId) {
     console.log('under construction');
-  }
+  };
 
   var idToTimestamp = function(id) {
     var timestamp = id.substring(0,8);
@@ -583,6 +490,101 @@
     return seconds;
     // date = new Date( parseInt(timestamp, 16) * 1000 );
     // return date;
+  };
+
+  /**
+   *  Function where most of the click listener should be setup
+   *  called very late in the init process, will try to look it with Promise
+   */
+  var setUpClickListeners = function () {
+    // Show notes screen
+    jQuery('.notes-button').click(function() {
+      if (app.username) {
+        app.hideAllRows();
+        jQuery('#notes-screen').removeClass('hidden');
+      }
+    });
+
+    // Show notes screen
+    jQuery('.worth-remembering-button').click(function() {
+      if (app.username) {
+        app.hideAllRows();
+        jQuery('#worth-remembering-screen').removeClass('hidden');
+      }
+    });
+
+    // Refresh and repull data - this may go eventually
+    jQuery('.refresh-button').click(function() {
+      jQuery().toastmessage('showNoticeToast', "Refreshing...");
+      tryPullAll();
+
+      console.log('Refresh the harvest planning graph on user request');
+      HG.Patchgraph.refresh();
+    });
+
+    // Show harvest planning tool
+    jQuery('.equalization-button').click(function() {
+      if (app.username) {
+        app.hideAllRows();
+        jQuery('#equalization-screen').removeClass('hidden');
+        populateStaticEqualization();
+      }
+    });
+
+    // Show move tracker screen - TODO: remove me before going to prod
+    // jQuery('.move-tracker-button').click(function() {
+    //   if (app.username) {
+    //     app.hideAllRows();
+    //     jQuery('#move-tracker-screen').removeClass('hidden');
+    //     app.populateMoveTracker(app.username);
+    //   }
+    // });
+
+    /*
+     * =========================================================
+     * Section with functions for the harvest/patch graph
+     * =========================================================
+    */
+    jQuery('.graphs-button').click(function() {
+      if (app.username) {
+        app.hideAllRows();
+        jQuery('#graphs-screen').removeClass('hidden');
+        // populateStaticHarvestEqualization();
+      } else {
+        alert ("Show a nicer popup and hide everything until logged in");
+        console.log('User not logged in so show nothing and prompt for user');
+        app.hideAllRows();
+      }
+    });
+
+    // click listener for bout-picker dropdown to re-draw graph for selected bout (no data reload)
+    jQuery(document).on('click', '#bout-picker li a', function () {
+      console.log("Selected Option:"+ jQuery(this).text());
+      console.log("Selected Option:"+ jQuery(this).data("bout"));
+      HG.Patchgraph.showGraphForBout(jQuery(this).data("bout"));
+    });
+
+    // Click listener for graph refresh button - this will reload data and re-draw bout
+    // jQuery('#refresh-graph').click(function () {
+    //   console.log('Refresh the harvest planning graph on user request');
+    //   HG.Patchgraph.refresh();
+    // });
+    /*
+     * =========================================================
+     * End of - Section with functions for the harvest/patch graph
+     * =========================================================
+    */
+
+    jQuery('.equalization-squirrels-field').change(function(ev) {
+      updateEqualization(ev);
+    });
+
+    jQuery('#move-forward').click(function() {
+      updateMoveTracker("next");
+    });
+    jQuery('#move-backward').click(function() {
+      updateMoveTracker("previous");
+    });
   };
 
 
