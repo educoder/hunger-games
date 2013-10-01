@@ -152,6 +152,15 @@ input:disabled {
 	background-color: #ddd;
 }
 
+#worth-remembering-screen {
+	/*background-image: url('../img/background_final_smlegend.png');*/
+	border: 1px solid;
+	padding: 5px;
+	border-radius: 7px;
+	box-shadow: rgba(0,0,0,0.2) 1px 4px 15px;
+	background-color: #ddd;
+}
+
 #list-screen ul {
 	min-height: 200px;
 	max-height: 485px;

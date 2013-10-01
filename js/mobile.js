@@ -38,6 +38,7 @@
 
   app.currentNote = null;
   app.currentReply = {};
+  app.currentWorthRemembering = null;
   /*
   app.currentReply = {
     text:"bla bla",
@@ -54,6 +55,8 @@
   app.indexView = null;     // TODO - think about how necessary making these global is going to be
   app.inputView = null;
   app.listView = null;
+  app.worthRememberingInputView = null;
+  app.worthRememberingListView = null;  
   app.loginButtonsView = null;
 
   app.keyCount = 0;
@@ -152,6 +155,14 @@
       if (app.username) {
         app.hideAllRows();
         jQuery('#notes-screen').removeClass('hidden');
+      }
+    });
+
+    // Show notes screen
+    jQuery('.worth-remembering-button').click(function() {
+      if (app.username) {
+        app.hideAllRows();
+        jQuery('#worth-remembering-screen').removeClass('hidden');
       }
     });
 
@@ -258,7 +269,19 @@
       });
     }
 
-    // show notes-screen
+    if (app.worthRememberingInputView === null) {
+      app.worthRememberingInputView = new app.View.WorthRememberingInputView({
+        el: '#worth-remembering-screen'
+      });
+    }
+
+    if (app.worthRememberingListView === null) {
+      app.worthRememberingListView = new app.View.WorthRememberingListView({
+        el: '#worth-remembering-list-screen'
+      });
+    }    
+
+    // show notes-screen - is this the default? TODO: check with design team where the first pedagogical step should be
     jQuery('#notes-screen').removeClass('hidden');
 
     // if (app.loginButtonsView === null) {
@@ -549,6 +572,10 @@
       app.currentNote = _.max(unpublishedNotes, function(n) { return n.get('created_at'); });
     }
   };
+
+  app.restoreWorthRemembering = function(teacherId) {
+    console.log('under construction');
+  }
 
   var idToTimestamp = function(id) {
     var timestamp = id.substring(0,8);

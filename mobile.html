@@ -80,7 +80,7 @@
 <!--                         <li class="active home"><a href="#">Home</a></li> -->
                         <li class="active refresh-button"><a href="#">Refresh</a></li>
                         <li class="active notes-button"><a href="#">Notes</a></li>
-                        <!-- <li class="active worth-remembering-button"><a href="#">Worth remembering</a></li> -->
+                        <li class="active worth-remembering-button"><a href="#">Worth remembering</a></li>
                         <li class="active equalization-button"><a href="#">Equalization</a></li>
                         <!-- <li class="active move-tracker-button"><a href="#">Move tracker</a></li> -->
                         <li class="active graphs-button"><a href="#">Harvest</a></li>
@@ -133,6 +133,22 @@
             </div>
         </div>
     </div>
+
+    <div id="worth-remembering-screen" class="row-fluid">
+        <div class="span12 view-container bs-docs-sidebar">
+            <a id="share-worth-remembering-btn" class="btn btn-large btn-success">
+                Submit
+            </a>
+            <div id="worth-remembering-input-screen">
+                <textarea class="field worth-remembering-entry-field" id="worth-remembering-entry" name="worth-remembering" type="text" ></textarea>
+            </div>
+            <div id="worth-remembering-list-screen" class="bs-docs-sidebar">
+                <ul class="nav nav-list bs-docs-sidenav affix-top scrollable">
+                    <!-- filled by worth remembering ListView -->
+                </ul>
+            </div>
+        </div>
+    </div>    
 
     <div id="equalization-screen" class="row-fluid">
         <div class="span12 view-container bs-docs-sidebar map-screen bkg-small-legend">
