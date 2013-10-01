@@ -350,15 +350,23 @@
     }
   };
 
-  // app.populateMoveTracker = function(username, boutId) {
-  app.populateMoveTracker = function(username) {
-    var boutId = 2;
+  app.populateMoveTracker = function(username, boutId) {
     jQuery('.bout-number').text(boutId);
 
-    // go over the array and pull out all 'rfid_update' events that are related to username
+    var startFlag = false;
+    var stopFlag = false;
+
+    // go over the array, find where to start and stop (beginning and end of the passed boutId param) and pull out all 'rfid_update' events that are related to username
     _.each(app.recentBoutData, function(e) {
-      // this only checks the first arrival (so far it seems like there's never more than 1, but could be an issue)
-      if (e.event === "rfid_update" && e.payload.id === username) {
+      if (e.event === "start_bout" && e.payload && e.payload.bout_id && e.payload.bout_id === boutId) {
+        startFlag = true;
+      }
+      if (e.event === "stop_bout" && e.payload && e.payload.bout_id && e.payload.bout_id === boutId) {
+        stopFlag = true;
+      }
+
+      // push all timestamp/location pairs into the array, as long as they are chronologically between the start and end flag times
+      if (e.event === "rfid_update" && e.payload.id === username && startFlag === true && stopFlag === false) {
         console.log(username + " has arrived to " + e.payload.arrival + " at " + idToTimestamp(e._id.$oid));
         app.userLocations.push({"timestamp":idToTimestamp(e._id.$oid), "location":e.payload.arrival});
       }
