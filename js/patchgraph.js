@@ -1,13 +1,15 @@
 
 (function() {
   "use strict";
-  var Patchgraph = this.Patchgraph || {};
-  var HG = this.HG || {};                     // TODO: refactor this to Hunger? HungerGames?
+  var HG = this.HG || {};
+  HG.Patchgraph = this.HG.Patchgraph || new HG.App();
+  var app = HG.Patchgraph;
 
   // Information for REST calls to dataset
   var baseUrl = null;
   var DATABASE = null;
   var runId = null;
+  var habitatConfiguration = null;
   var boutId = null;
 
   var PREDATION = 'predation';
@@ -25,7 +27,7 @@
   var yAxis;
 
 
-  Patchgraph.init = function (drowsyUrl, database, run_id) {
+  app.init = function (drowsyUrl, database, run_id) {
     baseUrl = drowsyUrl;
     DATABASE = database;
     runId = run_id;
@@ -38,7 +40,7 @@
     return promise;
   };
 
-  Patchgraph.refresh = function () {
+  app.refresh = function () {
     d3.select(".patchgraph").remove();
 
     // hide predation button until data tells us otherwise
@@ -49,14 +51,15 @@
     return promise;
   };
 
-  Patchgraph.showGraphForBout = function(bout) {
+  app.showGraphForBout = function(habitatConf, bout) {
     d3.select(".patchgraph").remove();
 
+    habitatConfiguration = habitatConf;
     boutId = bout.toString();
 
     // retrieve data for selected bout
     var bout_data = _.find(statistics_data, function (d) {
-      return parseInt(d.bout_id, 10) === parseInt(bout, 10);
+      return (d.habitat_configuration == habitatConf && parseInt(d.bout_id, 10) === parseInt(bout, 10));
     });
 
     if (bout_data) {
@@ -68,7 +71,7 @@
 
       draw(bout_data.user_stats);
     } else {
-      console.warn('No bout data found for bout: '+bout);
+      console.warn('No bout data found for habitat_configuration '+habitatConf+' and bout: '+bout);
     }
   };
 
@@ -88,6 +91,7 @@
             showPredationButton(true);  
           }
 
+          habitatConfiguration = _.first(data).habitat_configuration;
           boutId = _.first(data).bout_id;
 
           draw(_.first(data).user_stats);
@@ -229,7 +233,7 @@
         // var username = this.__data__.name; //hack
         var username = _.first(d3.select(this).data()).name;
         // TODO call Colin's 
-        HG.Mobile.populateMoveTracker(username, boutId);
+        HG.Mobile.populateMoveTracker(username, habitatConfiguration, boutId);
       });
       // .on("mouseover", function(d){    
       //   var yPosition = parseFloat(d3.select(this).attr("y")) + yScale.rangeBand() /2;
@@ -488,7 +492,7 @@
     _.each(data, function (d, iterator) {
       //<li><a tabindex="-1" href="#" data-bout="3">Something else here</a></li>
       var listItem = jQuery('<li>');
-      listItem.append('<a tabindex="-1" href="#" data-bout='+d.bout_id+'>'+d.bout_id+'</a>');
+      listItem.append('<a tabindex="-1" href="#" data-habitat-configuration="'+d.habitat_configuration+'" data-bout="'+d.bout_id+'">'+d.habitat_configuration.substring(0,1).toUpperCase()+d.bout_id+'</a>');
       jQuery('#bout-picker').append(listItem);
     });
   };
@@ -507,8 +511,9 @@
     }
   };
 
-  Patchgraph.svg = svg;
+  app.svg = svg;
 
-  HG.Patchgraph = Patchgraph;
+  //HG.Patchgraph = Patchgraph;
+  this.HG = HG;
 
 }).call(this);
