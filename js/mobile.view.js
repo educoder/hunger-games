@@ -90,6 +90,7 @@
       var p1 = this.$el.find('#note-part-1-entry').val();
       var p2 = this.$el.find('#note-part-2-entry').val();
       if (p1.slice(-3) !== "..." && p2.slice(-3) !== "...") {
+        // var newP1 = HG.Mobile.turnUrlsToLinks(p1);
         app.currentNote.set('part_1', p1);
         app.currentNote.set('part_2', p2);
         app.currentNote.set('published', true);
@@ -536,7 +537,7 @@
             jQuery('#worth-remembering-list-screen li:nth-last-child(1) .note').attr('id','worth-remembering-id-'+n.get('_id'));
             // update the colors of the author box
             var color = app.users.findWhere({username:n.get('author')}).get('color');
-            var authorContainer = jQuery('#worth-remembering-list-screen li:nth-last-child(1) .author-container')
+            var authorContainer = jQuery('#worth-remembering-list-screen li:nth-last-child(1) .author-container');
             authorContainer.css('background-color', color);
             // set teacher user to TEA (check this with TOM) - see also replies
             if (app.users.findWhere({'username':n.get('author')}).isTeacher()) {
@@ -554,7 +555,7 @@
                 el.append(replyItem);
                 // add the author color
                 var c = app.users.findWhere({username:r.author}).get('color');
-                var replyAuthorContainer = jQuery('#worth-remembering-list-screen li:nth-last-child(1)').children().last().children().first()
+                var replyAuthorContainer = jQuery('#worth-remembering-list-screen li:nth-last-child(1)').children().last().children().first();
                 replyAuthorContainer.css('background-color', c);
                 if (app.users.findWhere({'username':r.author}).isTeacher()) {
                   replyAuthorContainer.children().text('TEA');
