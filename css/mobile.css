@@ -152,15 +152,6 @@ input:disabled {
 	background-color: #ddd;
 }
 
-#worth-remembering-screen {
-	/*background-image: url('../img/background_final_smlegend.png');*/
-	border: 1px solid;
-	padding: 5px;
-	border-radius: 7px;
-	box-shadow: rgba(0,0,0,0.2) 1px 4px 15px;
-	background-color: #ddd;
-}
-
 #list-screen ul {
 	min-height: 200px;
 	max-height: 485px;
@@ -255,11 +246,116 @@ input:disabled {
 }
 
 
-.icon-chevron-right {
+/**** WR ****/
+#worth-remembering-screen {
+	border: 1px solid;
+	padding: 5px;
+	border-radius: 7px;
+	box-shadow: rgba(0,0,0,0.2) 1px 4px 15px;
+	background-color: #ddd;
+}
+
+#share-worth-remembering-btn {
 	float: right;
 }
 
+.worth-remembering-entry-field {
+	width: 89%;
+	margin-top: -3px;
+}
 
+#worth-remembering-list-screen ul {
+	min-height: 200px;
+	max-height: 485px;
+	background-color: white;
+}
+
+#worth-remembering-list-screen li {
+	margin-bottom: -1px;
+}
+
+#worth-remembering-list-screen .list-item {
+	margin-left: -16px;
+}
+
+#worth-remembering-list-screen .note {
+	position: relative;
+	border: 1px solid black;
+	padding-top: 5px !important;
+	color: black;
+}
+
+#worth-remembering-list-screen .author-container {
+	position: absolute;
+	height: 100%;
+	width: 60px;
+	border: 1px solid black;
+	margin-top: -6px;
+	font-size: 20px;
+	text-align: center;
+	color: white;
+	background-color: red;
+}
+
+#worth-remembering-list-screen .author {
+	position: absolute;
+	top: 35%;
+	left: 25%;
+}
+
+#worth-remembering-list-screen .part {
+	margin-left: 70px;
+}
+
+#worth-remembering-list-screen .create-reply-btn {
+	padding-left: 70px;
+	margin-top: 12px;
+	margin-bottom: 3px;
+	color: #08C;
+}
+
+#worth-remembering-list-screen .reply-entry {
+	position: relative;
+	margin-left: 47px;
+	margin-top: -3px;
+	width: -moz-calc(100% - 62px);
+	width: -webkit-calc(100% - 62px);
+	width: calc(100% - 62px);
+}
+
+#worth-remembering-list-screen .reply-text-entry {
+	padding-right: 64px;
+	width: calc(100% - 60px);
+}
+
+#worth-remembering-list-screen .submit-reply-btn {
+	position: absolute;
+	/*top: 24px;*/
+	bottom: 16px;
+	right: 6px;
+	border-radius: 3px;
+}
+
+#worth-remembering-list-screen .reply {
+	position: relative;
+	width: -moz-calc(100% - 62px);
+	width: -webkit-calc(100% - 62px);
+	width: calc(100% - 62px);
+	margin: 2px 0px -2px 47px;
+	min-height: 60px;
+}
+
+#worth-remembering-list-screen .content {
+	height: 100%;
+	width: -moz-calc(100% - 62px);
+	width: -webkit-calc(100% - 62px);
+	width: calc(100% - 62px);
+	min-height: 51px;
+	margin: -6px 61px;
+	padding: 7px;
+	border: 1px solid black;
+	color: black;
+}
 
 
 .map-screen {

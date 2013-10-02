@@ -309,18 +309,30 @@
     }
   };
 
-  app.populateMoveTracker = function(username, boutId) {
-    jQuery('.bout-number').text(boutId);
+  app.populateMoveTracker = function(username, configuration, boutId) {
+    var configLabel = null;
+    if (configuration === "gameon") {
+      configLabel = "G";
+    } else if (configuration === "predation") {
+      configLabel = "P";
+    } else {
+      console.error("Invalid configuration type!");
+    }
+    jQuery('.bout-number').text(configLabel+boutId);
+    
+    jQuery('.username').text(username);
+    // jQuery('.username').text(username.toUpperCase());    
 
     var startFlag = false;
     var stopFlag = false;
 
-    // go over the array, find where to start and stop (beginning and end of the passed boutId param) and pull out all 'rfid_update' events that are related to username
+    // go over the array, find where to start and stop (beginning and end of the passed boutId and config params) and pull out all 'rfid_update' events that are related to username
+    // note that this works on the assumption that recentBoutData is ordered by timestamp (which is currently is)
     _.each(app.recentBoutData, function(e) {
-      if (e.event === "start_bout" && e.payload && e.payload.bout_id && e.payload.bout_id === boutId) {
+      if (e.event === "start_bout" && e.payload && e.payload.bout_id && e.payload.bout_id === boutId && e.payload.habitat_configuration_id === configuration) {
         startFlag = true;
       }
-      if (e.event === "stop_bout" && e.payload && e.payload.bout_id && e.payload.bout_id === boutId) {
+      if (e.event === "stop_bout" && e.payload && e.payload.bout_id && e.payload.bout_id === boutId && e.payload.habitat_configuration_id === configuration) {
         stopFlag = true;
       }
 
@@ -332,20 +344,17 @@
     });
 
     // set up the move tracker for the first move for this user in this bout
-    updateMoveTracker("first", username);
+    updateMoveTracker("first", username, configuration);
   };
 
-  var updateMoveTracker = function(move, username) {
+  var updateMoveTracker = function(move, username, configuration) {
     if (move === "first") {
       app.userMove = 1;
       app.hideAllRows();
       jQuery('#move-tracker-screen').removeClass('hidden');
-      jQuery('.username').text(username);
-      // jQuery('.username').text(username.toUpperCase());
 
-      // TODO: check me
-      if (HG.Mobile.stateData.state.current_habitat_configuration === "predation") {
-        _.each(HG.Mobile.configurationData.patches, function(p) {
+      if (configuration === "predation") {
+        _.each(app.configurationData.patches, function(p) {
           jQuery('#move-tracker-screen .' + p.patch_id + ' .move-tracker-risk-field').text(p.risk_label);
         });
         jQuery('#move-tracker-screen .hidden').removeClass('hidden');
@@ -434,11 +443,6 @@
   //*************** HELPER FUNCTIONS ***************//
 
   var tryPullAll = function() {
-    // tryPullStateData();
-    // tryPullConfigurationData();
-    // // tryPullStatisticsData();
-    // tryPullRecentBoutData();
-
     return jQuery.when(tryPullStateData(), tryPullConfigurationData(), tryPullRecentBoutData());
   };
 
@@ -791,7 +795,8 @@
       app.currentReply.content = input;
       app.keyCount = 0;
     } else if ((field === 'worth_remembering') && (instantSave || app.keyCount > 9)) {
-      app.currentWorthRemembering.set('part_1', jQuery('#worth-remembering-entry').val());
+      console.log('WR saved');
+      app.currentWorthRemembering.set('part_1', input);
       app.currentWorthRemembering.save();
       app.keyCount = 0;
     }
