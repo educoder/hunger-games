@@ -260,13 +260,13 @@ input:disabled {
 }
 
 .worth-remembering-entry-field {
-	width: 89%;
+	width: 88%;
 	margin-top: -3px;
 }
 
 #worth-remembering-list-screen ul {
 	min-height: 200px;
-	max-height: 485px;
+	max-height: 575px;
 	background-color: white;
 }
 
@@ -373,10 +373,10 @@ input:disabled {
 }
 
 #move-tracker-title-box {
-    margin-left: -moz-calc(50% - 160px);
-    margin-left: -webkit-calc(50% - 160px);
-    margin-left: calc(50% - 160px);
-	width: 330px;
+    margin-left: -moz-calc(50% - 180px);
+    margin-left: -webkit-calc(50% - 180px);
+    margin-left: calc(50% - 180px);
+	width: 360px;
 	height: 40px;
 	background: white;
 	border-radius: 7px;
