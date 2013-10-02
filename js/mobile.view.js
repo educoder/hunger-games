@@ -234,22 +234,29 @@
           if (n.get('part_1') && n.get('part_2') && n.get('author')) {
             console.log('Showing each note...');
             var data = n.toJSON();
+            data.color = app.users.findWhere({username:n.get('author')}).get('color');
+
+            if (app.users.findWhere({'username':n.get('author')}).isTeacher()) {
+              data.author = '*T*';
+            } else {
+              data.author = n.get('author').toUpperCase();
+            }
 
             var listItem = _.template(jQuery(view.template).text(), data);
             list.append(listItem);
 
             // these selectors are pretty awkward... are we still really liking templates? Is there some DOM ev.target/this/iterator type thing I can grab?
-            jQuery('#list-screen li:nth-last-child(1) .note').attr('id','note-id-'+n.get('_id'));
+            // jQuery('#list-screen li:nth-last-child(1) .note').attr('id','note-id-'+n.get('_id'));
             // update the colors of the author box
-            var color = app.users.findWhere({username:n.get('author')}).get('color');
-            var authorContainer = jQuery('#list-screen li:nth-last-child(1) .author-container');
-            authorContainer.css('background-color', color);
+            // var color = app.users.findWhere({username:n.get('author')}).get('color');
+            // var authorContainer = jQuery('#list-screen li:nth-last-child(1) .author-container');
+            // authorContainer.css('background-color', color);
             // set teacher user to *T* (check this with TOM) - see also replies
-            if (app.users.findWhere({'username':n.get('author')}).isTeacher()) {
-              authorContainer.children().text('*T*');
-            } else {
-              authorContainer.children().text(n.get('author').toUpperCase());
-            }
+            // if (app.users.findWhere({'username':n.get('author')}).isTeacher()) {
+            //   authorContainer.children().text('*T*');
+            // } else {
+            //   authorContainer.children().text(n.get('author').toUpperCase());
+            // }
 
             // if there are buildOns/replies
             if (n.get('build_ons')) {
@@ -484,7 +491,7 @@
         jQuery('#worth-remembering-list-screen .reply-entry').addClass('hidden');
         // removing hidden class from sibling element (ie show the reply text entry box)
         jQuery(ev.target).parent().siblings().removeClass('hidden');       // lovely!
-        var relatedNoteId = jQuery(ev.target).parent().attr('id').slice(21);
+        var relatedNoteId = jQuery(ev.target).parent().attr('id').slice(8);
         app.createReply(relatedNoteId);
       },
 
@@ -533,22 +540,29 @@
             n.set('part_2', ' ');                   // this ugliness is so that we can reuse the same templates as with notes (there must be a part_2 or _.template check on the data)
 
             var data = n.toJSON();
+            data.color = app.users.findWhere({username:n.get('author')}).get('color');
+
+            if (app.users.findWhere({'username':n.get('author')}).isTeacher()) {
+              data.author = '*T*';
+            } else {
+              data.author = n.get('author').toUpperCase();
+            }
 
             var listItem = _.template(jQuery(view.template).text(), data);
             list.append(listItem);
 
             // used for linking up replies
-            jQuery('#worth-remembering-list-screen li:nth-last-child(1) .note').attr('id','worth-remembering-id-'+n.get('_id'));
+            // jQuery('#worth-remembering-list-screen li:nth-last-child(1) .note').attr('id','worth-remembering-id-'+n.get('_id'));
             // update the colors of the author box
-            var color = app.users.findWhere({username:n.get('author')}).get('color');
-            var authorContainer = jQuery('#worth-remembering-list-screen li:nth-last-child(1) .author-container');
-            authorContainer.css('background-color', color);
+            // var color = app.users.findWhere({username:n.get('author')}).get('color');
+            // var authorContainer = jQuery('#worth-remembering-list-screen li:nth-last-child(1) .author-container');
+            // authorContainer.css('background-color', color);
             // set teacher user to *T* else username to uppercase
-            if (app.users.findWhere({'username':n.get('author')}).isTeacher()) {
-              authorContainer.children().text('*T*');
-            } else {
-              authorContainer.children().text(n.get('author').toUpperCase());
-            }
+            // if (app.users.findWhere({'username':n.get('author')}).isTeacher()) {
+            //   authorContainer.children().text('*T*');
+            // } else {
+            //   authorContainer.children().text(n.get('author').toUpperCase());
+            // }
 
             // if there are buildOns/replies
             if (n.get('build_ons')) {
