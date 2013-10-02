@@ -36,8 +36,8 @@
 
     <script id="list-view-template" type="text/template">
         <li class="list-item">
-            <a class="note">
-                <div class="author-container"><span class="author"><%= author %></span></div>
+            <a id="note-id-<%= _id %>" class="note">
+                <div class="author-container" style="background-color: <%= color %> ;"><span class="author"><%= author %></span></div>
                 <div class="part part-1"><%= part_1 %></div>
                 <div class="part part-2"><%= part_2 %></div>
                 <div class="create-reply-btn">Reply</div>
