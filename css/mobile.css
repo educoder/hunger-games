@@ -376,7 +376,7 @@ input:disabled {
     margin-left: -moz-calc(50% - 160px);
     margin-left: -webkit-calc(50% - 160px);
     margin-left: calc(50% - 160px);
-	width: 320px;
+	width: 330px;
 	height: 40px;
 	background: white;
 	border-radius: 7px;
