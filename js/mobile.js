@@ -623,8 +623,8 @@
     // click listener for bout-picker dropdown to re-draw graph for selected bout (no data reload)
     jQuery(document).on('click', '#bout-picker li a', function () {
       console.log("Selected Option:"+ jQuery(this).text());
-      console.log("Selected Option:"+ jQuery(this).data("bout"));
-      HG.Patchgraph.showGraphForBout(jQuery(this).data("bout"));
+      console.log("Selected Option with habitat_configuration "+jQuery(this).data("habitat-configuration")+" and bout_id "+jQuery(this).data("bout"));
+      HG.Patchgraph.showGraphForBout(jQuery(this).data("habitat-configuration"), jQuery(this).data("bout"));
     });
 
     // Click listener for graph refresh button - this will reload data and re-draw bout
