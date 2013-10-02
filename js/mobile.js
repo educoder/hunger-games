@@ -90,8 +90,7 @@
     if (app.username && app.runId) {
       // We have a user in cookies so we show stuff
       console.log('We found user: '+app.username);
-      jQuery('.username-display a').text(app.runId+'#'+app.username.toUpperCase());
-      //jQuery('.username-display a').text(app.runId+'#'+app.username);
+      jQuery('.username-display a').text(app.runId+' - '+app.username.toUpperCase());
 
       hideLogin();
       showUsername();
@@ -642,8 +641,7 @@
         app.username = user.get('username');
 
         jQuery.cookie('hunger-games_mobile_username', app.username, { expires: 1, path: '/' });
-        //jQuery('.username-display a').text(app.runId+'#'+app.username);
-        jQuery('.username-display a').text(app.username.toUpperCase());
+        jQuery('.username-display a').text(app.runId+' - '+app.username.toUpperCase());
 
         // show notes-screen
         jQuery('#notes-screen').removeClass('hidden');
