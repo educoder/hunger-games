@@ -791,6 +791,15 @@
     }
   };
 
+  app.turnUrlsToLinks = function(text) {
+    var urlRegex = /(https?:\/\/[^\s]+)/g;
+    var urlText = text.replace(urlRegex, '<a href="$1">$1</a>');
+    return urlText;
+    // return text.replace(urlRegex, function (url) {
+    //     alert('<a href="' + url + '">' + url + '</a>');
+    // });
+  };
+
 
   this.HG = HG;
 

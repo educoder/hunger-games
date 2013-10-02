@@ -90,6 +90,7 @@
       var p1 = this.$el.find('#note-part-1-entry').val();
       var p2 = this.$el.find('#note-part-2-entry').val();
       if (p1.slice(-3) !== "..." && p2.slice(-3) !== "...") {
+        // var newP1 = HG.Mobile.turnUrlsToLinks(p1);
         app.currentNote.set('part_1', p1);
         app.currentNote.set('part_2', p2);
         app.currentNote.set('published', true);
