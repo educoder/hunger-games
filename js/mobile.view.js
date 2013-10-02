@@ -244,10 +244,12 @@
             var color = app.users.findWhere({username:n.get('author')}).get('color');
             var authorContainer = jQuery('#list-screen li:nth-last-child(1) .author-container');
             authorContainer.css('background-color', color);
-            // set teacher user to TEA (check this with TOM) - see also replies
+            // set teacher user to *T* (check this with TOM) - see also replies
             if (app.users.findWhere({'username':n.get('author')}).isTeacher()) {
-              authorContainer.children().text('TEA');
-            }            
+              authorContainer.children().text('*T*');
+            } else {
+              authorContainer.children().text(n.get('author').toUpperCase());
+            }
 
             // if there are buildOns/replies
             if (n.get('build_ons')) {
@@ -262,9 +264,11 @@
                 var c = app.users.findWhere({username:r.author}).get('color');
                 var replyAuthorContainer = jQuery('#list-screen li:nth-last-child(1) ').children().last().children().first();
                 replyAuthorContainer.css('background-color', c);
-                // set teacher user to TEA (check this with TOM) - see also replies
+                // set teacher user to *T* else uppercase the users
                 if (app.users.findWhere({'username':r.author}).isTeacher()) {
-                  replyAuthorContainer.children().text('TEA');
+                  replyAuthorContainer.children().text('*T*');
+                } else {
+                  replyAuthorContainer.children().text(r.author.toUpperCase());
                 }
               });
             }
@@ -539,9 +543,11 @@
             var color = app.users.findWhere({username:n.get('author')}).get('color');
             var authorContainer = jQuery('#worth-remembering-list-screen li:nth-last-child(1) .author-container');
             authorContainer.css('background-color', color);
-            // set teacher user to TEA (check this with TOM) - see also replies
+            // set teacher user to *T* else username to uppercase
             if (app.users.findWhere({'username':n.get('author')}).isTeacher()) {
-              authorContainer.children().text('TEA');
+              authorContainer.children().text('*T*');
+            } else {
+              authorContainer.children().text(n.get('author').toUpperCase());
             }
 
             // if there are buildOns/replies
@@ -558,7 +564,9 @@
                 var replyAuthorContainer = jQuery('#worth-remembering-list-screen li:nth-last-child(1)').children().last().children().first();
                 replyAuthorContainer.css('background-color', c);
                 if (app.users.findWhere({'username':r.author}).isTeacher()) {
-                  replyAuthorContainer.children().text('TEA');
+                  replyAuthorContainer.children().text('*T*');
+                } else {
+                  replyAuthorContainer.children().text(r.author.toUpperCase());
                 }
               });
             }

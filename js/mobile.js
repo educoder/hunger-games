@@ -39,20 +39,13 @@
   app.currentNote = null;
   app.currentReply = {};
   app.currentWorthRemembering = null;
-  /*
-  app.currentReply = {
-    text:"bla bla",
-    related_note_id:"13ad6a54cb08c806f8f00000"
-  }
-  */
 
   // for use with the RecentBoutData
   app.userLocations = [];
   app.userMove = 0;
   app.patchPopulations = {};
 
-    // app.indexModel = null;
-  app.indexView = null;     // TODO - think about how necessary making these global is going to be
+  app.indexView = null;
   app.inputView = null;
   app.listView = null;
   app.worthRememberingInputView = null;
@@ -87,16 +80,6 @@
 
     app.handleLogin();
 
-    // /* pull users, then initialize the model and wake it up, then pull everything else */
-    // HG.Model.init(app.config.drowsy.url, DATABASE)
-    // .then(function () {
-    //   console.log('model initialized - now waking up');
-    //   return HG.Model.wake(app.config.wakeful.url);
-    // })
-    // .done(function () {
-    //   console.log('model awake - now calling handleLogin');
-    //   app.handleLogin();
-    // });
   };
 
   app.handleLogin = function () {
@@ -107,7 +90,8 @@
     if (app.username && app.runId) {
       // We have a user in cookies so we show stuff
       console.log('We found user: '+app.username);
-      jQuery('.username-display a').text(app.runId+'#'+app.username);
+      jQuery('.username-display a').text(app.runId+'#'+app.username.toUpperCase());
+      //jQuery('.username-display a').text(app.runId+'#'+app.username);
 
       hideLogin();
       showUsername();
@@ -320,8 +304,7 @@
     }
     jQuery('.bout-number').text(configLabel+boutId);
     
-    jQuery('.username').text(username);
-    // jQuery('.username').text(username.toUpperCase());    
+    jQuery('.username').text(username.toUpperCase());    
 
     var startFlag = false;
     var stopFlag = false;
@@ -598,14 +581,6 @@
       }
     });
 
-    // Show move tracker screen - TODO: remove me before going to prod
-    // jQuery('.move-tracker-button').click(function() {
-    //   if (app.username) {
-    //     app.hideAllRows();
-    //     jQuery('#move-tracker-screen').removeClass('hidden');
-    //     app.populateMoveTracker(app.username);
-    //   }
-    // });
 
     /*
      * =========================================================
@@ -667,7 +642,8 @@
         app.username = user.get('username');
 
         jQuery.cookie('hunger-games_mobile_username', app.username, { expires: 1, path: '/' });
-        jQuery('.username-display a').text(app.runId+'#'+app.username);
+        //jQuery('.username-display a').text(app.runId+'#'+app.username);
+        jQuery('.username-display a').text(app.username.toUpperCase());
 
         // show notes-screen
         jQuery('#notes-screen').removeClass('hidden');
