@@ -129,7 +129,7 @@
 
     yAxisLabelNames = d3.scale.ordinal()
                     .domain(dataset.map(function(d){
-                        return d.name;}))
+                        return d.name.toUpperCase();}))
                     .rangeRoundBands([padding, h - padding], 0.05);
 
     xAxisLabel = d3.scale.linear()
@@ -265,7 +265,7 @@
       .enter()
       .append("text")
       .text(function(d) {
-          return d.name;
+          return d.name.toUpperCase();
       })
       .attr("text-anchor", "middle")
       .attr("y", function(d, i) {
