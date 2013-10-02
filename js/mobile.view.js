@@ -241,20 +241,30 @@
             jQuery('#list-screen li:nth-last-child(1) .note').attr('id','note-id-'+n.get('_id'));
             // update the colors of the author box
             var color = app.users.findWhere({username:n.get('author')}).get('color');
-            jQuery('#list-screen li:nth-last-child(1) .author-container').css('background-color', color);
+            var authorContainer = jQuery('#list-screen li:nth-last-child(1) .author-container');
+            authorContainer.css('background-color', color);
+            // set teacher user to TEA (check this with TOM) - see also replies
+            if (app.users.findWhere({'username':n.get('author')}).isTeacher()) {
+              authorContainer.children().text('TEA');
+            }            
 
             // if there are buildOns/replies
             if (n.get('build_ons')) {
               // determine the DOM element that we'll start adding the templated items to
-              var el = jQuery('#list-screen li:nth-last-child(1)');    // do we need to clear it out first?
+              var el = jQuery('#list-screen li:nth-last-child(1)');
               // each through the replies
               _.each(n.get('build_ons'), function(r) {
                 // attach them to the list item or preceeding item
                 var replyItem = _.template(jQuery(view.replyTemplate).text(), r);
                 el.append(replyItem);
                 // add the author color
-                var c = app.users.findWhere({username:r.author}).get('color');       // check me!!
-                jQuery('#list-screen li:nth-last-child(1) ').children().last().children().first().css('background-color', c);
+                var c = app.users.findWhere({username:r.author}).get('color');
+                var replyAuthorContainer = jQuery('#list-screen li:nth-last-child(1) ').children().last().children().first();
+                replyAuthorContainer.css('background-color', c);
+                // set teacher user to TEA (check this with TOM) - see also replies
+                if (app.users.findWhere({'username':r.author}).isTeacher()) {
+                  replyAuthorContainer.children().text('TEA');
+                }
               });
             }
           } else {
@@ -516,6 +526,7 @@
           if (n.get('part_1') && n.get('author')) {
             console.log('Showing each note...');
             n.set('part_2', ' ');                   // this ugliness is so that we can reuse the same templates as with notes (there must be a part_2 or _.template check on the data)
+
             var data = n.toJSON();
 
             var listItem = _.template(jQuery(view.template).text(), data);
@@ -525,20 +536,29 @@
             jQuery('#worth-remembering-list-screen li:nth-last-child(1) .note').attr('id','worth-remembering-id-'+n.get('_id'));
             // update the colors of the author box
             var color = app.users.findWhere({username:n.get('author')}).get('color');
-            jQuery('#worth-remembering-list-screen li:nth-last-child(1) .author-container').css('background-color', color);
+            var authorContainer = jQuery('#worth-remembering-list-screen li:nth-last-child(1) .author-container')
+            authorContainer.css('background-color', color);
+            // set teacher user to TEA (check this with TOM) - see also replies
+            if (app.users.findWhere({'username':n.get('author')}).isTeacher()) {
+              authorContainer.children().text('TEA');
+            }
 
             // if there are buildOns/replies
             if (n.get('build_ons')) {
               // determine the DOM element that we'll start adding the templated items to
-              var el = jQuery('#worth-remembering-list-screen li:nth-last-child(1)');    // do we need to clear it out first?
+              var el = jQuery('#worth-remembering-list-screen li:nth-last-child(1)');
               // each through the replies
               _.each(n.get('build_ons'), function(r) {
                 // attach them to the list item or preceeding item
                 var replyItem = _.template(jQuery(view.replyTemplate).text(), r);
                 el.append(replyItem);
                 // add the author color
-                var c = app.users.findWhere({username:r.author}).get('color');       // check me!!
-                jQuery('#worth-remembering-list-screen li:nth-last-child(1) ').children().last().children().first().css('background-color', c);
+                var c = app.users.findWhere({username:r.author}).get('color');
+                var replyAuthorContainer = jQuery('#worth-remembering-list-screen li:nth-last-child(1)').children().last().children().first()
+                replyAuthorContainer.css('background-color', c);
+                if (app.users.findWhere({'username':r.author}).isTeacher()) {
+                  replyAuthorContainer.children().text('TEA');
+                }
               });
             }
           } else {
