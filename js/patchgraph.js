@@ -508,7 +508,7 @@
       if (jQuery('#predation').exists()) {
         console.log('predation button already there, nothing to add...');
       } else {
-        var predationButton = jQuery('<button type="button" class="btn btn-large btn-success graph-sort-btn" id="predation" data-selector="predation">Predation</button>');
+        var predationButton = jQuery('<button type="button" class="btn btn-large btn-success graph-sort-btn" id="predation" data-selector="avg_risk">Predation</button>');
         // jQuery('#predation').removeClass('hidden');
         jQuery('.sort-buttons').append(predationButton);
       }
