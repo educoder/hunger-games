@@ -114,8 +114,8 @@
                 Submit
             </a>
             <div id="input-screen">
-                <textarea class="field note-entry-field part-1-text-entry" id="note-part-1-entry" name="part_1" type="text" ></textarea>
-                <textarea class="field note-entry-field part-2-text-entry" id="note-part-2-entry" name="part_2" type="text" ></textarea>
+                <textarea class="field note-entry-field part-1-text-entry" id="note-part-1-entry" name="part_1" ></textarea>
+                <textarea class="field note-entry-field part-2-text-entry" id="note-part-2-entry" name="part_2" ></textarea>
             </div>
 
             <div id="list-screen" class="bs-docs-sidebar">
@@ -132,7 +132,7 @@
                 Submit
             </a>
             <div id="worth-remembering-input-screen">
-                <textarea class="field worth-remembering-entry-field" id="worth-remembering-entry" name="worth_remembering" type="text" ></textarea>
+                <textarea class="field worth-remembering-entry-field" id="worth-remembering-entry" name="worth_remembering"></textarea>
             </div>
             <div id="worth-remembering-list-screen" class="bs-docs-sidebar">
                 <ul class="nav nav-list bs-docs-sidenav affix-top scrollable">
@@ -186,9 +186,9 @@
         <div class="span12 view-container bs-docs-sidebar map-screen bkg-large-legend">
             <div id="move-tracker-title-box">
                 <div class="map-title">
-                    <button id="move-backward" class="move-button"><</button>
+                    <button id="move-backward" class="move-button">&lt;</button>
                     Bout <span class="bout-number"></span> moves for <span class="username"></span>: Move <span id="move-number"></span>
-                    <button id="move-forward" class="move-button">></button>
+                    <button id="move-forward" class="move-button">&gt;</button>
                 </div>
             </div>
             <div class="patch-a patch">
@@ -243,10 +243,9 @@
                 </div>
                 <div class="btn-group">
                     <button class="btn btn-large btn-primary dropdown-toggle" data-toggle="dropdown">Choose bout <span class="caret"></span></button>
-                    <ul id="bout-picker" class="dropdown-menu" role="menu" aria-labelledby="choose bout">
+                    <ul id="bout-picker" class="dropdown-menu" role="menu">
                         <!--<li><a tabindex="-1" href="#" data-bout="1">Example of a line - created in code</a></li>-->
                     </ul>
-                    </a>
                 </div>
             </div>
         </div>
