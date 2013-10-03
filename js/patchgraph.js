@@ -316,8 +316,14 @@
     d3.selectAll(".graph-sort-btn").on("click", function(){
       var selector = jQuery(this).data('selector');
 
-      sortGraphBars(selector);
+      // remove highlight from all buttons
+      jQuery('.graph-sort-btn').removeClass('btn-danger');
+      jQuery('.graph-sort-btn').addClass('btn-success');
+      // highlight clicked button
+      jQuery(this).removeClass('btn-success');
+      jQuery(this).addClass('btn-danger');
 
+      sortGraphBars(selector);
       sortLabelNames(selector);
 
       // svg.select(".y").call(yAxis);
