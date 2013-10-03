@@ -282,7 +282,14 @@
       })
       .attr("font-family", "sans-serif")
       .attr("font-size", "12px")
-      .attr("fill", "white")
+      .attr("fill", function(d) {
+        var c = HG.Mobile.users.findWhere({username:d.name}).get('color_label');
+        if (c === 'black' || c === 'purple' || c === 'brown' || c === 'blue') {
+          return 'white';
+        } else {
+          return 'black';
+        }
+      })
       .attr("class", "name-labels");
 
    

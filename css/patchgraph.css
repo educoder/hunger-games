@@ -69,17 +69,17 @@ rect:hover {
 
 .legendBar1 {
     fill: rgb(200, 0, 0); /* Fallback */
-    fill: rgba(255,0,0, 0.3);
+    fill: rgba(237,28,36, 0.2);
 }
 
 .legendBar2 {
     fill: rgb(0, 200, 0); /* Fallback */
-    fill: rgba(0,255,0, 0.3);
+    fill: rgba(215, 230, 179, 0.8);
 }
 
 .legendBar3 {
     fill: rgb(0, 0, 200); /* Fallback */
-    fill: rgba(0,0,255, 0.3);
+    fill: rgba(191, 228, 255, 0.8);
 }
 
 .labels {
