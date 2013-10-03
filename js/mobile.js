@@ -592,7 +592,7 @@
         jQuery('#graphs-screen').removeClass('hidden');
         // populateStaticHarvestEqualization();
       } else {
-        alert ("Show a nicer popup and hide everything until logged in");
+        jQuery().toastmessage('showWarningToast', "User not logged. Please log in!");
         console.log('User not logged in so show nothing and prompt for user');
         app.hideAllRows();
       }
