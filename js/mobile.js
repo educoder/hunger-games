@@ -602,6 +602,14 @@
     jQuery(document).on('click', '#bout-picker li a', function () {
       console.log("Selected Option:"+ jQuery(this).text());
       console.log("Selected Option with habitat_configuration "+jQuery(this).data("habitat-configuration")+" and bout_id "+jQuery(this).data("bout"));
+      // change label of bout picker to show selected bout
+      jQuery('#bout-picker-label').html('');
+      jQuery('#bout-picker-label').append(jQuery(this).text());
+      jQuery('#bout-picker-label').append(jQuery('<span class="caret"></span>'));
+      // remove highlight from all graph sorting buttons
+      jQuery('.graph-sort-btn').removeClass('btn-danger');
+      jQuery('.graph-sort-btn').addClass('btn-success');
+      // redraw graph for chosen bout
       HG.Patchgraph.showGraphForBout(jQuery(this).data("habitat-configuration"), jQuery(this).data("bout"));
     });
 

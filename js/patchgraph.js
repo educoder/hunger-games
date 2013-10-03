@@ -316,7 +316,7 @@
     d3.selectAll(".graph-sort-btn").on("click", function(){
       var selector = jQuery(this).data('selector');
 
-      // remove highlight from all buttons
+      // remove highlight from all graph sorting buttons
       jQuery('.graph-sort-btn').removeClass('btn-danger');
       jQuery('.graph-sort-btn').addClass('btn-success');
       // highlight clicked button
