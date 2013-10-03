@@ -303,13 +303,7 @@
       })
       .attr("font-family", "sans-serif")
       .attr("font-size", "12px")
-      .attr("fill", function(d, i){
-        if (i%2 === 0){
-          return "blue";
-        } else {
-          return "red";
-        }
-      })
+      .attr("fill", "black")
       .attr("class", "labels");
 
 
