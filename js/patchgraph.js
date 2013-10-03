@@ -85,17 +85,23 @@
       .then (function (data) {
         if (data && data.length > 0) {
           console.log('successfully fetched patchgraph data');
-          updateBoutPicker(data);
+          // store fetched data so we have later access to it when
+          // user switches bout and we can avoid ajax call
+          statistics_data = _.sortBy(data, function(d) {
+            return d.bout_id;
+          });
+          updateBoutPicker(statistics_data); // populate the bout picker
+          // retrieve the data of the bout we show by default (newest)
+          var defaultBoutData = _.last(statistics_data);
 
-          if (_.first(data).habitat_configuration === PREDATION) {
+          if (defaultBoutData.habitat_configuration === PREDATION) {
             showPredationButton(true);  
           }
 
-          habitatConfiguration = _.first(data).habitat_configuration;
-          boutId = _.first(data).bout_id;
+          habitatConfiguration = defaultBoutData.habitat_configuration;
+          boutId = defaultBoutData.bout_id;
 
-          draw(_.first(data).user_stats);
-          statistics_data = data;
+          draw(defaultBoutData.user_stats);
         } else {
           console.warn('No data found for run: '+runId);
         }
