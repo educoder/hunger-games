@@ -365,8 +365,8 @@ input:disabled {
 }
 
 .bkg-small-legend {
-	/*background-image: url('../img/background_final_smlegend.png');*/
-	background-image: url('../img/equalizing_monochrome-smlegend.png');
+	background-image: url('../img/background_final_smlegend.png');
+	/*background-image: url('../img/equalizing_monochrome-smlegend.png');*/
 }
 
 .bkg-large-legend {
