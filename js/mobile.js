@@ -29,6 +29,7 @@
   app.username = null;
   app.runState = null;
   app.userState = null;
+  app.numOfStudents = 0;
 
   var DATABASE = null;
   app.stateData = null;
@@ -147,6 +148,10 @@
       console.log('model awake - now calling ready');
       app.ready();
     });
+
+    // determin the number of students in run and set max value on equalization-squirrels-field
+    app.numOfStudents = app.users.where({user_role:"student"}).length;
+    jQuery('.equalization-squirrels-field').attr('max', app.numOfStudents);
 
     /* MISC */
     jQuery().toastmessage({
@@ -268,7 +273,7 @@
           if (numSq === 0) {
             jQuery('.'+selectedPatch+' .equalization-harvest-field').text('0');
           } else {
-            var y = p.quality_per_minute / numSq;
+            var y = Math.round((p.quality_per_minute / numSq)*100)/100;
             jQuery('.'+selectedPatch+' .equalization-harvest-field').text(y);            
           }
         }
@@ -625,7 +630,11 @@
     */
 
     jQuery('.equalization-squirrels-field').change(function(ev) {
-      updateEqualization(ev);
+      if (this.checkValidity()) {
+        updateEqualization(ev);
+      } else {
+        jQuery().toastmessage('showWarningToast', "Please enter valid number between (0 and "+app.numOfStudents+")");
+      }
     });
 
     jQuery('#move-forward').click(function() {
