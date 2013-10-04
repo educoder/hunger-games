@@ -185,10 +185,10 @@ input:disabled {
 	background-color: red;
 }
 
-#list-screen .author {
-	position: absolute;
+.author {
+	position: relative;
 	top: 35%;
-	left: 25%;
+	/*left: 25%;*/
 }
 
 #list-screen .part {
@@ -297,11 +297,13 @@ input:disabled {
 	background-color: red;
 }
 
+/*
+No need for repetition since both list-screen author and this author work the same
 #worth-remembering-list-screen .author {
 	position: absolute;
 	top: 35%;
 	left: 25%;
-}
+}*/
 
 #worth-remembering-list-screen .part {
 	margin-left: 70px;
