@@ -91,10 +91,6 @@
     if (app.username && app.runId) {
       // We have a user in cookies so we show stuff
       console.log('We found user: '+app.username);
-      jQuery('.username-display a').text(app.runId+' - '+app.username.toUpperCase());
-
-      hideLogin();
-      showUsername();
 
       // make sure the app.users collection is always filled
       app.rollcall.usersWithTags([app.runId])
@@ -107,6 +103,12 @@
           return model.get('username');
         };
         app.users.sort();
+
+        var currenUser = app.users.findWhere({username: app.username});
+        jQuery('.username-display a').text(app.runId+' - '+currenUser.get('display_name'));
+
+        hideLogin();
+        showUsername();
 
         app.setup();
       });
@@ -658,7 +660,7 @@
         app.username = user.get('username');
 
         jQuery.cookie('hunger-games_mobile_username', app.username, { expires: 1, path: '/' });
-        jQuery('.username-display a').text(app.runId+' - '+app.username.toUpperCase());
+        jQuery('.username-display a').text(app.runId+' - '+user.get('display_name'));
 
         // show notes-screen
         jQuery('#notes-screen').removeClass('hidden');
@@ -743,14 +745,14 @@
 
       // sort the collection by username
       app.users.comparator = function(model) {
-        return model.get('username');
+        return model.get('display_name');
       };
       app.users.sort();
 
       app.users.each(function(user) {
         var button = jQuery('<button class="btn btn-large btn-primary login-button">');
         button.val(user.get('username'));
-        button.text(user.get('username'));
+        button.text(user.get('display_name'));
         jQuery('.login-buttons').append(button);
       });
 
