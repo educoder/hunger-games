@@ -40,13 +40,13 @@ input {
 
 .view-container {
 	min-height: 300px !important;
-	border: 1px solid;
+	/*border: 1px solid;*/
 	padding: 5px;
 	margin-bottom: 10px;
 	position: relative;
-	border-radius: 7px;
-	box-shadow: rgba(0,0,0,0.2) 1px 4px 15px;
-	background-color: #ddd
+	/*border-radius: 7px;*/
+	/*box-shadow: rgba(0,0,0,0.2) 1px 4px 15px;*/
+	background-color: white;
 }
 
 
@@ -138,16 +138,21 @@ input:disabled {
 	width: 65%;
 }
 
+/* INPUT SCREEN */
+
+.input-box-wrapper {
+	padding: 5px;
+}
 
 /* LET THE GROSSNESS BEGIN */
 
 #list-screen {
 	/*background-image: url('../img/background_final_smlegend.png');*/
-	border: 1px solid;
+	/*border: 1px solid;*/
 	padding: 5px;
 	border-radius: 7px;
-	box-shadow: rgba(0,0,0,0.2) 1px 4px 15px;
-	background-color: #ddd;
+	/*box-shadow: rgba(0,0,0,0.2) 1px 4px 15px;*/
+	background-color: white;
 }
 
 #list-screen ul {
@@ -184,10 +189,13 @@ input:disabled {
 }
 
 .author {
-	position: relative;
-	top: 35%;
-	/*left: 25%;*/
+	/*position: absolute;*/
+	/*top: 35%;*/
+	z-index: 2;
+	text-align: center;
+	padding-top: 35%;
 }
+
 
 #list-screen .part {
 	margin-left: 70px;
@@ -246,11 +254,11 @@ input:disabled {
 
 /**** WR ****/
 #worth-remembering-list-screen {
-	border: 1px solid;
+	/*border: 1px solid;*/
 	padding: 5px;
 	border-radius: 7px;
-	box-shadow: rgba(0,0,0,0.2) 1px 4px 15px;
-	background-color: #ddd;
+	/*box-shadow: rgba(0,0,0,0.2) 1px 4px 15px;*/
+	background-color: white;
 }
 
 #share-worth-remembering-btn {

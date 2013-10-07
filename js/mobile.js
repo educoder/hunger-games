@@ -205,6 +205,7 @@
 
       // show notes-screen - is this the default? TODO: check with design team where the first pedagogical step should be
       jQuery('#notes-screen').removeClass('hidden');
+      jQuery('.nav-pills .notes-button').addClass('active'); // highlight notes selection in nav bar
     });
   };
 
@@ -548,9 +549,16 @@
    *  called very late in the init process, will try to look it with Promise
    */
   var setUpClickListeners = function () {
+    // jQuery('.nav-pills li').click(function() {
+    //   jQuery('.nav-pills li').removeClass('active'); // unmark all nav items
+    // });
+
     // Show notes screen
     jQuery('.notes-button').click(function() {
       if (app.username) {
+        jQuery('.nav-pills li').removeClass('active'); // unmark all nav items
+        jQuery(this).addClass('active');
+
         app.hideAllRows();
         jQuery('#notes-screen').removeClass('hidden');
       }
@@ -559,6 +567,9 @@
     // Show notes screen
     jQuery('.worth-remembering-button').click(function() {
       if (app.username) {
+        jQuery('.nav-pills li').removeClass('active'); // unmark all nav items
+        jQuery(this).addClass('active');
+
         app.hideAllRows();
         jQuery('#worth-remembering-screen').removeClass('hidden');
       }
@@ -581,6 +592,9 @@
     // Show harvest planning tool
     jQuery('.equalization-button').click(function() {
       if (app.username) {
+        jQuery('.nav-pills li').removeClass('active'); // unmark all nav items
+        jQuery(this).addClass('active');
+
         app.hideAllRows();
         jQuery('#equalization-screen').removeClass('hidden');
         populateStaticEqualization();
@@ -595,6 +609,9 @@
     */
     jQuery('.graphs-button').click(function() {
       if (app.username) {
+        jQuery('.nav-pills li').removeClass('active'); // unmark all nav items
+        jQuery(this).addClass('active');
+        
         app.hideAllRows();
         jQuery('#graphs-screen').removeClass('hidden');
         // populateStaticHarvestEqualization();
