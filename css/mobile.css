@@ -271,8 +271,9 @@ input:disabled {
 }
 
 #worth-remembering-list-screen ul {
-	min-height: 300px;
-	max-height: 675px;
+	/*min-height: 300px;
+	max-height: 475px;*/
+	height: 595px;
 	background-color: white;
 }
 
