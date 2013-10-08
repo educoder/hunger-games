@@ -144,7 +144,7 @@ input:disabled {
 /* LET THE GROSSNESS BEGIN */
 
 #list-screen {
-	/*background-image: url('../img/background_final_smlegend.png');*/
+	/* background-image: url('../img/background_final_smlegend.png'); */
 	border: 1px solid;
 	padding: 5px;
 	border-radius: 7px;
