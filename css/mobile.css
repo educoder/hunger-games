@@ -1,9 +1,7 @@
 /* ALL */
 
-@import url(http://fonts.googleapis.com/css?family=Ubuntu:400,700,400italic,700italic);
-
 body {
-	font-family: Ubuntu, sans-serif;
+	font-family: "HelveticaNeue", "Helvetica Neue", Helvetica, sans-serif;
 }
 
 textarea {
@@ -42,13 +40,13 @@ input {
 
 .view-container {
 	min-height: 300px !important;
-	border: 1px solid;
+	/*border: 1px solid;*/
 	padding: 5px;
 	margin-bottom: 10px;
 	position: relative;
-	border-radius: 7px;
-	box-shadow: rgba(0,0,0,0.2) 1px 4px 15px;
-	background-color: #ddd
+	/*border-radius: 7px;*/
+	/*box-shadow: rgba(0,0,0,0.2) 1px 4px 15px;*/
+	background-color: white;
 }
 
 
@@ -140,16 +138,22 @@ input:disabled {
 	width: 65%;
 }
 
+/* INPUT SCREEN */
+
+.input-box-wrapper {
+	padding: 5px;
+}
 
 /* LET THE GROSSNESS BEGIN */
 
 #list-screen {
-	/* background-image: url('../img/background_final_smlegend.png'); */
 	border: 1px solid;
+	/*background-image: url('../img/background_final_smlegend.png');*/
+	/*border: 1px solid;*/
 	padding: 5px;
 	border-radius: 7px;
-	box-shadow: rgba(0,0,0,0.2) 1px 4px 15px;
-	background-color: #ddd;
+	/*box-shadow: rgba(0,0,0,0.2) 1px 4px 15px;*/
+	background-color: white;
 }
 
 #list-screen ul {
@@ -185,11 +189,14 @@ input:disabled {
 	background-color: red;
 }
 
-#list-screen .author {
-	position: absolute;
-	top: 35%;
-	left: 25%;
+.author {
+	/*position: absolute;*/
+	/*top: 35%;*/
+	z-index: 2;
+	text-align: center;
+	padding-top: 35%;
 }
+
 
 #list-screen .part {
 	margin-left: 70px;
@@ -247,12 +254,12 @@ input:disabled {
 
 
 /**** WR ****/
-#worth-remembering-screen {
-	border: 1px solid;
+#worth-remembering-list-screen {
+	/*border: 1px solid;*/
 	padding: 5px;
 	border-radius: 7px;
-	box-shadow: rgba(0,0,0,0.2) 1px 4px 15px;
-	background-color: #ddd;
+	/*box-shadow: rgba(0,0,0,0.2) 1px 4px 15px;*/
+	background-color: white;
 }
 
 #share-worth-remembering-btn {
@@ -265,8 +272,8 @@ input:disabled {
 }
 
 #worth-remembering-list-screen ul {
-	min-height: 200px;
-	max-height: 575px;
+	min-height: 300px;
+	max-height: 675px;
 	background-color: white;
 }
 
@@ -297,11 +304,13 @@ input:disabled {
 	background-color: red;
 }
 
+/*
+No need for repetition since both list-screen author and this author work the same
 #worth-remembering-list-screen .author {
 	position: absolute;
 	top: 35%;
 	left: 25%;
-}
+}*/
 
 #worth-remembering-list-screen .part {
 	margin-left: 70px;
@@ -366,6 +375,7 @@ input:disabled {
 
 .bkg-small-legend {
 	background-image: url('../img/background_final_smlegend.png');
+	/*background-image: url('../img/equalizing_monochrome-smlegend.png');*/
 }
 
 .bkg-large-legend {
@@ -376,7 +386,7 @@ input:disabled {
     margin-left: -moz-calc(50% - 180px);
     margin-left: -webkit-calc(50% - 180px);
     margin-left: calc(50% - 180px);
-	width: 360px;
+	width: 370px;
 	height: 40px;
 	background: white;
 	border-radius: 7px;

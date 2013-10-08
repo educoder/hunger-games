@@ -29,6 +29,7 @@
   app.username = null;
   app.runState = null;
   app.userState = null;
+  app.numOfStudents = 0;
 
   var DATABASE = null;
   app.stateData = null;
@@ -90,10 +91,6 @@
     if (app.username && app.runId) {
       // We have a user in cookies so we show stuff
       console.log('We found user: '+app.username);
-      jQuery('.username-display a').text(app.runId+' - '+app.username.toUpperCase());
-
-      hideLogin();
-      showUsername();
 
       // make sure the app.users collection is always filled
       app.rollcall.usersWithTags([app.runId])
@@ -106,6 +103,12 @@
           return model.get('username');
         };
         app.users.sort();
+
+        var currenUser = app.users.findWhere({username: app.username});
+        jQuery('.username-display a').text(app.runId+' - '+currenUser.get('display_name'));
+
+        hideLogin();
+        showUsername();
 
         app.setup();
       });
@@ -147,6 +150,10 @@
       console.log('model awake - now calling ready');
       app.ready();
     });
+
+    // determin the number of students in run and set max value on equalization-squirrels-field
+    app.numOfStudents = app.users.where({user_role:"student"}).length;
+    jQuery('.equalization-squirrels-field').attr('max', app.numOfStudents);
 
     /* MISC */
     jQuery().toastmessage({
@@ -198,6 +205,7 @@
 
       // show notes-screen - is this the default? TODO: check with design team where the first pedagogical step should be
       jQuery('#notes-screen').removeClass('hidden');
+      jQuery('.nav-pills .notes-button').addClass('active'); // highlight notes selection in nav bar
     });
   };
 
@@ -268,7 +276,7 @@
           if (numSq === 0) {
             jQuery('.'+selectedPatch+' .equalization-harvest-field').text('0');
           } else {
-            var y = p.quality_per_minute / numSq;
+            var y = Math.round((p.quality_per_minute / numSq)*100)/100;
             jQuery('.'+selectedPatch+' .equalization-harvest-field').text(y);            
           }
         }
@@ -541,9 +549,16 @@
    *  called very late in the init process, will try to look it with Promise
    */
   var setUpClickListeners = function () {
+    // jQuery('.nav-pills li').click(function() {
+    //   jQuery('.nav-pills li').removeClass('active'); // unmark all nav items
+    // });
+
     // Show notes screen
     jQuery('.notes-button').click(function() {
       if (app.username) {
+        jQuery('.nav-pills li').removeClass('active'); // unmark all nav items
+        jQuery(this).addClass('active');
+
         app.hideAllRows();
         jQuery('#notes-screen').removeClass('hidden');
       }
@@ -552,6 +567,9 @@
     // Show notes screen
     jQuery('.worth-remembering-button').click(function() {
       if (app.username) {
+        jQuery('.nav-pills li').removeClass('active'); // unmark all nav items
+        jQuery(this).addClass('active');
+
         app.hideAllRows();
         jQuery('#worth-remembering-screen').removeClass('hidden');
       }
@@ -574,6 +592,9 @@
     // Show harvest planning tool
     jQuery('.equalization-button').click(function() {
       if (app.username) {
+        jQuery('.nav-pills li').removeClass('active'); // unmark all nav items
+        jQuery(this).addClass('active');
+
         app.hideAllRows();
         jQuery('#equalization-screen').removeClass('hidden');
         populateStaticEqualization();
@@ -588,11 +609,14 @@
     */
     jQuery('.graphs-button').click(function() {
       if (app.username) {
+        jQuery('.nav-pills li').removeClass('active'); // unmark all nav items
+        jQuery(this).addClass('active');
+        
         app.hideAllRows();
         jQuery('#graphs-screen').removeClass('hidden');
         // populateStaticHarvestEqualization();
       } else {
-        alert ("Show a nicer popup and hide everything until logged in");
+        jQuery().toastmessage('showWarningToast', "User not logged. Please log in!");
         console.log('User not logged in so show nothing and prompt for user');
         app.hideAllRows();
       }
@@ -602,6 +626,14 @@
     jQuery(document).on('click', '#bout-picker li a', function () {
       console.log("Selected Option:"+ jQuery(this).text());
       console.log("Selected Option with habitat_configuration "+jQuery(this).data("habitat-configuration")+" and bout_id "+jQuery(this).data("bout"));
+      // change label of bout picker to show selected bout
+      jQuery('#bout-picker-label').html('');
+      jQuery('#bout-picker-label').append(jQuery(this).text());
+      jQuery('#bout-picker-label').append(jQuery('<span class="caret"></span>'));
+      // remove highlight from all graph sorting buttons
+      jQuery('.graph-sort-btn').removeClass('btn-danger');
+      jQuery('.graph-sort-btn').addClass('btn-success');
+      // redraw graph for chosen bout
       HG.Patchgraph.showGraphForBout(jQuery(this).data("habitat-configuration"), jQuery(this).data("bout"));
     });
 
@@ -617,7 +649,11 @@
     */
 
     jQuery('.equalization-squirrels-field').change(function(ev) {
-      updateEqualization(ev);
+      if (this.checkValidity()) {
+        updateEqualization(ev);
+      } else {
+        jQuery().toastmessage('showWarningToast', "Please enter valid number between (0 and "+app.numOfStudents+")");
+      }
     });
 
     jQuery('#move-forward').click(function() {
@@ -641,7 +677,7 @@
         app.username = user.get('username');
 
         jQuery.cookie('hunger-games_mobile_username', app.username, { expires: 1, path: '/' });
-        jQuery('.username-display a').text(app.runId+' - '+app.username.toUpperCase());
+        jQuery('.username-display a').text(app.runId+' - '+user.get('display_name'));
 
         // show notes-screen
         jQuery('#notes-screen').removeClass('hidden');
@@ -726,14 +762,14 @@
 
       // sort the collection by username
       app.users.comparator = function(model) {
-        return model.get('username');
+        return model.get('display_name');
       };
       app.users.sort();
 
       app.users.each(function(user) {
         var button = jQuery('<button class="btn btn-large btn-primary login-button">');
         button.val(user.get('username'));
-        button.text(user.get('username'));
+        button.text(user.get('display_name'));
         jQuery('.login-buttons').append(button);
       });
 

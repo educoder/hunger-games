@@ -27,6 +27,7 @@
 
               if (uicUser.teacher === true) {
                 user.set('user_role', 'teacher');
+                user.set('display_name', '*T*');
               }
               // user.save();
             } else {
@@ -43,6 +44,7 @@
 
               if (uicUser.teacher === true) {
                 newUser.set('user_role', 'teacher');
+                newUser.set('display_name', '*T*');
               }
               // newUser.save();
               rollcallUsers.add(newUser);

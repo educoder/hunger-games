@@ -85,17 +85,23 @@
       .then (function (data) {
         if (data && data.length > 0) {
           console.log('successfully fetched patchgraph data');
-          updateBoutPicker(data);
+          // store fetched data so we have later access to it when
+          // user switches bout and we can avoid ajax call
+          statistics_data = _.sortBy(data, function(d) {
+            return d.bout_id;
+          });
+          updateBoutPicker(statistics_data); // populate the bout picker
+          // retrieve the data of the bout we show by default (newest)
+          var defaultBoutData = _.last(statistics_data);
 
-          if (_.first(data).habitat_configuration === PREDATION) {
+          if (defaultBoutData.habitat_configuration === PREDATION) {
             showPredationButton(true);  
           }
 
-          habitatConfiguration = _.first(data).habitat_configuration;
-          boutId = _.first(data).bout_id;
+          habitatConfiguration = defaultBoutData.habitat_configuration;
+          boutId = defaultBoutData.bout_id;
 
-          draw(_.first(data).user_stats);
-          statistics_data = data;
+          draw(defaultBoutData.user_stats);
         } else {
           console.warn('No data found for run: '+runId);
         }
@@ -276,7 +282,14 @@
       })
       .attr("font-family", "sans-serif")
       .attr("font-size", "12px")
-      .attr("fill", "white")
+      .attr("fill", function(d) {
+        var c = HG.Mobile.users.findWhere({username:d.name}).get('color_label');
+        if (c === 'black' || c === 'purple' || c === 'brown' || c === 'blue') {
+          return 'white';
+        } else {
+          return 'black';
+        }
+      })
       .attr("class", "name-labels");
 
    
@@ -297,21 +310,21 @@
       })
       .attr("font-family", "sans-serif")
       .attr("font-size", "12px")
-      .attr("fill", function(d, i){
-        if (i%2 === 0){
-          return "blue";
-        } else {
-          return "red";
-        }
-      })
+      .attr("fill", "black")
       .attr("class", "labels");
 
 
     d3.selectAll(".graph-sort-btn").on("click", function(){
       var selector = jQuery(this).data('selector');
 
-      sortGraphBars(selector);
+      // remove highlight from all graph sorting buttons
+      jQuery('.graph-sort-btn').removeClass('btn-danger');
+      jQuery('.graph-sort-btn').addClass('btn-success');
+      // highlight clicked button
+      jQuery(this).removeClass('btn-success');
+      jQuery(this).addClass('btn-danger');
 
+      sortGraphBars(selector);
       sortLabelNames(selector);
 
       // svg.select(".y").call(yAxis);
@@ -502,7 +515,7 @@
       if (jQuery('#predation').exists()) {
         console.log('predation button already there, nothing to add...');
       } else {
-        var predationButton = jQuery('<button type="button" class="btn btn-large btn-success graph-sort-btn" id="predation" data-selector="predation">Predation</button>');
+        var predationButton = jQuery('<button type="button" class="btn btn-large btn-success graph-sort-btn" id="predation" data-selector="avg_risk">Predation</button>');
         // jQuery('#predation').removeClass('hidden');
         jQuery('.sort-buttons').append(predationButton);
       }
