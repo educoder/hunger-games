@@ -253,7 +253,6 @@
   };
 
   var populateStaticEqualization = function() {
-    // ok, are we using Backbone Views?
     jQuery('#equalization-minutes-field').text(app.configurationData.harvest_calculator_bout_length_in_minutes);
 
     _.each(app.configurationData.patches, function(p) {
@@ -276,7 +275,7 @@
           if (numSq === 0) {
             jQuery('.'+selectedPatch+' .equalization-harvest-field').text('0');
           } else {
-            var y = Math.round((p.quality_per_minute / numSq)*100)/100;
+            var y = Math.round((p.quality_per_minute / numSq * app.configurationData.harvest_calculator_bout_length_in_minutes)*100)/100;
             jQuery('.'+selectedPatch+' .equalization-harvest-field').text(y);            
           }
         }
