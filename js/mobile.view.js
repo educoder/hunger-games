@@ -366,7 +366,7 @@
         // // case 3: else skip this note
         // else {
         //   return;
-        // }        
+        // }
     }
 
   });
@@ -381,12 +381,12 @@
       console.log('Initializing WorthRememberingInputView...', this.el);
       if (app.users.findWhere({'username':app.username}).isTeacher()) {
         console.log('Hey there teacher');
-        this.$el.find('#share-worth-remembering-btn').attr("disabled", false);
-        this.$el.find('#worth-remembering-entry').attr("disabled", false);
+        this.$el.find('#share-worth-remembering-btn').removeClass('hidden');
+        this.$el.find('#worth-remembering-entry').removeClass('hidden');
       } else {
         console.log('No button for you!');
-        this.$el.find('#share-worth-remembering-btn').attr("disabled", true);
-        this.$el.find('#worth-remembering-entry').attr("disabled", true);
+        this.$el.find('#share-worth-remembering-btn').addClass('hidden');
+        this.$el.find('#worth-remembering-entry').addClass('hidden');
       }
       view.tryRestore();
     },
