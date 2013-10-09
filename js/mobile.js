@@ -253,7 +253,6 @@
   };
 
   var populateStaticEqualization = function() {
-    // ok, are we using Backbone Views?
     jQuery('#equalization-minutes-field').text(app.configurationData.harvest_calculator_bout_length_in_minutes);
 
     _.each(app.configurationData.patches, function(p) {
@@ -276,7 +275,7 @@
           if (numSq === 0) {
             jQuery('.'+selectedPatch+' .equalization-harvest-field').text('0');
           } else {
-            var y = Math.round((p.quality_per_minute / numSq)*100)/100;
+            var y = Math.round((p.quality_per_minute / numSq * app.configurationData.harvest_calculator_bout_length_in_minutes)*100)/100;
             jQuery('.'+selectedPatch+' .equalization-harvest-field').text(y);            
           }
         }
@@ -388,6 +387,7 @@
           jQuery('#move-tracker-screen .'+p+' .move-tracker-yield-field').text("0");
         }
         
+
         jQuery('#move-tracker-screen .'+p+' .move-tracker-new-yield-field').text(Math.round(qualObj[p] / (numSq + 1)));
       });
     } else {
@@ -399,9 +399,11 @@
       // clear all locations
       jQuery('#move-tracker-screen .patch').removeClass('current-position');
       jQuery('#move-tracker-screen .patch').removeClass('next-position');
-      // add the new locations
+      jQuery('#move-tracker-screen .move-tracker-new-yield-label').removeClass('hidden');
+      // add the new locations and hide the 'new yield' field for current position
       jQuery('#move-tracker-screen .'+app.userLocations[app.userMove-1].location).addClass('current-position');
       jQuery('#move-tracker-screen .'+app.userLocations[app.userMove].location).addClass('next-position');
+      jQuery('#move-tracker-screen .'+app.userLocations[app.userMove-1].location+' .move-tracker-new-yield-label').addClass('hidden');
     }
 
   };
