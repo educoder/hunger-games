@@ -478,11 +478,11 @@
   var tryPullActivityData = function() {
     var promise = jQuery.get(app.config.drowsy.url+'/'+DATABASE+'-'+app.runId+'/activity')
       .then(function (data) {
-        _.each(data, function(activity) {
-          app.activityDropdownData.push(activity);
-        });
-        _.sortBy(app.activityDropdownData, function (a) {
+        var sortedData = _.sortBy(data, function (a) {
           return a._id;
+        });
+        _.each(sortedData, function(activity) {
+          app.activityDropdownData.push(activity);
         });
         console.log("Activity Data pulled");
       });
