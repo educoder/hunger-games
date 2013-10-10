@@ -36,6 +36,7 @@
   app.configuationData = null;
   app.recentBoutData = null;
   app.notesData = null;
+  app.activityDropdownData = [];
 
   app.currentNote = null;
   app.currentReply = {};
@@ -170,7 +171,7 @@
     //   });
     // }
 
-    jQuery.when(tryPullAll()).done(function(stateData, configurationData, recentBoutData) {
+    jQuery.when(tryPullAll()).done(function(stateData, configurationData, recentBoutData, activityDropdownData) {
       console.log('tryPullAll and Patchgraph.init() finished so we do the rest of ready()');
 
       if (app.inputView === null) {
@@ -255,9 +256,9 @@
   var populateStaticEqualization = function() {
     jQuery('#equalization-minutes-field').text(app.configurationData.harvest_calculator_bout_length_in_minutes);
 
-    _.each(app.configurationData.patches, function(p) {
-      jQuery('#equalization-screen .'+p.patch_id+' .equalization-quality-field').text(p.quality_per_minute);
-    });
+    // _.each(app.configurationData.patches, function(p) {
+    //   jQuery('#equalization-screen .'+p.patch_id+' .equalization-quality-field').text(p.quality_per_minute);
+    // });
   };
 
   var updateEqualization = function(ev) {
@@ -269,7 +270,8 @@
     if (app.configurationData) {
       // Harvest per squirrel field
       _.each(app.configurationData.patches, function(p) {
-        if (jQuery(ev.target.parentElement.parentElement).hasClass(p.patch_id)) {
+        var pId = p.patch_id.substring(p.patch_id.length -1, p.patch_id.length);
+        if (jQuery(ev.target).data('patch') === pId) {
           selectedPatch = p.patch_id;
           // make sure we don't try to divide by zero (tho JS/Chrome seems to actually handle this gracefully!)
           if (numSq === 0) {
@@ -483,7 +485,7 @@
   //*************** HELPER FUNCTIONS ***************//
 
   var tryPullAll = function() {
-    return jQuery.when(tryPullStateData(), tryPullConfigurationData(), tryPullRecentBoutData());
+    return jQuery.when(tryPullStateData(), tryPullConfigurationData(), tryPullRecentBoutData(), tryPullActivityData());
   };
 
   var tryPullStateData = function() {
@@ -521,15 +523,18 @@
     // }
   };
 
-  var tryPullStatisticsData = function() {
-    // needed: run_id, habitat_configuration, bout_id
-    // if (app.runId) {
-    //   jQuery.get(app.config.drowsy.uic_url+'/'+DATABASE+'/statistics', function(data) {
-    //     app.configurationData = data;
-    //   })
-    //   .done(function() { console.log("Statistics data pulled!"); })
-    //   .fail(function() { error.log("Error pulling configuration data..."); });
-    // }
+  var tryPullActivityData = function() {
+    var promise = jQuery.get(app.config.drowsy.url+'/'+DATABASE+'-'+app.runId+'/activity')
+      .then(function (data) {
+        var sortedData = _.sortBy(data, function (a) {
+          return a._id;
+        });
+        _.each(sortedData, function(activity) {
+          app.activityDropdownData.push(activity);
+        });
+        console.log("Activity Data pulled");
+      });
+    return promise;
   };
 
   var tryPullRecentBoutData = function() {

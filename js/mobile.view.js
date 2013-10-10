@@ -40,9 +40,12 @@
     InputView
   **/
   app.View.InputView = Backbone.View.extend({
+    view: this,
+
     initialize: function() {
       var view = this;
       console.log('Initializing InputView...', view.el);
+      view.populateActivityDropdown();
       view.updateActivity();
     },
 
@@ -107,6 +110,21 @@
       var str = jQuery(ev.target).val();
       if (str.slice(-3) === "...") {
         jQuery(ev.target).val(str.substring(0, str.length - 3) + " ");
+      }
+    },
+
+    populateActivityDropdown: function () {
+      if (app.activityDropdownData || app.activityDropdownData.length >= 0) {
+        var dropdown = jQuery('#activity-dropdown');
+        dropdown.html(''); // clearing out the html
+        _.each(app.activityDropdownData, function(a) {
+          var option = jQuery('<option>');
+          option.attr('value', 'activity-'+a._id);
+          option.text(a.title);
+          dropdown.append(option);
+        });
+      } else {
+        console.log('no state date no drop down ...');
       }
     },
 

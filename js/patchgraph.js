@@ -14,9 +14,13 @@
 
   var PREDATION = 'predation';
 
-  var w = 650;
+  var w = 950;
   var h = 600;
   var padding = 45;
+  var maxW = w - (padding * 2); // leaving a padding left and right is the max width of the graph
+  var d_starving = 1200;
+  var d_surviving = 1350;
+  var d_max = 2500;
   var xScale;
   var yScale;
   var svg;
@@ -114,10 +118,14 @@
   };
 
   var draw = function (dataset) {
+    // xScale = d3.scale.linear()
+    //             .domain([0, d3.max(dataset, function(d){
+    //                     return d.harvest; })])
+    //             .range([padding, w - (padding*2)]);
+
     xScale = d3.scale.linear()
-                .domain([0, d3.max(dataset, function(d){
-                        return d.harvest; })])
-                .range([padding, w - (padding*2)]);
+      .domain([0,d_max])
+      .range([padding, maxW]);
 
     yScale = d3.scale.ordinal()
                 .domain(d3.range(dataset.length))
@@ -138,9 +146,13 @@
                         return d.name.toUpperCase();}))
                     .rangeRoundBands([padding, h - padding], 0.05);
 
+    // xAxisLabel = d3.scale.linear()
+    //                 .domain([0, d3.max(dataset, function(d){
+    //                     return d.harvest; })])
+    //                 .range([padding, w -padding]);
+
     xAxisLabel = d3.scale.linear()
-                    .domain([0, d3.max(dataset, function(d){
-                        return d.harvest; })])
+                    .domain([0, d_max])
                     .range([padding, w -padding]);
 
     xAxis = d3.svg.axis()
@@ -151,11 +163,17 @@
     yAxis = d3.svg.axis()
                       .scale(yAxisLabelNames)
                       .orient("left");
-                                    
+    
+    /*
+    * Starving range 
+    */                      
+    var starvingPercent = d_starving / d_max;      
     svg.append("rect")
       .attr("y", padding)
       .attr("x", padding)
-      .attr("width", 200)
+      .attr("width", function(){
+        return (maxW * starvingPercent);
+      })
       .attr("height", h -padding*2)
       // .attr("fill", "rgba(255,0,0, 0.3")
       .attr("class", "legendBar legendBar1");
@@ -169,10 +187,18 @@
       .attr("font-size", "14px")
       .attr("font-weight", "bold");
 
+    /*
+    * Surviving range 
+    */
+    var survivingPercent = (d_surviving - d_starving) / d_max;
     svg.append("rect")
       .attr("y", padding)
-      .attr("x", padding +200)
-      .attr("width", 200)
+      .attr("x", function() {
+        return (maxW * starvingPercent) + padding;
+      })
+      .attr("width", function() {
+        return (maxW * survivingPercent);
+      })
       .attr("height", h -padding*2)
       // .attr("fill", "rgba(0,255,0, 0.3")
       .attr("class", "legendBar legendBar2");
@@ -181,15 +207,25 @@
       .text("Surviving")
       .attr("text-anchor", "middle")
       .attr("y", padding -7)
-      .attr("x", padding +300)
+      .attr("x", function () {
+        return (maxW * starvingPercent) + 65;
+      })
       .attr("font-family", "sans-serif")
       .attr("font-size", "14px")
       .attr("font-weight", "bold");
 
+    /*
+    * Prospering range 
+    */
+    var prosperingPercent = (d_max - d_surviving) / d_max;
     svg.append("rect")
       .attr("y", padding)
-      .attr("x", padding +400)
-      .attr("width", 200)
+      .attr("x", function () {
+        return (maxW * (starvingPercent + survivingPercent)) + padding;
+      })
+      .attr("width", function () {
+        return (maxW * prosperingPercent);
+      })
       .attr("height", h -padding*2)
       // .attr("fill", "rgba(0,0,255, 0.3")
       .attr("class", "legendBar legendBar3");
@@ -198,7 +234,9 @@
       .text("Prospering")
       .attr("text-anchor", "middle")
       .attr("y", padding -7)
-      .attr("x", padding +500)
+      .attr("x", function () {
+        return maxW - 100;
+      })
       .attr("font-family", "sans-serif")
       .attr("font-size", "14px")
       .attr("font-weight", "bold");
