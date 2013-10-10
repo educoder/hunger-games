@@ -481,6 +481,9 @@
         _.each(data, function(activity) {
           app.activityDropdownData.push(activity);
         });
+        _.sortBy(app.activityDropdownData, function (a) {
+          return a._id;
+        });
         console.log("Activity Data pulled");
       });
     return promise;
