@@ -423,7 +423,17 @@
 		background-color: #FBFACF;
 		border-radius: 10px;
 		padding: 8px;
-		width: 200px;
+		width: 210px;
+	}
+
+	.patch div:first-child {
+		background-color: #e3a953;
+		border-radius: 5px;
+		padding: 3px 3px 0px;
+	}
+
+	.patch div:first-child label input{
+		margin-bottom: 3px;
 	}
 
 	.patch-a {

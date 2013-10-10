@@ -255,9 +255,9 @@
   var populateStaticEqualization = function() {
     jQuery('#equalization-minutes-field').text(app.configurationData.harvest_calculator_bout_length_in_minutes);
 
-    _.each(app.configurationData.patches, function(p) {
-      jQuery('#equalization-screen .'+p.patch_id+' .equalization-quality-field').text(p.quality_per_minute);
-    });
+    // _.each(app.configurationData.patches, function(p) {
+    //   jQuery('#equalization-screen .'+p.patch_id+' .equalization-quality-field').text(p.quality_per_minute);
+    // });
   };
 
   var updateEqualization = function(ev) {
@@ -269,7 +269,8 @@
     if (app.configurationData) {
       // Harvest per squirrel field
       _.each(app.configurationData.patches, function(p) {
-        if (jQuery(ev.target.parentElement.parentElement).hasClass(p.patch_id)) {
+        var pId = p.patch_id.substring(p.patch_id.length -1, p.patch_id.length);
+        if (jQuery(ev.target).data('patch') === pId) {
           selectedPatch = p.patch_id;
           // make sure we don't try to divide by zero (tho JS/Chrome seems to actually handle this gracefully!)
           if (numSq === 0) {
