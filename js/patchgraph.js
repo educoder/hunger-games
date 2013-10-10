@@ -14,13 +14,13 @@
 
   var PREDATION = 'predation';
 
-  var w = 650;
+  var w = 850;
   var h = 600;
   var padding = 45;
   var maxW = w - (padding * 2); // leaving a padding left and right is the max width of the graph
   var d_starving = 1200;
   var d_surviving = 1350;
-  var d_max = 3000;
+  var d_max = 2500;
   var xScale;
   var yScale;
   var svg;
