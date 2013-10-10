@@ -426,7 +426,7 @@
 		width: 210px;
 	}
 
-	.patch div:first-child {
+	#equalization-screen .patch div:first-child {
 		background-color: #e3a953;
 		border-radius: 5px;
 		padding: 3px 3px 0px;
