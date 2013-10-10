@@ -36,6 +36,7 @@
   app.configuationData = null;
   app.recentBoutData = null;
   app.notesData = null;
+  app.activityDropdownData = [];
 
   app.currentNote = null;
   app.currentReply = {};
@@ -170,7 +171,7 @@
     //   });
     // }
 
-    jQuery.when(tryPullAll()).done(function(stateData, configurationData, recentBoutData) {
+    jQuery.when(tryPullAll()).done(function(stateData, configurationData, recentBoutData, activityDropdownData) {
       console.log('tryPullAll and Patchgraph.init() finished so we do the rest of ready()');
 
       if (app.inputView === null) {
@@ -436,7 +437,7 @@
   //*************** HELPER FUNCTIONS ***************//
 
   var tryPullAll = function() {
-    return jQuery.when(tryPullStateData(), tryPullConfigurationData(), tryPullRecentBoutData());
+    return jQuery.when(tryPullStateData(), tryPullConfigurationData(), tryPullRecentBoutData(), tryPullActivityData());
   };
 
   var tryPullStateData = function() {
@@ -474,15 +475,15 @@
     // }
   };
 
-  var tryPullStatisticsData = function() {
-    // needed: run_id, habitat_configuration, bout_id
-    // if (app.runId) {
-    //   jQuery.get(app.config.drowsy.uic_url+'/'+DATABASE+'/statistics', function(data) {
-    //     app.configurationData = data;
-    //   })
-    //   .done(function() { console.log("Statistics data pulled!"); })
-    //   .fail(function() { error.log("Error pulling configuration data..."); });
-    // }
+  var tryPullActivityData = function() {
+    var promise = jQuery.get(app.config.drowsy.url+'/'+DATABASE+'-'+app.runId+'/activity')
+      .then(function (data) {
+        _.each(data, function(activity) {
+          app.activityDropdownData.push(activity);
+        });
+        console.log("Activity Data pulled");
+      });
+    return promise;
   };
 
   var tryPullRecentBoutData = function() {
