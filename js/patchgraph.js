@@ -14,7 +14,7 @@
 
   var PREDATION = 'predation';
 
-  var w = 850;
+  var w = 950;
   var h = 600;
   var padding = 45;
   var maxW = w - (padding * 2); // leaving a padding left and right is the max width of the graph
