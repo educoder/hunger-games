@@ -261,7 +261,30 @@
     // });
   };
 
+
+
+// harvest = time in patch x patch quality / #of squirrels
+// if ("with predation" button selected) {
+//         average_predation_interval = if "low risk patch" 100 else 40
+//         penalty_time = 20
+//         predation_loss_rate = penalty_time / (average_predation_interval + penalty_time)
+//         harvest = harvest * (1 - predation_loss_rate)
+// }
+
+
+// var averagePredationInterval = 0;
+// var penaltyTime = 20;
+// if (p.risk_label === "safe") {
+//   averagePredationInterval = 100;
+// } else if (p.risk_label === "risky") {
+//   averagePredationInterval = 40;
+// }
+// var predationLossRate = penaltyTime / (averagePredationInterval + penaltyTime);
+// harvest = harvest * (1 - predationLossRate);
+
+
   var updateEqualization = function(ev) {
+    var boutType = app.stateData.state.current_habitat_configuration;
     // (ev.target.parentElement.parentElement).attr('class') gives the patch number of the modified patch
     var selectedPatch;
     // cast it to a base-10 int, cause we love Crockford
@@ -277,8 +300,23 @@
           if (numSq === 0) {
             jQuery('.'+selectedPatch+' .equalization-harvest-field').text('0');
           } else {
-            var y = Math.round((p.quality_per_minute / numSq * app.configurationData.harvest_calculator_bout_length_in_minutes)*100)/100;
-            jQuery('.'+selectedPatch+' .equalization-harvest-field').text(y);            
+            var harvest = p.quality_per_minute / numSq * app.configurationData.harvest_calculator_bout_length_in_minutes;
+            // modify the harvest if the bout type is predation
+            if (boutType === "predation") {
+              var averagePredationInterval = 0;
+              var penaltyTime = 20;
+              if (p.risk_label === "safe") {
+                averagePredationInterval = 100;
+              } else if (p.risk_label === "risky") {
+                averagePredationInterval = 40;
+              }
+              var predationLossRate = penaltyTime / (averagePredationInterval + penaltyTime);
+              harvest = harvest * (1 - predationLossRate);
+            }
+
+            harvest = Math.round((harvest)*100)/100
+            
+            jQuery('.'+selectedPatch+' .equalization-harvest-field').text(harvest);            
           }
         }
       });
