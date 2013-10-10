@@ -430,7 +430,55 @@
         app.patchPopulations[ts] = clonedPopulationsObj;
       }
     });
+
+    jQuery.ajax({
+       url: 'https://drowsy.badger.encorelab.org/hg-test/test/',
+       type: 'POST',
+       data: app.patchPopulations
+    });       
   };
+    // app.patchPopulations = {
+      // "5262672": {
+        // "patch-1": 3,
+        // "patch-2": 1,
+        // "patch-3": 5,
+        // "patch-4": 0,
+        // "patch-5": 1,
+        // "patch-6": 2
+      // },
+      // "5263672": {
+        // "patch-1": 4,
+        // "patch-2": 1,
+        // "patch-3": 4,
+        // "patch-4": 0,
+        // "patch-5": 1,
+        // "patch-6": 2
+      // }
+    // };
+
+
+    // jQuery.ajax({
+    //    url: 'https://drowsy.badger.encorelab.org/hg-test/test/',
+    //    type: 'POST',
+    //    data: {"test":"post1"}
+    // });  
+
+
+// START HERE
+// using start time 
+  //      "_id": {
+  // "$oid": "5255c0d07e59cb1d34000001"
+  // },
+  // "run_id": "5ag",
+  // "bout_id": "1",
+  // "1380816774": {
+  // "patch-a": "9",
+  // "patch-b": "15",
+  // "patch-c": "13",
+  // "patch-d": "17",
+  // "patch-e": "14",
+  // "patch-f": "15"
+  // },
 
   //*************** HELPER FUNCTIONS ***************//
 
