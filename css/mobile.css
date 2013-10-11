@@ -378,6 +378,8 @@
 
 
 	.map-screen {
+		/*background-image: url('../img/background_including_texture_low.png');*/
+		background-image: url('../img/background_including_texture.png');
 		background-size: 100% 100%;
 		background-repeat: no-repeat;
 		width: inherit;
@@ -393,14 +395,13 @@
 		overflow: hidden;
 	}
 
-	.bkg-small-legend {
+	/*.bkg-small-legend {
 		background-image: url('../img/background_final_smlegend.png');
-		/*background-image: url('../img/equalizing_monochrome-smlegend.png');*/
 	}
 
 	.bkg-large-legend {
 		background-image: url('../img/background_final_lglegend.png');
-	}
+	}*/
 
 	#move-tracker-title-box {
 	    margin-left: -moz-calc(50% - 180px);
