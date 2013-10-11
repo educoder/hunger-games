@@ -262,27 +262,6 @@
   };
 
 
-
-// harvest = time in patch x patch quality / #of squirrels
-// if ("with predation" button selected) {
-//         average_predation_interval = if "low risk patch" 100 else 40
-//         penalty_time = 20
-//         predation_loss_rate = penalty_time / (average_predation_interval + penalty_time)
-//         harvest = harvest * (1 - predation_loss_rate)
-// }
-
-
-// var averagePredationInterval = 0;
-// var penaltyTime = 20;
-// if (p.risk_label === "safe") {
-//   averagePredationInterval = 100;
-// } else if (p.risk_label === "risky") {
-//   averagePredationInterval = 40;
-// }
-// var predationLossRate = penaltyTime / (averagePredationInterval + penaltyTime);
-// harvest = harvest * (1 - predationLossRate);
-
-
   var updateEqualization = function(ev) {
     var boutType = app.stateData.state.current_habitat_configuration;
     // (ev.target.parentElement.parentElement).attr('class') gives the patch number of the modified patch
@@ -340,6 +319,8 @@
   };
 
   app.populateMoveTracker = function(username, configuration, boutId) {
+    app.userLocations = [];
+
     var configLabel = null;
     if (configuration === "gameon") {
       configLabel = "G";
@@ -367,7 +348,7 @@
 
       // push all timestamp/location pairs into the array, as long as they are chronologically between the start and end flag times
       if (e.event === "rfid_update" && e.payload.id === username && startFlag === true && stopFlag === false) {
-        console.log(username + " has arrived to " + e.payload.arrival + " at " + idToTimestamp(e._id.$oid));
+        console.log(username + " is at " + e.payload.arrival + " at " + idToTimestamp(e._id.$oid));
         app.userLocations.push({"timestamp":idToTimestamp(e._id.$oid), "location":e.payload.arrival});
       }
     });
@@ -435,16 +416,18 @@
     }
 
     // update UI: location fields 
-    if (app.userLocations[app.userMove]) {
+
       // clear all locations
-      jQuery('#move-tracker-screen .patch').removeClass('current-position');
       jQuery('#move-tracker-screen .patch').removeClass('next-position');
+      jQuery('#move-tracker-screen .patch').removeClass('current-position');
       jQuery('#move-tracker-screen .move-tracker-new-yield-label').removeClass('hidden');
       // add the new locations and hide the 'new yield' field for current position
+      if (app.userLocations[app.userMove]) {
+        jQuery('#move-tracker-screen .'+app.userLocations[app.userMove].location).addClass('next-position');
+      }
       jQuery('#move-tracker-screen .'+app.userLocations[app.userMove-1].location).addClass('current-position');
-      jQuery('#move-tracker-screen .'+app.userLocations[app.userMove].location).addClass('next-position');
       jQuery('#move-tracker-screen .'+app.userLocations[app.userMove-1].location+' .move-tracker-new-yield-label').addClass('hidden');
-    }
+
 
   };
 
