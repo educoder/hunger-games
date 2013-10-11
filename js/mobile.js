@@ -34,6 +34,7 @@
   var DATABASE = null;
   app.stateData = null;
   app.configuationData = null;
+  app.statisticsData = null;
   app.recentBoutData = null;
   app.notesData = null;
   app.activityDropdownData = [];
@@ -152,9 +153,10 @@
       app.ready();
     });
 
-    // determin the number of students in run and set max value on equalization-squirrels-field
-    app.numOfStudents = app.users.where({user_role:"student"}).length;
-    jQuery('.equalization-squirrels-field').attr('max', app.numOfStudents);
+    // determine the number of students in run and set max value on equalization-squirrels-field
+    // app.numOfStudents = app.users.where({user_role:"student"}).length;
+    // jQuery('.equalization-squirrels-field').attr('max', app.numOfStudents);
+    // jQuery('#equalization-screen .max-squirrels').text(app.numOfStudents);
 
     /* MISC */
     jQuery().toastmessage({
@@ -255,6 +257,8 @@
 
   var populateStaticEqualization = function() {
     jQuery('#equalization-minutes-field').text(app.configurationData.harvest_calculator_bout_length_in_minutes);
+    jQuery('.equalization-squirrels-field').attr('max', app.numOfStudents);
+    jQuery('#equalization-screen .max-squirrels').text(app.numOfStudents);    
 
     // _.each(app.configurationData.patches, function(p) {
     //   jQuery('#equalization-screen .'+p.patch_id+' .equalization-quality-field').text(p.quality_per_minute);
@@ -268,55 +272,61 @@
     var selectedPatch;
     // cast it to a base-10 int, cause we love Crockford
     var numSq = parseInt(jQuery(ev.target).val(), 10);
-    // have we pulled data?
-    if (app.configurationData) {
-      // Harvest per squirrel field
-      _.each(app.configurationData.patches, function(p) {
-        var pId = p.patch_id.substring(p.patch_id.length -1, p.patch_id.length);
-        if (jQuery(ev.target).data('patch') === pId) {
-          selectedPatch = p.patch_id;
-          // make sure we don't try to divide by zero (tho JS/Chrome seems to actually handle this gracefully!)
-          if (numSq === 0) {
-            jQuery('.'+selectedPatch+' .equalization-harvest-field').text('0');
-          } else {
-            var harvest = p.quality_per_minute / numSq * app.configurationData.harvest_calculator_bout_length_in_minutes;
-            // modify the harvest if the bout type is predation
-            if (boutType === "predation") {
-              var averagePredationInterval = 0;
-              var penaltyTime = 20;
-              if (p.risk_label === "safe") {
-                averagePredationInterval = 100;
-              } else if (p.risk_label === "risky") {
-                averagePredationInterval = 40;
-              }
-              var predationLossRate = penaltyTime / (averagePredationInterval + penaltyTime);
-              harvest = harvest * (1 - predationLossRate);
-            }
 
-            harvest = Math.round((harvest)*100)/100;
-            
-            jQuery('.'+selectedPatch+' .equalization-harvest-field').text(harvest);            
-          }
-        }
-      });
-      // Patch time all squirrels field
-      var t = app.configurationData.harvest_calculator_bout_length_in_minutes * numSq;
-      jQuery('.'+selectedPatch+' .equalization-patch-time-field').text(t);
-
-      // Squirrels assigned field
-      var totalSq = 0;
-      jQuery('.equalization-squirrels-field').each(function(f) {
-        var sCount = parseInt(jQuery(this).val(), 10);
-        if (sCount) {
-          totalSq += parseInt(jQuery(this).val(), 10);
-        }
-      });
+    // squirrels assigned will be the total number already assigned plus the newly changed value
+    var totalSq = 0;
+    jQuery('.equalization-squirrels-field').each(function(f) {
+      var sCount = parseInt(jQuery(this).val(), 10);
+      if (sCount) {
+        totalSq += parseInt(jQuery(this).val(), 10);
+      }
+    });
+    
+    // only accept the value if it's less than the number of students
+    if (totalSq <= app.numOfStudents) {
       jQuery('#squirrels-assigned').text(totalSq);
-      
+      // have we pulled data?
+      if (app.configurationData) {
+        // Harvest per squirrel field
+        _.each(app.configurationData.patches, function(p) {
+          var pId = p.patch_id.substring(p.patch_id.length -1, p.patch_id.length);
+          if (jQuery(ev.target).data('patch') === pId) {
+            selectedPatch = p.patch_id;
+            // make sure we don't try to divide by zero (tho JS/Chrome seems to actually handle this gracefully!)
+            if (numSq === 0) {
+              jQuery('.'+selectedPatch+' .equalization-harvest-field').text('0');
+            } else {
+              var harvest = p.quality_per_minute / numSq * app.configurationData.harvest_calculator_bout_length_in_minutes;
+              // modify the harvest if the bout type is predation
+              if (boutType === "predation") {
+                var averagePredationInterval = 0;
+                var penaltyTime = 20;
+                if (p.risk_label === "safe") {
+                  averagePredationInterval = 100;
+                } else if (p.risk_label === "risky") {
+                  averagePredationInterval = 40;
+                }
+                var predationLossRate = penaltyTime / (averagePredationInterval + penaltyTime);
+                harvest = harvest * (1 - predationLossRate);
+              }
+
+              harvest = Math.round((harvest)*100)/100;
+              
+              jQuery('.'+selectedPatch+' .equalization-harvest-field').text(harvest);            
+            }
+          }
+        });
+        // Patch time all squirrels field
+        var t = app.configurationData.harvest_calculator_bout_length_in_minutes * numSq;
+        jQuery('.'+selectedPatch+' .equalization-patch-time-field').text(t);
+      } else {
+        console.error("Missing configuration data...");
+      }
     } else {
-      console.error("Missing configuration data...");
+      jQuery().toastmessage('showWarningToast', "You must assign a number of squirrels equal to or less than "+app.numOfStudents);
     }
   };
+
 
   app.populateMoveTracker = function(username, configuration, boutId) {
     app.userLocations = [];
@@ -506,7 +516,7 @@
   //*************** HELPER FUNCTIONS ***************//
 
   var tryPullAll = function() {
-    return jQuery.when(tryPullStateData(), tryPullConfigurationData(), tryPullRecentBoutData(), tryPullActivityData());
+    return jQuery.when(tryPullStateData(), tryPullStatisticsData(), tryPullConfigurationData(), tryPullRecentBoutData(), tryPullActivityData());
   };
 
   var tryPullStateData = function() {
@@ -543,6 +553,22 @@
       return promise;
     // }
   };
+
+  var tryPullStatisticsData = function() {
+    // if (app.runId) {
+      var promise = jQuery.get(app.config.drowsy.uic_url+'/'+DATABASE+'/statistics?selector=%7B%22run_id%22%3A%22'+app.runId+'%22%7D')
+      .then( function(data) {
+        app.statisticsData = data[0];
+        app.numOfStudents = app.statisticsData.user_stats.length
+        console.log("Statistics data pulled!");
+
+        return data;
+      })
+      .fail(function() { console.error("Error pulling configuration data..."); });
+
+      return promise;
+    // }
+  };  
 
   var tryPullActivityData = function() {
     var promise = jQuery.get(app.config.drowsy.url+'/'+DATABASE+'-'+app.runId+'/activity')
