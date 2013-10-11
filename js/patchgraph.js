@@ -29,6 +29,13 @@
   var xAxisLabel;
   var xAxis;
   var yAxis;
+  var yLabelTexts = {
+                avg_quality:     ['Richer', 'Poorer'],
+                avg_competition: ['More','Less'],
+                total_moves:     ['More','Fewer'],
+                arbitrage:       ['Better','Worse'],
+                avg_risk:       ['Riskier','Safer']
+  };
 
 
   app.init = function (drowsyUrl, database, run_id) {
@@ -455,17 +462,47 @@
   //         });
   // };
 
+  /* Tom
+    d. i'd like to remove the numeric labels on the axes completely.
+on the y-axis, though, we need text labels. Label 1 should be
+centered about 1/4 of the way up the left axis (starting at the
+bottom), and Label 2 about 1/3 of the way from the top of the
+axis. (these are consistent with the "increasing" nature of moving
+up along the y-axis.)
+
+
+      Label 1     Label 2
+
+Quality:    Poorer      Richer
+Competition:  Less        More
+Moves:    Fewer     More
+Arbitrage:    Worse     Better
+Predation:  Safer     Riskier
+
+  */
+
   /* This function rearranges the y Axis. If you return d.name in the map function
      it will show the names of each student. However I am showing the data range we
      sorted with. This doesn't work quit yet and I might need some help to figure
      this out */
-  var changeYaxis = function (sortedData, dataField) {
-    var yAxisLabel = d3.scale.ordinal()
-      .domain(sortedData.map(function(d){
-          return d[dataField];
-      }))
-      .rangeRoundBands([padding, h - padding], 0.05);
+  var changeYaxis = function (sortedData, selector) {
+    var yAxisLabel;
+    if (selector === 'harvest') {
+      yAxisLabel = d3.scale.ordinal()
+                    .domain(sortedData.map(function(d){
+                        return d.name.toUpperCase();}))
+                    .rangeRoundBands([padding, h - padding], 0.05);
+    } else {
+      yAxisLabel = d3.scale.ordinal()
+        .domain(yLabelTexts[selector])
+        .rangePoints([padding, h-padding], 1);
 
+        // yAxisLabel = d3.scale.ordinal()
+        //   .domain(sortedData.map(function(d){
+        //       return Math.round(d[selector]);
+        //   }))
+        //   .rangeRoundBands([padding, h - padding], 0.05);
+    }
 
     var yAxisNew = d3.svg.axis()
       .scale(yAxisLabel)
