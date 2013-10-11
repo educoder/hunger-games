@@ -454,11 +454,11 @@
       }
     });
 
-    jQuery.ajax({
-       url: 'https://drowsy.badger.encorelab.org/hg-test/test/',
-       type: 'POST',
-       data: app.patchPopulations
-    });       
+    // jQuery.ajax({
+    //    url: 'https://drowsy.badger.encorelab.org/hg-test/test/',
+    //    type: 'POST',
+    //    data: app.patchPopulations
+    // });       
   };
     // app.patchPopulations = {
       // "5262672": {
