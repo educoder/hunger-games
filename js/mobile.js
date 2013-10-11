@@ -314,7 +314,7 @@
               harvest = harvest * (1 - predationLossRate);
             }
 
-            harvest = Math.round((harvest)*100)/100
+            harvest = Math.round((harvest)*100)/100;
             
             jQuery('.'+selectedPatch+' .equalization-harvest-field').text(harvest);            
           }
