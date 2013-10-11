@@ -228,6 +228,7 @@
 	#list-screen .reply-text-entry {
 		padding-right: 64px;
 		width: calc(100% - 60px);
+		height: 60px;
 	}
 
 	#list-screen .submit-reply-btn {

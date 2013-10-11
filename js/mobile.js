@@ -559,7 +559,9 @@
       var promise = jQuery.get(app.config.drowsy.uic_url+'/'+DATABASE+'/statistics?selector=%7B%22run_id%22%3A%22'+app.runId+'%22%7D')
       .then( function(data) {
         app.statisticsData = data[0];
-        app.numOfStudents = app.statisticsData.user_stats.length
+        if (app.statisticsData) {
+          app.numOfStudents = app.statisticsData.user_stats.length;
+        }
         console.log("Statistics data pulled!");
 
         return data;
