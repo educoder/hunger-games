@@ -351,7 +351,9 @@
       .attr("fill", "black")
       .attr("class", "labels");
 
-
+    /*
+    * Click listeners for sort buttons
+    */
     d3.selectAll(".graph-sort-btn").on("click", function(){
       var selector = jQuery(this).data('selector');
 
@@ -368,76 +370,13 @@
       // svg.select(".y").call(yAxis);
       // resort the graph data
       var sortedData = dataset.sort(function(a, b){
-        return d3.ascending(a[selector], b[selector]);
+        return d3.descending(a[selector], b[selector]);
       });
 
       changeYaxis(sortedData, selector);
     });
 
-    // d3.select("#richPatch").on("click", function(){
-    //   var selector = jQuery(this).data('selector');
-
-    //   sortGraphBars(selector);
-
-    //   sortLabelNames(selector);
-
-    //   // svg.select(".y").call(yAxis);
-    //   // resort the graph data
-    //   var sortedData = dataset.sort(function(a, b){
-    //     return d3.ascending(a[selector], b[selector]);
-    //   });
-
-    //   changeYaxis(sortedData, selector);
-    // });
-
-    // d3.select("#patchMoves").on("click", function(){     
-    //   var selector = jQuery(this).data('selector');
-
-    //   sortGraphBars(selector);
-
-    //   sortLabelNames(selector);
-
-    //   // svg.select(".y").call(yAxis);
-    //   // resort the graph data
-    //   var sortedData = dataset.sort(function(a, b){
-    //     return d3.ascending(a[selector], b[selector]);
-    //   });
-
-    //   changeYaxis(sortedData, selector);
-    // });
-
-    // d3.select("#patchCompetition").on("click", function(){
-    //   var selector = jQuery(this).data('selector');
-
-    //   sortGraphBars(selector);
-
-    //   sortLabelNames(selector);
-
-    //   // svg.select(".y").call(yAxis);
-    //   // resort the graph data
-    //   var sortedData = dataset.sort(function(a, b){
-    //     return d3.ascending(a[selector], b[selector]);
-    //   });
-
-    //   changeYaxis(sortedData, selector);
-    // });
-
-    // d3.select("#arbitrage").on("click", function(){
-    //   var selector = jQuery(this).data('selector');
-
-    //   sortGraphBars(selector);
-
-    //   sortLabelNames(selector);
-
-    //   // svg.select(".y").call(yAxis);
-    //   // resort the graph data
-    //   var sortedData = dataset.sort(function(a, b){
-    //     return d3.ascending(a[selector], b[selector]);
-    //   });
-
-    //   changeYaxis(sortedData, selector);
-    // });
-
+  
     //Create Y axis
     svg.append("g")
       .attr("class", "x axis")
@@ -455,7 +394,7 @@
   var sortGraphBars = function (selector) {
     svg.selectAll("rect.bars")
       .sort(function(a, b){
-        return d3.ascending(a[selector], b[selector]);
+        return d3.descending(a[selector], b[selector]);
       })
       .transition()
       .delay(function(d, i){
@@ -468,7 +407,7 @@
 
       svg.selectAll(".labels")
         .sort(function(a, b){
-            return d3.ascending(a[selector], b[selector]);
+            return d3.descending(a[selector], b[selector]);
         })
         .transition()
         .delay(function(d, i){
@@ -484,7 +423,7 @@
   var sortLabelNames = function (dataField) {
     svg.selectAll(".name-labels")
       .sort(function(a, b){
-          return d3.ascending(a[dataField], b[dataField]);
+          return d3.descending(a[dataField], b[dataField]);
       })
       .transition()
       .delay(function(d, i){
