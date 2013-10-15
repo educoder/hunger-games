@@ -430,7 +430,7 @@
     // clear all locations
     // jQuery('#move-tracker-screen .patch').removeClass('next-position');
     jQuery('#move-tracker-screen .patch').removeClass('current-position');
-    jQuery('#footprints-img').css('background-image', 'none')
+    jQuery('#footprints-img').css('background-image', 'none');
     jQuery('#move-tracker-screen .move-tracker-new-yield-label').removeClass('hidden');
 
     // add the new locations and hide the 'new yield' field for current position

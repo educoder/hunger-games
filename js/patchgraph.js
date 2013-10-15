@@ -70,7 +70,7 @@
 
     // retrieve data for selected bout
     var bout_data = _.find(statistics_data, function (d) {
-      return (d.habitat_configuration == habitatConf && parseInt(d.bout_id, 10) === parseInt(bout, 10));
+      return (d.habitat_configuration == habitatConf && d.bout_id === boutId);
     });
 
     if (bout_data) {
@@ -519,9 +519,15 @@ Predation:  Safer     Riskier
     _.each(data, function (d, iterator) {
       //<li><a tabindex="-1" href="#" data-bout="3">Something else here</a></li>
       var listItem = jQuery('<li>');
-      listItem.append('<a tabindex="-1" href="#" data-habitat-configuration="'+d.habitat_configuration+'" data-bout="'+d.bout_id+'">'+d.habitat_configuration.substring(0,1).toUpperCase()+d.bout_id+'</a>');
+      listItem.append('<a tabindex="-1" href="#" data-habitat-configuration="'+d.habitat_configuration+'" data-bout="'+d.bout_id+'">'+d.bout_id+' - '+d.habitat_configuration.substring(0,1).toUpperCase()+' </a>');
       jQuery('#bout-picker').append(listItem);
     });
+
+    // show last bout element name in bout picker name
+    jQuery('#bout-picker-label').html('');
+    var d = _.last(data);
+    jQuery('#bout-picker-label').append(d.bout_id+' - '+d.habitat_configuration.substring(0,1).toUpperCase()+' ');
+    jQuery('#bout-picker-label').append(jQuery('<span class="caret"></span>'));
   };
 
   var showPredationButton = function(visible) {

@@ -55,6 +55,11 @@
 		background-color: white;
 	}
 
+	#graphs-screen .view-container {
+		padding-bottom: 0;
+		margin-bottom: 0;
+	}
+
 
 	/*.container-header {
 		height: 40px;
