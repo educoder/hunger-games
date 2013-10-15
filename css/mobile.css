@@ -396,13 +396,11 @@
 		overflow: hidden;
 	}
 
-	/*.bkg-small-legend {
-		background-image: url('../img/background_final_smlegend.png');
+	#footprints-img {
+		/*background-image: url('../img/FootPrint_a-b.png');*/
+		height:100%;
+		width: 100%;
 	}
-
-	.bkg-large-legend {
-		background-image: url('../img/background_final_lglegend.png');
-	}*/
 
 	#move-tracker-title-box {
 	    margin-left: -moz-calc(50% - 180px);

@@ -427,18 +427,22 @@
 
     // update UI: location fields 
 
-      // clear all locations
-      jQuery('#move-tracker-screen .patch').removeClass('next-position');
-      jQuery('#move-tracker-screen .patch').removeClass('current-position');
-      jQuery('#move-tracker-screen .move-tracker-new-yield-label').removeClass('hidden');
-      // add the new locations and hide the 'new yield' field for current position
-      if (app.userLocations[app.userMove]) {
-        jQuery('#move-tracker-screen .'+app.userLocations[app.userMove].location).addClass('next-position');
-      }
-      jQuery('#move-tracker-screen .'+app.userLocations[app.userMove-1].location).addClass('current-position');
-      jQuery('#move-tracker-screen .'+app.userLocations[app.userMove-1].location+' .move-tracker-new-yield-label').addClass('hidden');
+    // clear all locations
+    // jQuery('#move-tracker-screen .patch').removeClass('next-position');
+    jQuery('#move-tracker-screen .patch').removeClass('current-position');
+    jQuery('#footprints-img').css('background-image', 'none')
+    jQuery('#move-tracker-screen .move-tracker-new-yield-label').removeClass('hidden');
 
+    // add the new locations and hide the 'new yield' field for current position
+    if (app.userLocations[app.userMove]) {
+      //jQuery('#move-tracker-screen .'+app.userLocations[app.userMove].location).addClass('next-position');
+      var currentPatchLetter = app.userLocations[app.userMove-1].location.slice(6);
+      var nextPatchLetter = app.userLocations[app.userMove].location.slice(6);
+      jQuery('#footprints-img').css('background-image', "url('../img/FootPrint_"+currentPatchLetter+"-"+nextPatchLetter+".png')");
+    }
 
+    jQuery('#move-tracker-screen .'+app.userLocations[app.userMove-1].location).addClass('current-position');
+    jQuery('#move-tracker-screen .'+app.userLocations[app.userMove-1].location+' .move-tracker-new-yield-label').addClass('hidden');
   };
 
   var sortRecentBoutData = function() {
