@@ -381,7 +381,7 @@
       }
 
     } else if (move === "next") {
-      if (app.userMove < app.userLocations.length) {
+      if (app.userMove < (  app.userLocations.length - 1)) {
         app.userMove++;  
       } else {
         jQuery().toastmessage('showWarningToast', "Last move reached");
@@ -397,7 +397,7 @@
     }
 
     // the timestamp for Current location (post update)
-    var ts = app.userLocations[app.userMove-1].timestamp;
+    var ts = app.userLocations[app.userMove].timestamp;
 
     // update UI: move number
     jQuery("#move-number").text(app.userMove);
@@ -468,11 +468,13 @@
       }
     });
 
-    // jQuery.ajax({
-    //    url: 'https://drowsy.badger.encorelab.org/hg-test/test/',
-    //    type: 'POST',
-    //    data: app.patchPopulations
-    // });       
+    // add bout_id, habitat_configuration, run_id
+
+    jQuery.ajax({
+       url: 'https://drowsy.badger.encorelab.org/hg-test/patches_statistics/',
+       type: 'POST',
+       data: app.patchPopulations
+    });       
   };
     // app.patchPopulations = {
       // "5262672": {
