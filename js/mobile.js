@@ -841,6 +841,9 @@
     jQuery('.login-buttons').html(''); //clear the house
     console.log(app.config.runs);
 
+    // change header
+    jQuery('#login-picker .modal-header h3').text('Please choose your class');
+
     _.each(app.config.runs, function(run) {
       var button = jQuery('<button class="btn btn-large btn-primary login-button">');
       button.val(run);
@@ -861,6 +864,9 @@
   };
 
   var showUserLoginPicker = function(runId) {
+    // change header
+    jQuery('#login-picker .modal-header h3').text('Please login with your squirrel ID');
+
     // retrieve all users that have runId
     app.rollcall.usersWithTags([runId])
     .done(function (availableUsers) {
