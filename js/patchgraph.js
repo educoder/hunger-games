@@ -26,9 +26,11 @@
   var svg;
   var statistics_data = [];
   var yAxisLabelNames;
+  var yAxisRightLabelNames;
   var xAxisLabel;
   var xAxis;
   var yAxis;
+  var yAxisRight;
   var yLabelTexts = {
                 avg_quality:     ['Richer', 'Poorer'],
                 avg_competition: ['More','Less'],
@@ -153,6 +155,13 @@
                         return d.name.toUpperCase();}))
                     .rangeRoundBands([padding, h - padding], 0.05);
 
+    yAxisRightLabelNames = d3.scale.ordinal()
+                    .domain(dataset.map(function(d){
+                      // return d.name.toUpperCase();
+                      return '';
+                    }))
+                    .rangeRoundBands([padding, h - padding], 0.05);
+
     // xAxisLabel = d3.scale.linear()
     //                 .domain([0, d3.max(dataset, function(d){
     //                     return d.harvest; })])
@@ -171,6 +180,10 @@
                       .scale(yAxisLabelNames)
                       .orient("left");
     
+    yAxisRight = d3.svg.axis()
+                  .scale(yAxisRightLabelNames)
+                  .orient("right");
+
     /*
     * Starving range 
     */                      
@@ -357,20 +370,27 @@
       });
 
       changeYaxis(sortedData, selector);
+      changeYAxixRight(sortedData, selector);
     });
 
   
-    //Create Y axis
+    //Create X axis
     svg.append("g")
       .attr("class", "x axis")
       .attr("transform", "translate(0," + (h - padding) + ")")
       .call(xAxis);
 
-    //Create X axis
+    //Create Y axis
     svg.append("g")
       .attr("class", "y axis")
       .attr("transform", "translate(" + padding + ",0)")
       .call(yAxis);
+
+    //Create Y axis right
+    svg.append("g")
+      .attr("class", "right-y axis")
+      .attr("transform", "translate(" + (w-padding) + ",0)")
+      .call(yAxisRight);
 
   };
 
@@ -496,8 +516,28 @@ Predation:  Safer     Riskier
       .call(yAxisNew);
   };
 
-  var changeYRangeLabel = function (sortedData, selector) {
+  var changeYAxixRight = function (sortedData, selector) {
     // TODO: here goes tom's labeling
+    var yAxisLabel;
+    if (selector === 'harvest') {
+      yAxisLabel = d3.scale.ordinal()
+                    .domain(sortedData.map(function(d){
+                        return d.name.toUpperCase();}))
+                    .rangeRoundBands([padding, h - padding], 0.05);
+    } else {
+      yAxisLabel = d3.scale.ordinal()
+        .domain(yLabelTexts[selector])
+        .rangePoints([padding, h-padding], 1);
+    }
+
+    var yAxisNew = d3.svg.axis()
+      .scale(yAxisLabel)
+      .orient("right");
+
+    svg.select(".right-y.axis")
+      .transition()
+      .duration(1600)
+      .call(yAxisNew);
   };
 
   var updateBoutPicker = function(data) {
