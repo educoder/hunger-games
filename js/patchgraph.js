@@ -26,9 +26,11 @@
   var svg;
   var statistics_data = [];
   var yAxisLabelNames;
+  var yAxisRightLabelNames;
   var xAxisLabel;
   var xAxis;
   var yAxis;
+  var yAxisRight;
   var yLabelTexts = {
                 avg_quality:     ['Richer', 'Poorer'],
                 avg_competition: ['More','Less'],
@@ -153,6 +155,13 @@
                         return d.name.toUpperCase();}))
                     .rangeRoundBands([padding, h - padding], 0.05);
 
+    yAxisRightLabelNames = d3.scale.ordinal()
+                    .domain(dataset.map(function(d){
+                      // return d.name.toUpperCase();
+                      return '';
+                    }))
+                    .rangeRoundBands([padding, h - padding], 0.05);
+
     // xAxisLabel = d3.scale.linear()
     //                 .domain([0, d3.max(dataset, function(d){
     //                     return d.harvest; })])
@@ -171,6 +180,10 @@
                       .scale(yAxisLabelNames)
                       .orient("left");
     
+    yAxisRight = d3.svg.axis()
+                  .scale(yAxisRightLabelNames)
+                  .orient("right");
+
     /*
     * Starving range 
     */                      
@@ -286,56 +299,32 @@
         // TODO call Colin's 
         HG.Mobile.populateMoveTracker(username, habitatConfiguration, boutId);
       });
-      // .on("mouseover", function(d){    
-      //   var yPosition = parseFloat(d3.select(this).attr("y")) + yScale.rangeBand() /2;
-      //   var xPosition = parseFloat(d3.select(this).attr("x")) /2 + w /2;
 
-      //   d3.select("#tooltip")
-      //       .style("left", "660px")
-      //       .style("top", "140px")
-      //       .select("#strat")
-      //       .text(d.avg_quality);
-            
-      //   // d3.select("#tooltip")
-      //   //     .select("#graph")
-      //   //     .attr("src", "img/cpg.jpg");
-            
-      //   d3.select("#tooltip")
-      //       .select("#studentName")
-      //       .text(d.name);
-
-      //   d3.select("#tooltip").classed("hidden", false);
-      // })
-
-      // .on("mouseout", function() {
-      //     d3.select("#tooltip").classed("hidden", true);
-      // });
-
-    svg.selectAll("text.name")
-      .data(dataset)
-      .enter()
-      .append("text")
-      .text(function(d) {
-          return d.name.toUpperCase();
-      })
-      .attr("text-anchor", "middle")
-      .attr("y", function(d, i) {
-        return yScale(i) + yScale.rangeBand() /2 +4;
-      })
-      .attr("x", function(d) {
-        return 80;
-      })
-      .attr("font-family", "sans-serif")
-      .attr("font-size", "12px")
-      .attr("fill", function(d) {
-        var c = HG.Mobile.users.findWhere({username:d.name}).get('color_label');
-        if (c === 'black' || c === 'purple' || c === 'brown' || c === 'blue') {
-          return 'white';
-        } else {
-          return 'black';
-        }
-      })
-      .attr("class", "name-labels");
+    // svg.selectAll("text.name")
+    //   .data(dataset)
+    //   .enter()
+    //   .append("text")
+    //   .text(function(d) {
+    //       return d.name.toUpperCase();
+    //   })
+    //   .attr("text-anchor", "middle")
+    //   .attr("y", function(d, i) {
+    //     return yScale(i) + yScale.rangeBand() /2 +4;
+    //   })
+    //   .attr("x", function(d) {
+    //     return 80;
+    //   })
+    //   .attr("font-family", "sans-serif")
+    //   .attr("font-size", "12px")
+    //   .attr("fill", function(d) {
+    //     var c = HG.Mobile.users.findWhere({username:d.name}).get('color_label');
+    //     if (c === 'black' || c === 'purple' || c === 'brown' || c === 'blue') {
+    //       return 'white';
+    //     } else {
+    //       return 'black';
+    //     }
+    //   })
+    //   .attr("class", "name-labels");
 
    
     svg.selectAll("text.values")
@@ -372,7 +361,7 @@
       jQuery(this).addClass('btn-danger');
 
       sortGraphBars(selector);
-      sortLabelNames(selector);
+      // sortLabelNames(selector);
 
       // svg.select(".y").call(yAxis);
       // resort the graph data
@@ -381,20 +370,27 @@
       });
 
       changeYaxis(sortedData, selector);
+      changeYAxixRight(sortedData, selector);
     });
 
   
-    //Create Y axis
+    //Create X axis
     svg.append("g")
       .attr("class", "x axis")
       .attr("transform", "translate(0," + (h - padding) + ")")
       .call(xAxis);
 
-    //Create X axis
+    //Create Y axis
     svg.append("g")
       .attr("class", "y axis")
       .attr("transform", "translate(" + padding + ",0)")
       .call(yAxis);
+
+    //Create Y axis right
+    svg.append("g")
+      .attr("class", "right-y axis")
+      .attr("transform", "translate(" + (w-padding) + ",0)")
+      .call(yAxisRight);
 
   };
 
@@ -427,21 +423,21 @@
         });
   };
 
-  var sortLabelNames = function (dataField) {
-    svg.selectAll(".name-labels")
-      .sort(function(a, b){
-          return d3.descending(a[dataField], b[dataField]);
-      })
-      .transition()
-      .delay(function(d, i){
-        return i * 50;
-      })
-      .duration(1000)
-      .attr("text-anchor", "middle")
-      .attr("y", function(d, i) {
-        return yScale(i) +yScale.rangeBand() /2 +4;
-      });
-  };
+  // var sortLabelNames = function (dataField) {
+  //   svg.selectAll(".name-labels")
+  //     .sort(function(a, b){
+  //         return d3.descending(a[dataField], b[dataField]);
+  //     })
+  //     .transition()
+  //     .delay(function(d, i){
+  //       return i * 50;
+  //     })
+  //     .duration(1000)
+  //     .attr("text-anchor", "middle")
+  //     .attr("y", function(d, i) {
+  //       return yScale(i) +yScale.rangeBand() /2 +4;
+  //     });
+  // };
 
   // var changeGraph = function (sortedData) {
   //   svg.selectAll("rect")
@@ -486,6 +482,42 @@ Predation:  Safer     Riskier
      sorted with. This doesn't work quit yet and I might need some help to figure
      this out */
   var changeYaxis = function (sortedData, selector) {
+    // var yAxisLabel;
+    // if (selector === 'harvest') {
+    //   yAxisLabel = d3.scale.ordinal()
+    //                 .domain(sortedData.map(function(d){
+    //                     return d.name.toUpperCase();}))
+    //                 .rangeRoundBands([padding, h - padding], 0.05);
+    // } else {
+    //   yAxisLabel = d3.scale.ordinal()
+    //     .domain(yLabelTexts[selector])
+    //     .rangePoints([padding, h-padding], 1);
+
+    //     // yAxisLabel = d3.scale.ordinal()
+    //     //   .domain(sortedData.map(function(d){
+    //     //       return Math.round(d[selector]);
+    //     //   }))
+    //     //   .rangeRoundBands([padding, h - padding], 0.05);
+    // }
+
+    var yAxisLabel = d3.scale.ordinal()
+                    .domain(sortedData.map(function(d){
+                        return d.name.toUpperCase();
+                    }))
+                    .rangeRoundBands([padding, h - padding], 0.05);
+
+    var yAxisNew = d3.svg.axis()
+      .scale(yAxisLabel)
+      .orient("left");
+
+    svg.select(".y.axis")
+      .transition()
+      .duration(1600)
+      .call(yAxisNew);
+  };
+
+  var changeYAxixRight = function (sortedData, selector) {
+    // TODO: here goes tom's labeling
     var yAxisLabel;
     if (selector === 'harvest') {
       yAxisLabel = d3.scale.ordinal()
@@ -496,19 +528,13 @@ Predation:  Safer     Riskier
       yAxisLabel = d3.scale.ordinal()
         .domain(yLabelTexts[selector])
         .rangePoints([padding, h-padding], 1);
-
-        // yAxisLabel = d3.scale.ordinal()
-        //   .domain(sortedData.map(function(d){
-        //       return Math.round(d[selector]);
-        //   }))
-        //   .rangeRoundBands([padding, h - padding], 0.05);
     }
 
     var yAxisNew = d3.svg.axis()
       .scale(yAxisLabel)
-      .orient("left");
+      .orient("right");
 
-    svg.select(".y.axis")
+    svg.select(".right-y.axis")
       .transition()
       .duration(1600)
       .call(yAxisNew);

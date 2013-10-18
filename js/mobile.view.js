@@ -131,31 +131,41 @@
     updateActivity: function() {
       var view = this;
       var activity = jQuery('#activity-dropdown').val();
+      var activityId = parseInt(activity.substring(9, activity.length), 10);
       // if there's a note to restore, do it
-      app.restoreLastNote(activity);
-      view.render();
+      if (app.restoreLastNote(activity)) {
+        this.$el.find('#note-part-1-entry').val(app.currentNote.get('part_1'));
+        this.$el.find('#note-part-2-entry').val(app.currentNote.get('part_2'));
+      } else {
+        // dropdown and prompt UI
+        var selectedActivityData = _.findWhere(app.activityDropdownData, {"_id": activityId});
+        
+        jQuery('#note-part-1-entry').val(selectedActivityData.prompt1);
+        jQuery('#note-part-2-entry').val(selectedActivityData.prompt2);
+      }
+      // view.render();
     },
 
     render: function () {
       console.log('Rendering InputView...');
 
-      if (app.currentNote) {
-        this.$el.find('#note-part-1-entry').val(app.currentNote.get('part_1'));
-        this.$el.find('#note-part-2-entry').val(app.currentNote.get('part_2'));
-      } else {
-        // dropdown and prompt UI
-        var activity = jQuery('#activity-dropdown').val();
-        if (activity === "activity-1") {
-          jQuery('#note-part-1-entry').val("The strategy I tended to use was...");
-          jQuery('#note-part-2-entry').val("In order to do better next time I will...");
-        } else if (activity === "activity-2") {
-          jQuery('#note-part-1-entry').val("Compared to an ideal distribution, our results were...");
-          jQuery('#note-part-2-entry').val("This was because...");
-        } else {
-          jQuery('#note-part-1-entry').val("");
-          jQuery('#note-part-2-entry').val("");
-        }
-      }
+      // if (app.currentNote) {
+      //   this.$el.find('#note-part-1-entry').val(app.currentNote.get('part_1'));
+      //   this.$el.find('#note-part-2-entry').val(app.currentNote.get('part_2'));
+      // } else {
+      //   // dropdown and prompt UI
+      //   var activity = jQuery('#activity-dropdown').val();
+      //   if (activity === "activity-1") {
+      //     jQuery('#note-part-1-entry').val("The strategy I tended to use was...");
+      //     jQuery('#note-part-2-entry').val("In order to do better next time I will...");
+      //   } else if (activity === "activity-2") {
+      //     jQuery('#note-part-1-entry').val("Compared to an ideal distribution, our results were...");
+      //     jQuery('#note-part-2-entry').val("This was because...");
+      //   } else {
+      //     jQuery('#note-part-1-entry').val("");
+      //     jQuery('#note-part-2-entry').val("");
+      //   }
+      // }
 
     }
   });
