@@ -629,8 +629,10 @@
     if (_.isEmpty(unpublishedNotes)) {
       console.log('Nothing to restore');
       app.currentNote = null;
+      return false;
     } else {
       app.currentNote = _.max(unpublishedNotes, function(n) { return n.get('created_at'); });
+      return true;
     }
   };
 
