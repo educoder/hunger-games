@@ -124,7 +124,7 @@
           dropdown.append(option);
         });
       } else {
-        console.log('no state date no drop down ...');
+        console.log('No state date, so no dropdown ...');
       }
     },
 
