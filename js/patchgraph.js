@@ -548,7 +548,13 @@ Predation:  Safer     Riskier
     svg.select(".right-y.axis")
       .transition()
       .duration(1600)
-      .call(yAxisNew);
+      .call(yAxisNew)
+      .selectAll("text")
+        .attr("transform", function(d) {
+           return "rotate(-90)" ;
+        })
+        .attr("x", "-15px")
+        .attr("y", "15px");
   };
 
   var updateBoutPicker = function(data) {

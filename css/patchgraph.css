@@ -9,6 +9,16 @@
     font-size: 12px;
 }
 
+.right-y path, .right-y line {
+  fill: none;
+  stroke: #fff;
+}
+
+.right-y text {
+  font-weight: bold;
+  font-size: 16px;
+}
+
 .icon {
     height: 30px;
     width: 30px;
