@@ -212,14 +212,19 @@
             jQuery.ajax({
               url: app.config.drowsy.uic_url+'/'+DATABASE+'/state?selector=%7B%22run_id%22%3A%22'+app.runId+'%22%7D',
               success: function(data){
-                //var promise = jQuery.get(app.config.drowsy.uic_url+'/'+DATABASE+'/state?selector=%7B%22run_id%22%3A%22'+app.runId+'%22%7D')
-              
                 console.log('I polled! State is: '+data[0].state.current_state);
 
                 if (app.currentStateForPolling === 'foraging' && data[0].state.current_state === 'completed') {
-                  tryPullAll();
-                  // TODO: refresh UI
+                  jQuery().toastmessage('showNoticeToast', "New data is available. Refreshing...");
+
+                  tryPullAll().done(function(stateData, configurationData, recentBoutData) {
+                    console.log('tryPullAll is finished and we could wait for it or even manipulate data');
+                  });
+                  HG.Patchgraph.refresh().done(function(){
+                    console.log('Patchgraph data refreshed');
+                  });
                 }
+
                 app.currentStateForPolling = data[0].state.current_state;
 
                 // setup the next poll recursively
