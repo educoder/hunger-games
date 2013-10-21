@@ -32,11 +32,12 @@
   var yAxis;
   var yAxisRight;
   var yLabelTexts = {
+                harvest:         ['More', 'Less'],
                 avg_quality:     ['Richer', 'Poorer'],
                 avg_competition: ['More','Less'],
                 total_moves:     ['More','Fewer'],
                 arbitrage:       ['Better','Worse'],
-                avg_risk:       ['Riskier','Safer']
+                avg_risk:        ['Riskier','Safer']
   };
 
 
@@ -82,7 +83,12 @@
         showPredationButton(false);
       }
 
-      draw(bout_data.user_stats);
+      // sort user_stats alphabetically by name
+      var sortedUserStats = _.sortBy(bout_data.user_stats, function(d) {
+        return d.name;
+      });
+
+      draw(sortedUserStats);
     } else {
       console.warn('No bout data found for habitat_configuration '+habitatConf+' and bout: '+bout);
     }
@@ -114,7 +120,12 @@
           habitatConfiguration = defaultBoutData.habitat_configuration;
           boutId = defaultBoutData.bout_id;
 
-          draw(defaultBoutData.user_stats);
+          // sort user_stats alphabetically by name
+          var sortedUserStats = _.sortBy(defaultBoutData.user_stats, function(d) {
+            return d.name;
+          });
+
+          draw(sortedUserStats);
         } else {
           console.warn('No data found for run: '+runId);
         }
@@ -519,16 +530,16 @@ Predation:  Safer     Riskier
   var changeYAxixRight = function (sortedData, selector) {
     // TODO: here goes tom's labeling
     var yAxisLabel;
-    if (selector === 'harvest') {
-      yAxisLabel = d3.scale.ordinal()
-                    .domain(sortedData.map(function(d){
-                        return d.name.toUpperCase();}))
-                    .rangeRoundBands([padding, h - padding], 0.05);
-    } else {
-      yAxisLabel = d3.scale.ordinal()
-        .domain(yLabelTexts[selector])
-        .rangePoints([padding, h-padding], 1);
-    }
+    // if (selector === 'harvest') {
+    //   yAxisLabel = d3.scale.ordinal()
+    //                 .domain(sortedData.map(function(d){
+    //                     return d.name.toUpperCase();}))
+    //                 .rangeRoundBands([padding, h - padding], 0.05);
+    // } else {
+    yAxisLabel = d3.scale.ordinal()
+      .domain(yLabelTexts[selector])
+      .rangePoints([padding, h-padding], 1);
+    // }
 
     var yAxisNew = d3.svg.axis()
       .scale(yAxisLabel)
