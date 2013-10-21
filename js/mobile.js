@@ -39,6 +39,7 @@
   app.notesData = null;
   app.activityDropdownData = [];
 
+  app.currentStateForPolling = null;
   app.currentNote = null;
   app.currentReply = {};
   app.currentWorthRemembering = null;
@@ -205,6 +206,33 @@
       HG.Patchgraph.init(app.config.drowsy.uic_url, DATABASE, app.runId);
 
       setUpClickListeners();
+
+      (function poll(){
+         setTimeout(function(){
+            jQuery.ajax({
+              url: app.config.drowsy.uic_url+'/'+DATABASE+'/state?selector=%7B%22run_id%22%3A%22'+app.runId+'%22%7D',
+              success: function(data){
+                console.log('I polled! State is: '+data[0].state.current_state);
+
+                if (app.currentStateForPolling === 'foraging' && data[0].state.current_state === 'completed') {
+                  jQuery().toastmessage('showNoticeToast', "New data is available. Refreshing...");
+
+                  tryPullAll().done(function(stateData, configurationData, recentBoutData) {
+                    console.log('tryPullAll is finished and we could wait for it or even manipulate data');
+                  });
+                  HG.Patchgraph.refresh().done(function(){
+                    console.log('Patchgraph data refreshed');
+                  });
+                }
+
+                app.currentStateForPolling = data[0].state.current_state;
+
+                // setup the next poll recursively
+                poll();
+            }, dataType: "json"});
+        }, 10000);
+      })();
+
 
       // show notes-screen - is this the default? TODO: check with design team where the first pedagogical step should be
       jQuery('#notes-screen').removeClass('hidden');
@@ -468,13 +496,13 @@
       }
     });
 
-    // add bout_id, habitat_configuration, run_id
+    // TESTING ONLY
 
-    jQuery.ajax({
-       url: 'https://drowsy.badger.encorelab.org/hg-test/patches_statistics/',
-       type: 'POST',
-       data: app.patchPopulations
-    });       
+    // jQuery.ajax({
+    //    url: 'https://drowsy.badger.encorelab.org/hg-test/patches_statistics/',
+    //    type: 'POST',
+    //    data: app.patchPopulations
+    // });       
   };
     // app.patchPopulations = {
       // "5262672": {
