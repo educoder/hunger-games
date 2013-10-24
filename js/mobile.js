@@ -311,7 +311,7 @@
     });
     
     // only accept the value if it's less than the number of students
-    if (totalSq <= app.numOfStudents) {
+    // if (totalSq <= app.numOfStudents) {
       jQuery('#squirrels-assigned').text(totalSq);
       // have we pulled data?
       if (app.configurationData) {
@@ -350,9 +350,9 @@
       } else {
         console.error("Missing configuration data...");
       }
-    } else {
-      jQuery().toastmessage('showWarningToast', "You must assign a number of squirrels equal to or less than "+app.numOfStudents);
-    }
+    // } else {
+    //   jQuery().toastmessage('showWarningToast', "You must assign a number of squirrels equal to or less than "+app.numOfStudents);
+    // }
   };
 
 
