@@ -118,10 +118,12 @@
         var dropdown = jQuery('#activity-dropdown');
         dropdown.html(''); // clearing out the html
         _.each(app.activityDropdownData, function(a) {
-          var option = jQuery('<option>');
-          option.attr('value', 'activity-'+a._id);
-          option.text(a.title);
-          dropdown.append(option);
+          if (a._id === 1 || a._id === 2) {                         // TODO: this is only for the first couple weeks. CHANGE ME!
+            var option = jQuery('<option>');
+            option.attr('value', 'activity-'+a._id);
+            option.text(a.title);
+            dropdown.append(option);            
+          }
         });
       } else {
         console.log('No state date, so no dropdown ...');

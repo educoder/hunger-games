@@ -554,56 +554,45 @@
   };
 
   var tryPullStateData = function() {
-    // if (app.runId) {
-      var promise = jQuery.get(app.config.drowsy.uic_url+'/'+DATABASE+'/state?selector=%7B%22run_id%22%3A%22'+app.runId+'%22%7D')
-      // jQuery.get(app.config.drowsy.uic_url+'/'+DATABASE+'/state?selector=%7B%22run_id%22%3A%22'+app.runId+'%22%7D', function(data) {
-      //   app.stateData = data[0];
-      // })
-      .then(function(data) {
-        console.log("State data pulled!");
-        app.stateData = data[0];
-        // tryPullConfigurationData();
-        // tryPullStatisticsData();
-        // tryPullRecentBoutData();
-        return data;
-      })
-      .fail(function() { console.error("Error pulling state data..."); });
+    var promise = jQuery.get(app.config.drowsy.uic_url+'/'+DATABASE+'/state?selector=%7B%22run_id%22%3A%22'+app.runId+'%22%7D')
+    .then(function(data) {
+      console.log("State data pulled!");
+      app.stateData = data[0];
 
-      return promise;
-    // }
+      return data;
+    })
+    .fail(function() { console.error("Error pulling state data..."); });
+
+    return promise;
   };
 
   var tryPullConfigurationData = function() {
-    // if (app.runId) {
-      var promise = jQuery.get(app.config.drowsy.uic_url+'/'+DATABASE+'/configuration?selector=%7B%22run_id%22%3A%22'+app.runId+'%22%7D')
-      .then( function(data) {
-        app.configurationData = data[0];
-        console.log("Configuration data pulled!");
+    var promise = jQuery.get(app.config.drowsy.uic_url+'/'+DATABASE+'/configuration?selector=%7B%22run_id%22%3A%22'+app.runId+'%22%7D')
+    .then( function(data) {
+      app.configurationData = data[0];
+      console.log("Configuration data pulled!");
 
-        return data;
-      })
-      .fail(function() { console.error("Error pulling configuration data..."); });
+      return data;
+    })
+    .fail(function() { console.error("Error pulling configuration data..."); });
 
-      return promise;
-    // }
+    return promise;
   };
 
   var tryPullStatisticsData = function() {
-    // if (app.runId) {
-      var promise = jQuery.get(app.config.drowsy.uic_url+'/'+DATABASE+'/statistics?selector=%7B%22run_id%22%3A%22'+app.runId+'%22%7D')
-      .then( function(data) {
-        app.statisticsData = data[0];
-        if (app.statisticsData) {
-          app.numOfStudents = app.statisticsData.user_stats.length;
-        }
-        console.log("Statistics data pulled!");
+    var promise = jQuery.get(app.config.drowsy.uic_url+'/'+DATABASE+'/statistics?selector=%7B%22run_id%22%3A%22'+app.runId+'%22%7D')
+    .then( function(data) {
+      app.statisticsData = data[0];
+      if (app.statisticsData) {
+        app.numOfStudents = app.statisticsData.user_stats.length;
+      }
+      console.log("Statistics data pulled!");
 
-        return data;
-      })
-      .fail(function() { console.error("Error pulling configuration data..."); });
+      return data;
+    })
+    .fail(function() { console.error("Error pulling configuration data..."); });
 
-      return promise;
-    // }
+    return promise;
   };  
 
   var tryPullActivityData = function() {
@@ -617,27 +606,25 @@
         });
         console.log("Activity Data pulled");
       });
+
     return promise;
   };
 
   var tryPullRecentBoutData = function() {
     // to determine the selector, we need the run_id, habitat_configuration, the bout_id
     // in the log collection (chose which based on run) get all events between the bouts' 'game_start' and 'game_stop' timestamps
-    // if (app.runId) {
-      // +'%3F%253Fsort%253D%5B%22_id%22%252C%22ASC%22%5D'
-      var promise = jQuery.get(app.config.drowsy.uic_url+'/'+DATABASE+'/log-'+app.runId)
-      .then( function(data) {
-        app.recentBoutData = data;
-        sortRecentBoutData();
-        console.log("Recent bout data pulled!");
+    var promise = jQuery.get(app.config.drowsy.uic_url+'/'+DATABASE+'/log-'+app.runId)
+    .then( function(data) {
+      app.recentBoutData = data;
+      sortRecentBoutData();
+      console.log("Recent bout data pulled!");
 
-        return data;
-      })
-      // .done(function() { console.log("Recent bout data pulled!"); })
-      .fail(function() { console.error("Error pulling recent bout data..."); });
+      return data;
+    })
+    // .done(function() { console.log("Recent bout data pulled!"); })
+    .fail(function() { console.error("Error pulling recent bout data..."); });
 
-      return promise;
-    // }
+    return promise;
   };
 
   var tryPullUsersData = function() {
