@@ -1,13 +1,13 @@
 [
     {
         "_id": 1,
-        "title": "Pre-Class Activity: Squirrel Observations",
+        "title": "Squirrel Observations",
         "prompt1": "Something I noticed about squirrel behavior in my neighbourhood is...",
         "prompt2": "A question I have about squirrel behavior is..."
     },
     {
         "_id": 2,
-        "title": "Pre-Class Activity: Squirrel Research",
+        "title": "Squirrel Research",
         "prompt1": "",
         "prompt2": ""
     }
