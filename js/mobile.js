@@ -425,7 +425,7 @@
     }
 
     // the timestamp for Current location (post update)
-    var ts = app.userLocations[app.userMove].timestamp;
+    var ts = app.userLocations[app.userMove-1].timestamp;
 
     // update UI: move number
     jQuery("#move-number").text(app.userMove);
