@@ -14,10 +14,10 @@
 
   var PREDATION = 'predation';
 
-  var w = 950;
+  var w = 1000;
   var h = 600;
   var padding = 45;
-  var maxW = w - (padding * 2); // leaving a padding left and right is the max width of the graph
+  var maxW = w - (padding * 3); // leaving a padding left and right is the max width of the graph
   var d_starving = 1200;
   var d_surviving = 1350;
   var d_max = 2500;
@@ -180,7 +180,7 @@
 
     xAxisLabel = d3.scale.linear()
                     .domain([0, d_max])
-                    .range([padding, w -padding]);
+                    .range([padding, w -(padding*2)]);
 
     xAxis = d3.svg.axis()
                     .scale(xAxisLabel)
@@ -282,7 +282,12 @@
           return yScale(i);
       })
       .attr("width", function(d) {
+        // return xScale(d.harvest);
+        if (d.harvest < d_max) {
           return xScale(d.harvest);
+        } else {
+          return xScale(d_max);
+        }
       })
       .attr("height", yScale.rangeBand())
       .attr("fill", function(d) {
@@ -351,7 +356,11 @@
         return yScale(i) + yScale.rangeBand() /2 +4;
       })
       .attr("x", function(d) {
-        return xScale(d.harvest) +65;
+        if (d.harvest < d_max) {
+          return xScale(d.harvest) +65;
+        } else {
+          return xScale(d_max);
+        }
       })
       .attr("font-family", "sans-serif")
       .attr("font-size", "12px")
@@ -400,7 +409,7 @@
     //Create Y axis right
     svg.append("g")
       .attr("class", "right-y axis")
-      .attr("transform", "translate(" + (w-padding) + ",0)")
+      .attr("transform", "translate(" + (w-(padding*2)) + ",0)")
       .call(yAxisRight);
 
   };
@@ -548,13 +557,7 @@ Predation:  Safer     Riskier
     svg.select(".right-y.axis")
       .transition()
       .duration(1600)
-      .call(yAxisNew)
-      .selectAll("text")
-        .attr("transform", function(d) {
-           return "rotate(-90)" ;
-        })
-        .attr("x", "-15px")
-        .attr("y", "15px");
+      .call(yAxisNew);
   };
 
   var updateBoutPicker = function(data) {

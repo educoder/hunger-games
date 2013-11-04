@@ -230,7 +230,7 @@
                 // setup the next poll recursively
                 poll();
             }, dataType: "json"});
-        }, 10000);
+        }, 60000);
       })();
 
 
