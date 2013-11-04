@@ -10,5 +10,11 @@
         "title": "Squirrel Research",
         "prompt1": "",
         "prompt2": ""
+    },
+    {
+	   "_id": 3,
+	   "title": "My Bout 1 Moves",
+	   "prompt1": "The strategy I tended to use was...",
+	   "prompt2": "In order to do better next time I will..."
     }
 ]
