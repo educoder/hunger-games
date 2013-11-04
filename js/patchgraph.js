@@ -562,14 +562,16 @@ Predation:  Safer     Riskier
     _.each(data, function (d, iterator) {
       //<li><a tabindex="-1" href="#" data-bout="3">Something else here</a></li>
       var listItem = jQuery('<li>');
-      listItem.append('<a tabindex="-1" href="#" data-habitat-configuration="'+d.habitat_configuration+'" data-bout="'+d.bout_id+'">'+d.bout_id+' - '+d.habitat_configuration.substring(0,1).toUpperCase()+' </a>');
+      // listItem.append('<a tabindex="-1" href="#" data-habitat-configuration="'+d.habitat_configuration+'" data-bout="'+d.bout_id+'">'+d.bout_id+' - '+d.habitat_configuration.substring(0,1).toUpperCase()+' </a>');
+      listItem.append('<a tabindex="-1" href="#" data-habitat-configuration="'+d.habitat_configuration+'" data-bout="'+d.bout_id+'">Bout '+d.bout_id+'</a>');
       jQuery('#bout-picker').append(listItem);
     });
 
     // show last bout element name in bout picker name
     jQuery('#bout-picker-label').html('');
     var d = _.last(data);
-    jQuery('#bout-picker-label').append(d.bout_id+' - '+d.habitat_configuration.substring(0,1).toUpperCase()+' ');
+    // jQuery('#bout-picker-label').append(d.bout_id+' - '+d.habitat_configuration.substring(0,1).toUpperCase()+' ');
+    jQuery('#bout-picker-label').append('Bout '+d.bout_id);
     jQuery('#bout-picker-label').append(jQuery('<span class="caret"></span>'));
   };
 

@@ -359,15 +359,15 @@
   app.populateMoveTracker = function(username, configuration, boutId) {
     app.userLocations = [];
 
-    var configLabel = null;
-    if (configuration === "gameon") {
-      configLabel = "G";
-    } else if (configuration === "predation") {
-      configLabel = "P";
-    } else {
-      console.error("Invalid configuration type!");
-    }
-    jQuery('.bout-number').text(configLabel+boutId);
+    // var configLabel = null;
+    // if (configuration === "gameon") {
+    //   configLabel = "G";
+    // } else if (configuration === "predation") {
+    //   configLabel = "P";
+    // } else {
+    //   console.error("Invalid configuration type!");
+    // }
+    jQuery('.bout-number').text(boutId);
     
     jQuery('.username').text(username.toUpperCase());    
 

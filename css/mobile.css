@@ -60,6 +60,10 @@
 		margin-bottom: 0;
 	}
 
+	#bout-picker-label .caret {
+		margin-left: 5px;
+	}
+
 
 	/*.container-header {
 		height: 40px;
