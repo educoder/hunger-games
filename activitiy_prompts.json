@@ -16,5 +16,11 @@
 	   "title": "My Bout 1 Moves",
 	   "prompt1": "The strategy I tended to use was...",
 	   "prompt2": "In order to do better next time I will..."
-    }
+    },
+    {
+       "_id": 4,
+       "title": "Reflecting on Bout 2",
+       "prompt1": "Compared to an ideal distribution, our results were...",
+       "prompt2": "This was because..."
+    }    
 ]
