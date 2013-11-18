@@ -48,6 +48,7 @@
   app.userLocations = [];
   app.userMove = 0;
   app.patchPopulations = {};
+  app.boutConfiguationType = null;
 
   app.indexView = null;
   app.inputView = null;
@@ -321,7 +322,9 @@
           if (jQuery(ev.target).data('patch') === pId) {
             selectedPatch = p.patch_id;
             // make sure we don't try to divide by zero (tho JS/Chrome seems to actually handle this gracefully!)
-            if (numSq === 0) {
+            if (isNaN(numSq)) {
+              jQuery('.'+selectedPatch+' .equalization-harvest-field').text('');
+            } else if (numSq === 0) {
               jQuery('.'+selectedPatch+' .equalization-harvest-field').text('0');
             } else {
               var harvest = p.quality_per_minute / numSq * app.configurationData.harvest_calculator_bout_length_in_minutes;
@@ -344,9 +347,16 @@
             }
           }
         });
-        // Patch time all squirrels field
-        var t = app.configurationData.harvest_calculator_bout_length_in_minutes * numSq;
-        jQuery('.'+selectedPatch+' .equalization-patch-time-field').text(t);
+
+        if (isNaN(numSq)) {
+          // Patch time all squirrels field
+          jQuery('.'+selectedPatch+' .equalization-patch-time-field').text('');                 
+        } else {
+          // Patch time all squirrels field
+          var t = app.configurationData.harvest_calculator_bout_length_in_minutes * numSq;
+          jQuery('.'+selectedPatch+' .equalization-patch-time-field').text(t);          
+        }
+
       } else {
         console.error("Missing configuration data...");
       }
@@ -392,16 +402,17 @@
     });
 
     // set up the move tracker for the first move for this user in this bout
-    updateMoveTracker("first", username, configuration);
+    app.boutConfiguationType = configuration;
+    updateMoveTracker("first");
   };
 
-  var updateMoveTracker = function(move, username, configuration) {
+  var updateMoveTracker = function(move) {
     if (move === "first") {
       app.userMove = 1;
       app.hideAllRows();
       jQuery('#move-tracker-screen').removeClass('hidden');
 
-      if (configuration === "predation") {
+      if (app.boutConfiguationType === "predation") {
         _.each(app.configurationData.patches, function(p) {
           jQuery('#move-tracker-screen .' + p.patch_id + ' .move-tracker-risk-field').text(p.risk_label);
         });
@@ -435,19 +446,37 @@
     _.each(app.configurationData.patches, function(p) {
       qualObj[p.patch_id] = p.quality_per_minute;
     });
+    var riskObj = {};
+    _.each(app.configurationData.patches, function(p) {
+      riskObj[p.patch_id] = p.risk_label;
+    });
 
     // update UI: squirrel counts, yield and new yield
     if (app.patchPopulations[ts]) {
       _.each(app.patchPopulations[ts], function(numSq, p) {
         jQuery('#move-tracker-screen .'+p+' .move-tracker-squirrels-field').text(numSq);
+        var harvest = qualObj[p] / numSq;
+        var newHarvest = qualObj[p] / (numSq + 1);
+        
+        if (app.boutConfiguationType === "predation") {
+          var averagePredationInterval = 0;
+          var penaltyTime = 20;
+          if (riskObj[p] === "safe") {
+            averagePredationInterval = 100;
+          } else if (riskObj[p] === "risky") {
+            averagePredationInterval = 40;
+          }
+          var predationLossRate = penaltyTime / (averagePredationInterval + penaltyTime);
+          harvest = harvest * (1 - predationLossRate);
+          newHarvest = newHarvest * (1 - predationLossRate);
+        }
+
         if (numSq > 0) {
-          jQuery('#move-tracker-screen .'+p+' .move-tracker-yield-field').text(Math.round(qualObj[p] / numSq));
+          jQuery('#move-tracker-screen .'+p+' .move-tracker-yield-field').text(Math.round(harvest));
         } else {
           jQuery('#move-tracker-screen .'+p+' .move-tracker-yield-field').text("0");
         }
-        
-
-        jQuery('#move-tracker-screen .'+p+' .move-tracker-new-yield-field').text(Math.round(qualObj[p] / (numSq + 1)));
+        jQuery('#move-tracker-screen .'+p+' .move-tracker-new-yield-field').text(Math.round(newHarvest));
       });
     } else {
       console.error("No timestamp for this move in the patchPopulations");
