@@ -296,7 +296,8 @@
 
 
   var updateEqualization = function(ev) {
-    var boutType = app.stateData.state.current_habitat_configuration;
+    // var boutType = app.stateData.state.current_habitat_configuration;
+    var boutType = "predation";
     // (ev.target.parentElement.parentElement).attr('class') gives the patch number of the modified patch
     var selectedPatch;
     // cast it to a base-10 int, cause we love Crockford
