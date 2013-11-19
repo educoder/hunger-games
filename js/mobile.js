@@ -296,8 +296,8 @@
 
 
   var updateEqualization = function(ev) {
-    // var boutType = app.stateData.state.current_habitat_configuration;
-    var boutType = "predation";
+    var boutType = app.stateData.state.current_habitat_configuration;
+    // var boutType = "predation";
     // (ev.target.parentElement.parentElement).attr('class') gives the patch number of the modified patch
     var selectedPatch;
     // cast it to a base-10 int, cause we love Crockford
@@ -455,6 +455,10 @@
     // update UI: squirrel counts, yield and new yield
     if (app.patchPopulations[ts]) {
       _.each(app.patchPopulations[ts], function(numSq, p) {
+        // so gross - to compensate for the start_bout event being late
+        if (numSq < 1) {
+          numSq = 0;
+        }
         jQuery('#move-tracker-screen .'+p+' .move-tracker-squirrels-field').text(numSq);
         var harvest = qualObj[p] / numSq;
         var newHarvest = qualObj[p] / (numSq + 1);
