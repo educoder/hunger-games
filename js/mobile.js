@@ -412,12 +412,12 @@
       app.hideAllRows();
       jQuery('#move-tracker-screen').removeClass('hidden');
 
-      if (app.boutConfiguationType === "predation") {
-        _.each(app.configurationData.patches, function(p) {
-          jQuery('#move-tracker-screen .' + p.patch_id + ' .move-tracker-risk-field').text(p.risk_label);
-        });
-        jQuery('#move-tracker-screen .hidden').removeClass('hidden');
-      }
+      // if (app.boutConfiguationType === "predation") {
+      //   _.each(app.configurationData.patches, function(p) {
+      //     jQuery('#move-tracker-screen .' + p.patch_id + ' .move-tracker-risk-field').text(p.risk_label);
+      //   });
+      //   jQuery('#move-tracker-screen .hidden').removeClass('hidden');
+      // }
 
     } else if (move === "next") {
       if (app.userMove < (  app.userLocations.length - 1)) {
@@ -507,12 +507,14 @@
     var populations = {"patch-a":0,"patch-b":0,"patch-c":0,"patch-d":0,"patch-e":0,"patch-f":0};
 
     _.each(app.recentBoutData, function(e) {
-      if (e.event === "rfid_update" && e.payload.arrival !== "fg-den") {
-        // if this event's timestamp does not already exist in the patchPopulations object, create it
-        var ts = idToTimestamp(e._id.$oid);
-        var arr = e.payload.arrival;
-        var dep = e.payload.departure;
+      // if this event's timestamp does not already exist in the patchPopulations object, create it
+      var ts = idToTimestamp(e._id.$oid);
+      var arr = e.payload.arrival;
+      var dep = e.payload.departure;
 
+      if (e.event === "stop_bout") {
+        populations = {"patch-a":0,"patch-b":0,"patch-c":0,"patch-d":0,"patch-e":0,"patch-f":0};
+      } else if (e.event === "rfid_update" && e.payload.arrival !== "fg-den") {
         // update the patches for this timestamp with the arrivals and departures
         if (arr) {
           populations[arr]++;
@@ -520,9 +522,10 @@
         if (dep) {
           populations[dep]--;
         }
-        var clonedPopulationsObj = _.clone(populations);
-        app.patchPopulations[ts] = clonedPopulationsObj;
       }
+
+      var clonedPopulationsObj = _.clone(populations);
+      app.patchPopulations[ts] = clonedPopulationsObj;
     });
 
     // TESTING ONLY
