@@ -281,6 +281,8 @@
       .attr("y", function(d, i){
           return yScale(i);
       })
+      .attr("rx", "3")
+      .attr("yx", "3")
       .attr("width", function(d) {
         // return xScale(d.harvest);
         if (d.harvest < d_max) {
@@ -305,8 +307,8 @@
           return "rgba(75, 75, 75, 1)";
         }
       })
-      .attr("stroke-width", 1)
-      .attr("stroke", "rgb(0,0,0)")
+      // .attr("stroke-width", 1)
+      // .attr("stroke", "rgb(0,0,0)")
       .on("click", function(){
         console.log('clicked on bar in graph');
         // this is the result of weird usernames. Embrace for impact! 
@@ -395,10 +397,10 @@
 
   
     //Create X axis
-    svg.append("g")
-      .attr("class", "x axis")
-      .attr("transform", "translate(0," + (h - padding) + ")")
-      .call(xAxis);
+    // svg.append("g")
+    //   .attr("class", "x axis")
+    //   .attr("transform", "translate(0," + (h - padding) + ")")
+    //   .call(xAxis);
 
     //Create Y axis
     svg.append("g")
