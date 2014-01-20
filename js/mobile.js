@@ -88,9 +88,16 @@
   };
 
   app.handleLogin = function () {
-    // retrieve user name from cookie if possible otherwise ask user to choose name
-    app.runId = jQuery.cookie('hunger-games_mobile_runId');
-    app.username = jQuery.cookie('hunger-games_mobile_username');
+
+    if (jQuery.QueryString.runId && jQuery.QueryString.username) {
+      console.log ("URL parameter correct :)");
+      app.runId = jQuery.QueryString.runId;
+      app.username = jQuery.QueryString.username;
+    } else {
+      // retrieve user name from cookie if possible otherwise ask user to choose name
+      app.runId = jQuery.cookie('hunger-games_mobile_runId');
+      app.username = jQuery.cookie('hunger-games_mobile_username');
+    }
 
     if (app.username && app.runId) {
       // We have a user in cookies so we show stuff
