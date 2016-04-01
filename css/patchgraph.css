@@ -14,6 +14,11 @@
   stroke: #fff;
 }
 
+.y path, .y line {
+  fill: none;
+  stroke: #fff;
+}
+
 .right-y text {
   font-weight: bold;
   font-size: 16px;
